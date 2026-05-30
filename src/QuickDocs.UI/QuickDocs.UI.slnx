@@ -1,0 +1,11 @@
+﻿<Solution>
+  <Project Path="QuickDocs.UI.Android/QuickDocs.UI.Android.csproj">
+    <Deploy />
+  </Project>
+  <Project Path="QuickDocs.UI.Browser/QuickDocs.UI.Browser.csproj" />
+  <Project Path="QuickDocs.UI.Desktop/QuickDocs.UI.Desktop.csproj" />
+  <Project Path="QuickDocs.UI.iOS/QuickDocs.UI.iOS.csproj">
+    <Deploy />
+  </Project>
+  <Project Path="QuickDocs.UI/QuickDocs.UI.csproj" />
+</Solution>

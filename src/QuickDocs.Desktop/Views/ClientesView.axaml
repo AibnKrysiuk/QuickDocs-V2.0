@@ -1,0 +1,117 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="QuickDocs.Desktop.Views.ClientesView">
+    
+    <Grid RowDefinitions="Auto, *" Margin="15" Background="Transparent">
+        
+        <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,15">
+            <TextBlock Text="👥 Base de Datos de Clientes" FontSize="22" FontWeight="Bold" Foreground="#0F172A"/>
+            <TextBlock Text="Administre la información de contacto y facturación de sus clientes en un solo lugar." FontSize="13" Foreground="#64748B"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1" ColumnDefinitions="1.2*, 1.8*" ColumnSpacing="15">
+            
+            <Border Grid.Column="0" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" VerticalAlignment="Top">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="📝 Datos del Cliente" FontSize="14" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,5"/>
+                    
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Nombre / Razón Social" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                        <TextBox PlaceholderText="Ej. Juan Pérez / Construcciones S.A."/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="CUIT / CUIL" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                        <TextBox PlaceholderText="Ej. 20-34567890-9"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Correo Electrónico" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                        <TextBox PlaceholderText="Ej. contacto@empresa.com"/>
+                    </StackPanel>
+
+                    <Grid ColumnDefinitions="*, *" ColumnSpacing="10">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="Teléfono 1" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                            <TextBox PlaceholderText="Ej. 11 4444-5555"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Spacing="4">
+                            <TextBlock Text="Teléfono 2 (Opcional)" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                            <TextBox PlaceholderText="Ej. 11 2222-3333"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Dirección" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                        <TextBox PlaceholderText="Ej. Av. Rivadavia 1234, Piso 2"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Localidad" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                        <TextBox PlaceholderText="Ej. San Justo / La Plata"/>
+                    </StackPanel>
+
+                    <Grid ColumnDefinitions="*, Auto" Margin="0,10,0,0" ColumnSpacing="10">
+                        <Button Grid.Column="0" Content="💾 Guardar Cliente" Background="#10B981" Foreground="White" Padding="0,10" CornerRadius="6" FontWeight="SemiBold" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                        <Button Grid.Column="1" Content="Cancelar" Background="#F1F5F9" Foreground="#475569" Padding="15,10" CornerRadius="6" FontWeight="Medium"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="1" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000">
+                <Grid RowDefinitions="Auto, Auto, *">
+                    
+                    <Grid Grid.Row="0" ColumnDefinitions="*, Auto" ColumnSpacing="10" Margin="0,0,0,15">
+                        <TextBox Grid.Column="0" PlaceholderText="🔍 Buscar cliente por nombre o CUIT..." VerticalAlignment="Center"/>
+                        <Button Grid.Column="1" Content="Limpiar" Background="#F1F5F9" Foreground="#475569" Padding="12,8" CornerRadius="6" FontSize="12" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Grid Grid.Row="1" ColumnDefinitions="2*, *, Auto" Margin="5,0,5,5">
+                        <TextBlock Grid.Column="0" Text="Cliente / Localidad" FontWeight="SemiBold" Foreground="#334155" FontSize="12"/>
+                        <TextBlock Grid.Column="1" Text="CUIT / Teléfono" FontWeight="SemiBold" Foreground="#334155" FontSize="12"/>
+                        <TextBlock Grid.Column="2" Text="Acciones" FontWeight="SemiBold" Foreground="#334155" FontSize="12" Width="100" HorizontalAlignment="Center"/>
+                    </Grid>
+                    <Separator Grid.Row="1" VerticalAlignment="Bottom" Background="#E2E8F0"/>
+
+                    <ScrollViewer Grid.Row="2" Margin="0,5,0,0">
+                        <StackPanel Spacing="8">
+                            
+                            <Grid ColumnDefinitions="2*, *, Auto" Margin="5,4">
+                                <StackPanel Grid.Column="0" Spacing="2">
+                                    <TextBlock Text="Construcciones Norte S.A." FontWeight="SemiBold" Foreground="#0F172A" FontSize="13"/>
+                                    <TextBlock Text="📍 La Plata" Foreground="#64748B" FontSize="11"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Spacing="2">
+                                    <TextBlock Text="30-55443322-9" Foreground="#334155" FontSize="12"/>
+                                    <TextBlock Text="📞 221 456-7890" Foreground="#64748B" FontSize="11"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="5" Width="100" HorizontalAlignment="Center">
+                                    <Button Content="✏️" Background="#E0F2FE" Foreground="#0369A1" Padding="8,4" FontSize="12" CornerRadius="4"/>
+                                    <Button Content="🗑️" Background="#FEE2E2" Foreground="#991B1B" Padding="8,4" FontSize="12" CornerRadius="4"/>
+                                </StackPanel>
+                            </Grid>
+                            <Separator Background="#F8FAFC" Margin="0"/>
+
+                            <Grid ColumnDefinitions="2*, *, Auto" Margin="5,4">
+                                <StackPanel Grid.Column="0" Spacing="2">
+                                    <TextBlock Text="Juan Carlos Pérez" FontWeight="SemiBold" Foreground="#0F172A" FontSize="13"/>
+                                    <TextBlock Text="📍 Berazategui" Foreground="#64748B" FontSize="11"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Spacing="2">
+                                    <TextBlock Text="20-12345678-2" Foreground="#334155" FontSize="12"/>
+                                    <TextBlock Text="📞 11 9876-5432" Foreground="#64748B" FontSize="11"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="5" Width="100" HorizontalAlignment="Center">
+                                    <Button Content="✏️" Background="#E0F2FE" Foreground="#0369A1" Padding="8,4" FontSize="12" CornerRadius="4"/>
+                                    <Button Content="🗑️" Background="#FEE2E2" Foreground="#991B1B" Padding="8,4" FontSize="12" CornerRadius="4"/>
+                                </StackPanel>
+                            </Grid>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Border>
+            
+        </Grid>
+    </Grid>
+</UserControl>

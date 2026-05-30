@@ -1,0 +1,171 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:QuickDocs.Desktop.ViewModels"
+        x:Class="QuickDocs.Desktop.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel" Title="QuickDocs - Sistema de Gestión"
+        Width="1100" Height="700"
+        WindowStartupLocation="CenterScreen"
+        Background="#F8FAFC"> <Grid ColumnDefinitions="280, *">
+        
+        <Border Grid.Column="0" 
+                Background="#1E293B" Padding="15, 20">
+            
+            <Grid RowDefinitions="Auto, *, Auto">
+                <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,30">
+                    <TextBlock Text="📄 QuickDocs" 
+                               FontSize="24" 
+                               FontWeight="Bold" 
+                               Foreground="#F8FAFC"/> <TextBlock Text="Panel de Control" 
+                               FontSize="12" 
+                               Foreground="#94A3B8"/> </StackPanel>
+
+                <StackPanel Grid.Row="1" Spacing="8">
+    
+                    <Button Content="📊 Inicio" 
+                            HorizontalAlignment="Stretch" 
+                            Padding="12,10"
+                            Background="#334155" 
+                            Foreground="#F8FAFC"
+                            CornerRadius="6"
+                            HorizontalContentAlignment="Left"
+                            Command="{Binding MostrarInicio}"/>
+                    
+                    <Expander Header="➕ Crear Documento"
+                                HorizontalAlignment="Stretch"
+                                Background="#334155"
+                                Foreground="#E2E8F0"
+                                BorderThickness="0"
+                                Padding="0"
+                                Margin="0"
+                                FontSize="14"
+                                CornerRadius="6">
+                    <Expander.Resources>
+                        <SolidColorBrush x:Key="ExpanderHeaderBackground">Transparent</SolidColorBrush>
+                        <SolidColorBrush x:Key="ExpanderHeaderBackgroundPointerOver">Transparent</SolidColorBrush>
+                        <SolidColorBrush x:Key="ExpanderHeaderBackgroundPressed">Transparent</SolidColorBrush>
+                        <SolidColorBrush x:Key="ExpanderHeaderBackgroundExpanded">#334155</SolidColorBrush>
+                        <SolidColorBrush x:Key="ExpanderHeaderBackgroundExpandedPointerOver">Transparent</SolidColorBrush>
+                        <Thickness x:Key="ExpanderHeaderBorderThickness">0</Thickness>
+                        <Thickness x:Key="ExpanderHeaderBorderThicknessPointerOver">0</Thickness>
+                        <Thickness x:Key="ExpanderHeaderBorderThicknessPressed">0</Thickness>
+                    </Expander.Resources>
+                        
+                        <StackPanel Spacing="4" Margin="15, 5, 0, 5">
+                            
+                            <Button Content="📄 Presupuesto" 
+                                    HorizontalAlignment="Stretch" 
+                                    Padding="10,8"
+                                    Background="Transparent"
+                                    Foreground="#94A3B8"
+                                    FontSize="13"
+                                    HorizontalContentAlignment="Left"
+                                    Command="{Binding MostrarPresupuesto}"/>
+                                    
+                            <Button Content="🧾 Recibo" 
+                                    HorizontalAlignment="Stretch" 
+                                    Padding="10,8"
+                                    Background="Transparent"
+                                    Foreground="#94A3B8"
+                                    FontSize="13"
+                                    HorizontalContentAlignment="Left"
+                                    Command="{Binding MostrarRecibo}"/>
+                                    
+                            <Button Content="🚚 Remito" 
+                                    HorizontalAlignment="Stretch" 
+                                    Padding="10,8"
+                                    Background="Transparent"
+                                    Foreground="#94A3B8"
+                                    FontSize="13"
+                                    HorizontalContentAlignment="Left"
+                                    Command="{Binding MostrarRemito}"/>
+                                    
+                            <Button Content="💳 Nota de Crédito" 
+                                    HorizontalAlignment="Stretch" 
+                                    Padding="10,8"
+                                    Background="Transparent"
+                                    Foreground="#94A3B8"
+                                    FontSize="13"
+                                    HorizontalContentAlignment="Left"
+                                    Command="{Binding MostrarNotaCredito}"/>
+                        </StackPanel>
+                    </Expander>
+
+                    <Button Content="📁 Historial Documentos" 
+                            HorizontalAlignment="Stretch" 
+                            Padding="12,10"
+                            Background="Transparent"
+                            Foreground="#E2E8F0"
+                            CornerRadius="6"
+                            HorizontalContentAlignment="Left"
+                            Command="{Binding MostrarHistorial}"/>
+                    
+                    <Button Content="👥 Clientes" 
+                            HorizontalAlignment="Stretch" 
+                            Padding="12,10"
+                            Background="Transparent"
+                            Foreground="#E2E8F0"
+                            CornerRadius="6"
+                            HorizontalContentAlignment="Left"
+                            Command="{Binding MostrarClientes}"/>
+
+                    <Button Content="📦 Artículos e Ítems" 
+                            HorizontalAlignment="Stretch" 
+                            Padding="12,10"
+                            Background="Transparent"
+                            Foreground="#E2E8F0"
+                            CornerRadius="6"
+                            HorizontalContentAlignment="Left"
+                            Command="{Binding MostrarArticulos}"/>
+
+                    <Button Content="⚙️ Mi Perfil" 
+                            HorizontalAlignment="Stretch" 
+                            Padding="12,10"
+                            Background="Transparent"
+                            Foreground="#E2E8F0"
+                            CornerRadius="6"
+                            HorizontalContentAlignment="Left"
+                            Command="{Binding MostrarPerfil}"/>
+
+                    <Button Content="🔄 Sincronizar Nube" 
+                            HorizontalAlignment="Stretch" 
+                            Padding="12,10"
+                            Background="Transparent"
+                            Foreground="#34D399" 
+                            CornerRadius="6"
+                            HorizontalContentAlignment="Left"
+                            Margin="0,20,0,0"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Spacing="5">
+                    <Separator Background="#334155" Margin="0,0,0,10"/>
+                    <TextBlock Text="👤 Sesión: Admin" 
+                               FontSize="13" 
+                               FontWeight="Medium" 
+                               Foreground="#E2E8F0"/>
+                    <Button Content="Cerrar Sesión" 
+                            FontSize="11"
+                            Background="Transparent"
+                            Foreground="#FCA5A5"
+                            Padding="0"
+                            HorizontalAlignment="Left"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Column="1" Margin="30">
+            <ContentControl Content="{Binding ContenidoActual}">
+                
+                <!-- <ContentControl.ContentTemplate>
+                    <DataTemplate>
+                        <StackPanel Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="¡Bienvenido al Panel Principal!" FontSize="28" FontWeight="Bold" Foreground="#0F172A"/>
+                            <TextBlock Text="Selecciona una opción del menú izquierdo para comenzar." FontSize="14" Foreground="#475569" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ContentControl.ContentTemplate> -->
+                
+            </ContentControl>
+        </Grid>
+        
+    </Grid>
+</Window>

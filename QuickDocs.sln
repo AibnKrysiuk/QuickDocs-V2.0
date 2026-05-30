@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0BF55CE2-93B2-4582-9585-7E24576C61A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickDocs.Core", "src\QuickDocs.Core\QuickDocs.Core.csproj", "{E1CC98F0-B1D6-4118-943C-5156BA2F889C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickDocs.Backend", "src\QuickDocs.Backend\QuickDocs.Backend.csproj", "{D280F10F-626C-45C8-8CFA-DC1BA6289124}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "QuickDocs.UI", "QuickDocs.UI", "{5ABFE3F9-C7A4-4037-9A50-E9F02E8EF70F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickDocs.UI", "src\QuickDocs.UI\QuickDocs.UI\QuickDocs.UI.csproj", "{30FF10BF-532B-43F3-AD80-B597EC4F0E5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickDocs.Desktop", "src\QuickDocs.Desktop\QuickDocs.Desktop.csproj", "{7352A3A7-D4E9-4607-BFA0-565721AA5DFF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E1CC98F0-B1D6-4118-943C-5156BA2F889C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1CC98F0-B1D6-4118-943C-5156BA2F889C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1CC98F0-B1D6-4118-943C-5156BA2F889C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1CC98F0-B1D6-4118-943C-5156BA2F889C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D280F10F-626C-45C8-8CFA-DC1BA6289124}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D280F10F-626C-45C8-8CFA-DC1BA6289124}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D280F10F-626C-45C8-8CFA-DC1BA6289124}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D280F10F-626C-45C8-8CFA-DC1BA6289124}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30FF10BF-532B-43F3-AD80-B597EC4F0E5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30FF10BF-532B-43F3-AD80-B597EC4F0E5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30FF10BF-532B-43F3-AD80-B597EC4F0E5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30FF10BF-532B-43F3-AD80-B597EC4F0E5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7352A3A7-D4E9-4607-BFA0-565721AA5DFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7352A3A7-D4E9-4607-BFA0-565721AA5DFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7352A3A7-D4E9-4607-BFA0-565721AA5DFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7352A3A7-D4E9-4607-BFA0-565721AA5DFF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E1CC98F0-B1D6-4118-943C-5156BA2F889C} = {0BF55CE2-93B2-4582-9585-7E24576C61A1}
+		{D280F10F-626C-45C8-8CFA-DC1BA6289124} = {0BF55CE2-93B2-4582-9585-7E24576C61A1}
+		{5ABFE3F9-C7A4-4037-9A50-E9F02E8EF70F} = {0BF55CE2-93B2-4582-9585-7E24576C61A1}
+		{30FF10BF-532B-43F3-AD80-B597EC4F0E5E} = {5ABFE3F9-C7A4-4037-9A50-E9F02E8EF70F}
+		{7352A3A7-D4E9-4607-BFA0-565721AA5DFF} = {0BF55CE2-93B2-4582-9585-7E24576C61A1}
+	EndGlobalSection
+EndGlobal

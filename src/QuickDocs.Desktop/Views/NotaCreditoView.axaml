@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="QuickDocs.Desktop.Views.NotaCreditoView">
+    
+    <Grid RowDefinitions="Auto, *, Auto" Margin="15" Background="Transparent">
+        
+        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
+            <StackPanel Grid.Column="0" Spacing="5">
+                <TextBlock Text="💸 Nueva Nota de Crédito" FontSize="22" FontWeight="Bold" Foreground="#0F172A"/>
+                <TextBlock Text="Registre saldos a favor del cliente por devoluciones, descuentos o anulaciones." FontSize="13" Foreground="#64748B"/>
+            </StackPanel>
+            
+            <Button Grid.Column="1" Content="📋 Ver Historial" 
+                    Background="#64748B" Foreground="White" 
+                    Padding="12,8" CornerRadius="6" FontSize="13" FontWeight="Medium"
+                    VerticalAlignment="Top"/>
+        </Grid>
+
+        <Border Grid.Row="1" Background="White" Padding="25" CornerRadius="10" BoxShadow="0 4 6 -1 #10000000, 0 2 4 -1 #06000000" VerticalAlignment="Top">
+            <StackPanel Spacing="20">
+                
+                <Grid ColumnDefinitions="2*, *" ColumnSpacing="20">
+                    <StackPanel Grid.Column="0" Spacing="5">
+                        <TextBlock Text="Emitida a favor de (Cliente / Razón Social)" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                        <TextBox PlaceholderText="Nombre del cliente o empresa beneficiaria..." HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="1" Spacing="5">
+                        <TextBlock Text="Crédito a asignar (Monto $)" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                        <TextBox PlaceholderText="0.00" HorizontalContentAlignment="Right" FontWeight="Bold" Foreground="#6366F1"/>
+                    </StackPanel>
+                </Grid>
+
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Motivo de la emisión (Por qué y en qué calidad se emite)" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                    <TextBox PlaceholderText="Ej. Devolución de 2 packs de tornillos defectuosos / Ajuste por error en precio..." 
+                             HorizontalAlignment="Stretch" 
+                             Height="70" 
+                             AcceptsReturn="True" 
+                             TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Vencimiento del Crédito" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="Este crédito estará disponible y será válido por" FontSize="13" Foreground="#475569" VerticalAlignment="Center"/>
+                        
+                        <TextBox Text="30" Width="50" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
+                        
+                        <TextBlock Text="días corridos a partir de la fecha de emisión." FontSize="13" Foreground="#475569" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*, Auto" Margin="0,20,0,0">
+            <Button Grid.Column="0" Content="⚙️ Generar Nota de Crédito e Imprimir" 
+                    Background="#10B981" Foreground="White" 
+                    Padding="24,14" FontSize="15" FontWeight="Bold" CornerRadius="6" 
+                    HorizontalAlignment="Left"/>
+        </Grid>
+        
+    </Grid>
+</UserControl>

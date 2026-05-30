@@ -1,0 +1,13 @@
+# Carpetas de compilación
+[Bb]in/
+[Oo]bj/
+
+# Configuraciones de editores (VS Code, Rider, Visual Studio)
+.vs/
+.idea/
+*.user
+*.suo
+
+# Archivos temporales del sistema operativo
+.DS_Store
+Thumbs.db

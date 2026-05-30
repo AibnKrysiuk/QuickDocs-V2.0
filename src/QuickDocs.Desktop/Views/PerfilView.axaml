@@ -1,0 +1,100 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="QuickDocs.Desktop.Views.PerfilView">
+    
+    <Grid RowDefinitions="Auto, *" Margin="15" Background="Transparent">
+        
+        <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,20">
+            <TextBlock Text="⚙️ Configuración del Comercio" FontSize="22" FontWeight="Bold" Foreground="#0F172A"/>
+            <TextBlock Text="Personalice la información que aparecerá en sus documentos y facturas." FontSize="13" Foreground="#64748B"/>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1">
+            <Grid ColumnDefinitions="*, 2*" ColumnSpacing="20">
+                
+                <Border Grid.Column="0" Background="White" Padding="20" CornerRadius="10" BoxShadow="0 4 6 -1 #10000000" VerticalAlignment="Top">
+                    <StackPanel Spacing="15" HorizontalAlignment="Center">
+                        <TextBlock Text="Logo de la Empresa" FontSize="14" FontWeight="Bold" Foreground="#1E293B" HorizontalAlignment="Center"/>
+                        
+                        <Grid Width="180" Height="180">
+                            <Rectangle Fill="#F8FAFC" 
+                                    Stroke="#E2E8F0" 
+                                    StrokeThickness="2" 
+                                    StrokeDashArray="4,4" 
+                                    RadiusX="10" 
+                                    RadiusY="10"/>
+                            
+                            <Grid>
+                                <TextBlock Text="📸" FontSize="48" HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.1"/>
+                                
+                                <Image Source="avares://QuickDocs.Desktop/Assets/LogoQD.png" 
+                                    Stretch="Uniform" 
+                                    Margin="15"/>
+                            </Grid>
+                        </Grid>
+                        
+                        <Button Content="Seleccionar Logo" Background="#1E293B" Foreground="White" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="10" CornerRadius="6"/>
+                        <TextBlock Text="Formatos: PNG, JPG (Máx 2MB)" FontSize="11" Foreground="#94A3B8" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Grid.Column="1" Spacing="15">
+                    
+                    <Border Background="White" Padding="20" CornerRadius="10" BoxShadow="0 2 4 0 #10000000">
+                        <StackPanel Spacing="15">
+                            <TextBlock Text="Datos Identitarios" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
+                            
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="Nombre Comercial o Razón Social" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                                <TextBox PlaceholderText="Ej. Mi Comercio S.H. / Juan Pérez Ventas"/>
+                            </StackPanel>
+
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="CUIT / CUIL" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                                <TextBox PlaceholderText="Ej. 20-XXXXXXXX-X"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Background="White" Padding="20" CornerRadius="10" BoxShadow="0 2 4 0 #10000000">
+                        <StackPanel Spacing="15">
+                            <TextBlock Text="Contacto y Ubicación" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
+                            
+                            <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
+                                <StackPanel Grid.Column="0" Spacing="5">
+                                    <TextBlock Text="Teléfono Principal" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                                    <TextBox PlaceholderText="Ej. 11 1234-5678"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Spacing="5">
+                                    <TextBlock Text="Teléfono Secundario" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                                    <TextBox PlaceholderText="Opcional..."/>
+                                </StackPanel>
+                            </Grid>
+
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="Correo Electrónico de Contacto" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                                <TextBox PlaceholderText="Ej. contacto@micomercio.com"/>
+                            </StackPanel>
+
+                            <Grid ColumnDefinitions="1.5*, *" ColumnSpacing="15">
+                                <StackPanel Grid.Column="0" Spacing="5">
+                                    <TextBlock Text="Dirección Comercial" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                                    <TextBox PlaceholderText="Ej. Av. Siempre Viva 742"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Spacing="5">
+                                    <TextBlock Text="Localidad" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                                    <TextBox PlaceholderText="Ej. Morón / CABA"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Button Content="💾 Guardar Cambios del Perfil" 
+                            Background="#10B981" Foreground="White" 
+                            Padding="25,14" FontSize="15" FontWeight="Bold" CornerRadius="8" 
+                            HorizontalAlignment="Right"/>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

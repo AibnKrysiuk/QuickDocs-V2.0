@@ -1,0 +1,81 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:QuickDocs.Desktop.ViewModels"
+        x:Class="QuickDocs.Desktop.Views.RegisterView"
+        x:DataType="vm:LoginViewModel"
+        Title="QuickDocs - Crear Cuenta"
+        Width="400" Height="580"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False"
+        Background="#F3F4F6">
+
+    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+        <Border Background="White" 
+                CornerRadius="8" 
+                Padding="25" 
+                Width="340"
+                BoxShadow="0 4 10 0 #20000000">
+            
+            <StackPanel Spacing="12">
+                
+                <StackPanel HorizontalAlignment="Center" Margin="0,0,0,5">
+                    <TextBlock Text="👤 Registro" 
+                               FontSize="26" 
+                               FontWeight="Bold" 
+                               Foreground="#1F2937"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="Crea un nuevo usuario para el sistema" 
+                               FontSize="12" 
+                               Foreground="#6B7280" 
+                               HorizontalAlignment="Center"
+                               Margin="0,3,0,0"/>
+                </StackPanel>
+
+                <Separator Background="#E5E7EB" Margin="0,2"/>
+
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Nombre de Usuario" FontWeight="Medium" Foreground="#4B5563" FontSize="13"/>
+                    <TextBox Text="{Binding Usuario, Mode=TwoWay}" 
+                             PlaceholderText="Ej: maria.perez"
+                             Padding="10,8"/>
+                </StackPanel>
+
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Contraseña" FontWeight="Medium" Foreground="#4B5563" FontSize="13"/>
+                    <TextBox Text="{Binding Contrasena, Mode=TwoWay}" 
+                             PasswordChar="●" 
+                             PlaceholderText="Mínimo 4 caracteres"
+                             Padding="10,8"/>
+                </StackPanel>
+
+                <TextBlock Text="{Binding MensajeError}" 
+                           Foreground="#EF4444" 
+                           FontSize="12" 
+                           HorizontalAlignment="Center"
+                           TextWrapping="Wrap"
+                           IsVisible="{Binding MensajeError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+
+                <Button Click="OnRegistrarClick" 
+                        Content="Registrar Usuario" 
+                        Background="#10B981" 
+                        Foreground="White" 
+                        FontWeight="Bold"
+                        FontSize="14"
+                        HorizontalAlignment="Stretch" 
+                        HorizontalContentAlignment="Center"
+                        Padding="0,12"
+                        Margin="0,10,0,0"
+                        CornerRadius="5"/>
+
+                <Button Click="OnVolverClick" 
+                        Content="¿Ya tenés cuenta? Inicia Sesión" 
+                        Background="Transparent" 
+                        Foreground="#2563EB" 
+                        FontSize="12"
+                        HorizontalAlignment="Center" 
+                        Margin="0,5,0,0"/>
+                
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

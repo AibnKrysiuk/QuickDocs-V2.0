@@ -1,0 +1,100 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="QuickDocs.Desktop.Views.RemitoView">
+    
+    <Grid RowDefinitions="Auto, Auto, Auto, *, Auto" Margin="15" Background="Transparent">
+        
+        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
+            <StackPanel Grid.Column="0" Spacing="5">
+                <TextBlock Text="🚚 Nuevo Remito de Entrega" FontSize="22" FontWeight="Bold" Foreground="#0F172A"/>
+                <TextBlock Text="Gestione el traslado y la constancia de recepción de mercaderías." FontSize="13" Foreground="#64748B"/>
+            </StackPanel>
+            
+            <Button Grid.Column="1" Content="📋 Ver Historial" 
+                    Background="#64748B" Foreground="White" 
+                    Padding="12,8" CornerRadius="6" FontSize="13" FontWeight="Medium"
+                    VerticalAlignment="Top"/>
+        </Grid>
+
+        <Border Grid.Row="1" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,15">
+            <Grid RowDefinitions="Auto, Auto" RowSpacing="15">
+                
+                <Grid Grid.Row="0" ColumnDefinitions="*, Auto" ColumnSpacing="20">
+                    <StackPanel Grid.Column="0" Spacing="5">
+                        <TextBlock Text="Destinatario / Cliente" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                        <TextBox PlaceholderText="Nombre de quien recibe la mercadería..." HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                    
+                    <CheckBox Grid.Column="1" Content="Mostrar precios en el documento" 
+                              IsChecked="True" 
+                              FontWeight="Medium" 
+                              Foreground="#334155"
+                              VerticalAlignment="Bottom" 
+                              Margin="0,0,0,5"/>
+                </Grid>
+
+                <StackPanel Grid.Row="1" Spacing="5">
+                    <TextBlock Text="📍 Lugar de Entrega / Dirección de Envío" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                    <TextBox PlaceholderText="Ej. Av. Siempreviva 742, Planta Alta / Dejar en depósito central..." HorizontalAlignment="Stretch"/>
+                </StackPanel>
+                
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,15">
+            <StackPanel Spacing="10">
+                <TextBlock Text="📦 Añadir Bultos / Artículos al Remito" FontSize="13" FontWeight="Bold" Foreground="#1E293B"/>
+                
+                <Grid ColumnDefinitions="2*, 1*, 80, Auto" ColumnSpacing="12">
+                    <StackPanel Grid.Column="0" Spacing="5">
+                        <TextBlock Text="Descripción" FontSize="11" Foreground="#475569"/>
+                        <TextBox PlaceholderText="Ej. Pack de Ladrillos Huecos"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Spacing="5">
+                        <TextBlock Text="Marca" FontSize="11" Foreground="#475569"/>
+                        <TextBox PlaceholderText="Ej. Cortines"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Spacing="5">
+                        <TextBlock Text="Cant." FontSize="11" Foreground="#475569"/>
+                        <TextBox PlaceholderText="0" HorizontalContentAlignment="Center"/>
+                    </StackPanel>
+                    
+                    <Button Grid.Column="3" Content="➕ Agregar" 
+                            Background="#1E293B" Foreground="White" 
+                            Padding="15,0" Height="32" CornerRadius="6"
+                            VerticalAlignment="Bottom" FontWeight="SemiBold" FontSize="13"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="3" Background="White" CornerRadius="8" Padding="15" BoxShadow="0 2 4 0 #10000000">
+            <Grid RowDefinitions="Auto, *, Auto" RowSpacing="10">
+                <Grid Grid.Row="0" ColumnDefinitions="2*, 1*, 80" Margin="5,0,5,0">
+                    <TextBlock Grid.Column="0" Text="Detalle del Artículo enviado" FontWeight="SemiBold" Foreground="#334155"/>
+                    <TextBlock Grid.Column="1" Text="Marca" FontWeight="SemiBold" Foreground="#334155"/>
+                    <TextBlock Grid.Column="2" Text="Cant." FontWeight="SemiBold" Foreground="#334155" HorizontalAlignment="Center"/>
+                </Grid>
+                <Separator Grid.Row="0" VerticalAlignment="Bottom" Background="#E2E8F0"/>
+
+                <Grid Grid.Row="1" ColumnDefinitions="2*, 1*, 80" VerticalAlignment="Top" Margin="5,10,5,0">
+                    <TextBlock Grid.Column="0" Text="Pack de Ladrillos Huecos" VerticalAlignment="Center" Foreground="#0F172A"/>
+                    <TextBlock Grid.Column="1" Text="Cortines" VerticalAlignment="Center" Foreground="#475569"/>
+                    <TextBlock Grid.Column="2" Text="10" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0F172A"/>
+                </Grid>
+
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Left">
+                    <Button Content="✏️ Modificar" Background="#F1F5F9" Foreground="#334155" Padding="12,6" CornerRadius="4" FontSize="12"/>
+                    <Button Content="🗑️ Quitar" Background="#FEE2E2" Foreground="#EF4444" Padding="12,6" CornerRadius="4" FontSize="12"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="4" ColumnDefinitions="*, Auto" Margin="0,15,0,0">
+            <Button Grid.Column="0" Content="⚙️ Generar Remito e Imprimir" 
+                    Background="#10B981" Foreground="White" 
+                    Padding="24,14" FontSize="15" FontWeight="Bold" CornerRadius="6" 
+                    HorizontalAlignment="Left"/>
+        </Grid>
+        
+    </Grid>
+</UserControl>

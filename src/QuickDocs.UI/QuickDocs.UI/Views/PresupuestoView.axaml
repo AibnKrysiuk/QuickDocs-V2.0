@@ -1,6 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="QuickDocs.Desktop.Views.PresupuestoView">
+             xmlns:vm="using:QuickDocs.UI.ViewModels"
+             x:Class="QuickDocs.UI.Views.PresupuestoView"
+             x:DataType="vm:PresupuestoViewModel">
     
     <Grid RowDefinitions="Auto, Auto, Auto, *, Auto" Margin="15" Background="Transparent">
         
@@ -21,14 +23,12 @@
                 
                 <StackPanel Grid.Column="0" Spacing="5">
                     <TextBlock Text="Cliente / Razón Social" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
-                    <TextBox PlaceholderText="Escriba el nombre del cliente o empresa..." HorizontalAlignment="Stretch"/>
+                    <TextBox Text="{Binding TextoBuscarCliente, Mode=TwoWay}" PlaceholderText="Escriba el nombre del cliente o empresa..." HorizontalAlignment="Stretch"/>
                 </StackPanel>
                 
                 <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Orientation="Horizontal" Spacing="8">
                     <TextBlock Text="Documento válido por" FontSize="13" Foreground="#475569" VerticalAlignment="Center"/>
-                    
-                    <TextBox Text="15" Width="50" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
-                    
+                    <TextBox Text="{Binding DiasValidez, Mode=TwoWay}" Width="50" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
                     <TextBlock Text="días." FontSize="13" Foreground="#475569" VerticalAlignment="Center"/>
                 </StackPanel>
                 
@@ -42,25 +42,26 @@
                 <Grid ColumnDefinitions="2*, 1*, 80, 120, Auto" ColumnSpacing="12">
                     <StackPanel Grid.Column="0" Spacing="5">
                         <TextBlock Text="Nombre / Descripción" FontSize="11" Foreground="#475569"/>
-                        <TextBox PlaceholderText="Ej. Tornillo Hexagonal"/>
+                        <TextBox Text="{Binding DescripcionRenglon, Mode=TwoWay}" PlaceholderText="Ej. Tornillo Hexagonal"/>
                     </StackPanel>
                     
                     <StackPanel Grid.Column="1" Spacing="5">
                         <TextBlock Text="Marca" FontSize="11" Foreground="#475569"/>
-                        <TextBox PlaceholderText="Ej. Aceros Max"/>
+                        <TextBox Text="{Binding MarcaRenglon, Mode=TwoWay}" PlaceholderText="Ej. Aceros Max"/>
                     </StackPanel>
                     
                     <StackPanel Grid.Column="2" Spacing="5">
                         <TextBlock Text="Cant." FontSize="11" Foreground="#475569"/>
-                        <TextBox PlaceholderText="0" HorizontalContentAlignment="Center"/>
+                        <TextBox Text="{Binding CantidadRenglon, Mode=TwoWay}" PlaceholderText="0" HorizontalContentAlignment="Center"/>
                     </StackPanel>
                     
                     <StackPanel Grid.Column="3" Spacing="5">
                         <TextBlock Text="Precio Unit." FontSize="11" Foreground="#475569"/>
-                        <TextBox PlaceholderText="0.00" HorizontalContentAlignment="Right"/>
+                        <TextBox Text="{Binding PrecioRenglon, Mode=TwoWay}" PlaceholderText="0.00" HorizontalContentAlignment="Right"/>
                     </StackPanel>
                     
                     <Button Grid.Column="4" Content="➕ Agregar" 
+                            Command="{Binding AgregarRenglonCommand}"
                             Background="#1E293B" Foreground="White" 
                             Padding="15,0" Height="32" CornerRadius="6"
                             VerticalAlignment="Bottom" FontWeight="SemiBold" FontSize="13"/>
@@ -71,7 +72,7 @@
         <Border Grid.Row="3" Background="White" CornerRadius="8" Padding="15" BoxShadow="0 2 4 0 #10000000">
             <Grid RowDefinitions="Auto, *, Auto" RowSpacing="10">
                 
-                <Grid Grid.Row="0" ColumnDefinitions="2*, 1*, 80, 120, 120" Margin="5,0,5,0">
+                <Grid Grid.Row="0" ColumnDefinitions="2*, 1*, 80, 120, 120" Margin="5,0,5,5">
                     <TextBlock Grid.Column="0" Text="Detalle del Artículo" FontWeight="SemiBold" Foreground="#334155"/>
                     <TextBlock Grid.Column="1" Text="Marca" FontWeight="SemiBold" Foreground="#334155"/>
                     <TextBlock Grid.Column="2" Text="Cant." FontWeight="SemiBold" Foreground="#334155" HorizontalAlignment="Center"/>
@@ -80,17 +81,23 @@
                 </Grid>
                 <Separator Grid.Row="0" VerticalAlignment="Bottom" Background="#E2E8F0"/>
 
-                <Grid Grid.Row="1" ColumnDefinitions="2*, 1*, 80, 120, 120" VerticalAlignment="Top" Margin="5,10,5,0">
-                    <TextBlock Grid.Column="0" Text="Tornillo Hexagonal" VerticalAlignment="Center" Foreground="#0F172A"/>
-                    <TextBlock Grid.Column="1" Text="Aceros Max" VerticalAlignment="Center" Foreground="#475569"/>
-                    <TextBlock Grid.Column="2" Text="3" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0F172A"/>
-                    <TextBlock Grid.Column="3" Text="$ 150,00" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="#0F172A"/>
-                    <TextBlock Grid.Column="4" Text="$ 450,00" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Medium" Foreground="#0F172A"/>
-                </Grid>
+                <ListBox Grid.Row="1" ItemsSource="{Binding Detalles}" SelectedItem="{Binding DetalleSeleccionado, Mode=TwoWay}" Background="Transparent" BorderThickness="0" MaxHeight="300">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="2*, 1*, 80, 120, 120" Margin="0,4">
+                                <TextBlock Grid.Column="0" Text="{Binding Descripcion}" VerticalAlignment="Center" Foreground="#0F172A"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Marca}" VerticalAlignment="Center" Foreground="#475569"/>
+                                <TextBlock Grid.Column="2" Text="{Binding Cantidad}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0F172A"/>
+                                <TextBlock Grid.Column="3" Text="{Binding PrecioUnitario, StringFormat='{}{0:C}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="#0F172A"/>
+                                <TextBlock Grid.Column="4" Text="{Binding Importe, StringFormat='{}{0:C}'}" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Medium" Foreground="#0F172A"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
 
-                <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Left">
-                    <Button Content="✏️ Modificar Ítem" Background="#F1F5F9" Foreground="#334155" Padding="12,6" CornerRadius="4" FontSize="12" FontWeight="Medium"/>
-                    <Button Content="🗑️ Quitar Ítem" Background="#FEE2E2" Foreground="#EF4444" Padding="12,6" CornerRadius="4" FontSize="12" FontWeight="Medium"/>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Left" Margin="0,5,0,0">
+                    <Button Content="✏️ Modificar Ítem" Command="{Binding SeleccionarRenglonParaModificarCommand}" Background="#F1F5F9" Foreground="#334155" Padding="12,6" CornerRadius="4" FontSize="12" FontWeight="Medium"/>
+                    <Button Content="🗑️ Quitar Ítem" Command="{Binding QuitarRenglonCommand}" Background="#FEE2E2" Foreground="#EF4444" Padding="12,6" CornerRadius="4" FontSize="12" FontWeight="Medium"/>
                 </StackPanel>
                 
             </Grid>
@@ -98,13 +105,14 @@
 
         <Grid Grid.Row="4" ColumnDefinitions="*, Auto" Margin="0,15,0,0">
             <Button Grid.Column="0" Content="⚙️ Generar PDF e Imprimir" 
+                    Command="{Binding GuardarPresupuestoCommand}"
                     Background="#10B981" Foreground="White" 
                     Padding="24,14" FontSize="15" FontWeight="Bold" CornerRadius="6" 
                     HorizontalAlignment="Left"/>
             
             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
                 <TextBlock Text="TOTAL:" FontSize="18" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
-                <TextBlock Text="$ 450.00" FontSize="26" FontWeight="Black" Foreground="#10B981" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Total, StringFormat='{}{0:C}'}" FontSize="26" FontWeight="Black" Foreground="#10B981" VerticalAlignment="Center"/>
             </StackPanel>
         </Grid>
         

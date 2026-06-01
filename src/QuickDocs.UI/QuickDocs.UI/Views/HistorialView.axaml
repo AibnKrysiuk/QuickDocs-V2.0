@@ -1,0 +1,101 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:QuickDocs.UI.ViewModels"
+             x:Class="QuickDocs.UI.Views.HistorialView"
+             x:DataType="vm:HistorialViewModel">
+    
+    <Grid RowDefinitions="Auto, Auto, *, Auto" Margin="15" Background="Transparent">
+        
+        <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,15">
+            <TextBlock Text="📋 Historial de Documentos" FontSize="22" FontWeight="Bold" Foreground="#0F172A"/>
+            <TextBlock Text="Consulte, filtre y gestione todos los comprobantes emitidos por el sistema." FontSize="13" Foreground="#64748B"/>
+        </StackPanel>
+
+        <Border Grid.Row="1" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,15">
+            <StackPanel Spacing="10">
+                <TextBlock Text="🔍 Filtros de Búsqueda" FontSize="12" FontWeight="Bold" Foreground="#334155"/>
+                
+                <Grid ColumnDefinitions="*, *, *, Auto" ColumnSpacing="15">
+                    <StackPanel Grid.Column="0" Spacing="5">
+                        <TextBlock Text="Tipo de Documento" FontSize="11" Foreground="#475569"/>
+                        <ComboBox HorizontalAlignment="Stretch" SelectedIndex="0">
+                            <ComboBoxItem>📄 Presupuestos (SQLite)</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Spacing="5">
+                        <TextBlock Text="Buscar por Cliente" FontSize="11" Foreground="#475569"/>
+                        <TextBox Text="{Binding TextoBuscar, Mode=TwoWay}" PlaceholderText="Escriba el nombre del cliente..."/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Spacing="5">
+                        <TextBlock Text="Período" FontSize="11" Foreground="#475569"/>
+                        <ComboBox HorizontalAlignment="Stretch" SelectedIndex="0">
+                            <ComboBoxItem>Cualquier fecha</ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <Button Grid.Column="3" Content="🔄 Refrescar" 
+                            Command="{Binding CargarHistorialCommand}"
+                            Background="#F1F5F9" Foreground="#475569" 
+                            Padding="15,0" Height="32" CornerRadius="6"
+                            VerticalAlignment="Bottom" FontSize="12" FontWeight="Medium"/>
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="2" Background="White" CornerRadius="8" Padding="15" BoxShadow="0 2 4 0 #10000000">
+            <Grid RowDefinitions="Auto, *">
+                
+                <Grid Grid.Row="0" ColumnDefinitions="90, 130, 2*, 100, 250" Margin="5,0,5,5">
+                    <TextBlock Grid.Column="0" Text="Fecha" FontWeight="SemiBold" Foreground="#334155"/>
+                    <TextBlock Grid.Column="1" Text="Tipo" FontWeight="SemiBold" Foreground="#334155"/>
+                    <TextBlock Grid.Column="2" Text="Cliente / Detalle" FontWeight="SemiBold" Foreground="#334155"/>
+                    <TextBlock Grid.Column="3" Text="Total" FontWeight="SemiBold" Foreground="#334155" HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Column="4" Text="Acciones" FontWeight="SemiBold" Foreground="#334155" HorizontalAlignment="Center"/>
+                </Grid>
+                <Separator Grid.Row="0" VerticalAlignment="Bottom" Background="#E2E8F0"/>
+
+                <ListBox Grid.Row="1" ItemsSource="{Binding Documentos}" Background="Transparent" BorderThickness="0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="90, 130, 2*, 100, 250" Margin="0,4">
+                                
+                                <TextBlock Grid.Column="0" Text="{Binding FechaEmision, StringFormat='{}{0:dd/MM/yyyy}'}" VerticalAlignment="Center" Foreground="#475569" FontSize="13"/>
+                                
+                                <Border Grid.Column="1" Background="#E0F2FE" CornerRadius="4" Padding="6,2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <TextBlock Text="📄 Presupuesto" Foreground="#0369A1" FontSize="11" FontWeight="SemiBold"/>
+                                </Border>
+                                
+                                <TextBlock Grid.Column="2" Text="{Binding ClienteNombre}" VerticalAlignment="Center" Foreground="#0F172A" FontWeight="Medium" FontSize="13"/>
+                                
+                                <TextBlock Grid.Column="3" Text="{Binding Total, StringFormat='{}{0:C}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="#0F172A" FontSize="13"/>
+                                
+                                <StackPanel Grid.Column="4" Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+                                    <Button Content="✏️ Editar" 
+                                            Command="{Binding $parent[UserControl].DataContext.EditarPresupuestoCommand}"
+                                            CommandParameter="{Binding}"
+                                            Background="#E0F2FE" Foreground="#0369A1" Padding="8,4" FontSize="11" CornerRadius="4"/>
+                                    
+                                    <Button Content="🖨️ PDF" 
+                                            Command="{Binding ((vm:HistorialViewModel)DataContext).ReimprimirPdfCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            Background="#D1FAE5" Foreground="#065F46" Padding="8,4" FontSize="11" CornerRadius="4"/>
+                                    
+                                    <Button Content="🗑️ Borrar" 
+                                            Command="{Binding ((vm:HistorialViewModel)DataContext).BorrarPresupuestoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            Background="#FEE2E2" Foreground="#991B1B" Padding="8,4" FontSize="11" CornerRadius="4"/>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                
+            </Grid>
+        </Border>
+
+        <TextBlock Grid.Row="3" Text="{Binding LabelCantidadResultados}" FontSize="12" Foreground="#64748B" Margin="5,10,0,0"/>
+        
+    </Grid>
+</UserControl>

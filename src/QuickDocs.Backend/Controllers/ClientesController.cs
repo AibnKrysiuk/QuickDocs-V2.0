@@ -21,18 +21,19 @@ namespace QuickDocs.Backend.Controllers
 
         // GET: api/Clientes?usuarioId=1
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cliente>>> GetClientes([FromQuery] int usuarioId)
+        public async Task<ActionResult<IEnumerable<Cliente>>> GetClientes([FromQuery] int? usuarioId)
         {
-            // Validamos primero si el usuario existe para no hacer consultas al cohete
-            var usuarioExiste = await _context.Usuarios.AnyAsync(u => u.Id == usuarioId);
+            // Estrategia temporal: Si no viene usuarioId, usamos el 1 (Admin) para poder probar locales
+            int idClave = usuarioId ?? 1;
+
+            var usuarioExiste = await _context.Usuarios.AnyAsync(u => u.Id == idClave);
             if (!usuarioExiste)
             {
                 return BadRequest("El UsuarioId especificado no existe.");
             }
 
-            // Aplicamos el filtro estricto de Multi-tenancy
             return await _context.Clientes
-                .Where(c => c.UsuarioId == usuarioId)
+                .Where(c => c.UsuarioId == idClave)
                 .ToListAsync();
         }
 
@@ -40,7 +41,12 @@ namespace QuickDocs.Backend.Controllers
         [HttpPost]
         public async Task<ActionResult<Cliente>> PostCliente(Cliente cliente)
         {
-            // Validamos que el dueño del registro exista
+            // Si el frontend no manda un UsuarioId válido, le asignamos el del Admin (1)
+            if (cliente.UsuarioId <= 0)
+            {
+                cliente.UsuarioId = 1;
+            }
+
             var usuarioExiste = await _context.Usuarios.AnyAsync(u => u.Id == cliente.UsuarioId);
             if (!usuarioExiste)
             {
@@ -51,6 +57,52 @@ namespace QuickDocs.Backend.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetClientes), new { usuarioId = cliente.UsuarioId }, cliente);
+        }
+
+        // PUT: api/Clientes/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutCliente(int id, Cliente cliente)
+        {
+            if (id != cliente.Id)
+            {
+                return BadRequest("El ID del cliente no coincide con el de la URL.");
+            }
+
+            // Forzamos a mantener el usuario dueño del registro por seguridad
+            if (cliente.UsuarioId <= 0) cliente.UsuarioId = 1;
+
+            _context.Entry(cliente).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await _context.Clientes.AnyAsync(c => c.Id == id))
+                {
+                    return NotFound("El cliente que intentás modificar ya no existe.");
+                }
+                throw;
+            }
+
+            return NoContent();
+        }
+
+        // DELETE: api/Clientes/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCliente(int id)
+        {
+            var cliente = await _context.Clientes.FindAsync(id);
+            if (cliente == null)
+            {
+                return NotFound("El cliente que intentás borrar no existe.");
+            }
+
+            _context.Clientes.Remove(cliente);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

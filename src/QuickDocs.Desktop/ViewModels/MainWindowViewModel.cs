@@ -2,6 +2,7 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using QuickDocs.Desktop.Views;
+using QuickDocs.UI.Views;
 
 namespace QuickDocs.Desktop.ViewModels
 {
@@ -46,7 +47,7 @@ namespace QuickDocs.Desktop.ViewModels
         }
         private void EjecutarMostrarHistorial()
         {
-            ContenidoActual = new HistorialView();
+            ContenidoActual = new QuickDocs.UI.Views.HistorialView();
         }
         private void EjecutarMostrarPerfil() // 👈 Agregado
         {
@@ -58,11 +59,12 @@ namespace QuickDocs.Desktop.ViewModels
         }
         private void EjecutarMostrarClientes() // 👈 Nuevo
         {
-            ContenidoActual = new ClientesView();
+            ContenidoActual = new QuickDocs.UI.Views.ClientesView();
         }
         private void EjecutarMostrarArticulos()
         {
-            ContenidoActual = new ArticulosView();
+            // 🚀 Cambiamos para usar la vista de la capa compartida UI
+            ContenidoActual = new QuickDocs.UI.Views.ArticulosView();
         }
         private void EjecutarMostrarRecibo()
         {

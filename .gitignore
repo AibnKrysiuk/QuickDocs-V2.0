@@ -11,3 +11,32 @@
 # Archivos temporales del sistema operativo
 .DS_Store
 Thumbs.db
+
+# Archivos de compilación y salida de .NET
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# Herramientas de IDE (VS Code, Visual Studio, JetBrains)
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.idea/
+
+# Base de datos local (SQLite) y archivos temporales de BD
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# PDFs generados localmente (para no ensuciar el repo con pruebas)
+QuickDocs/Presupuestos/
+*.pdf

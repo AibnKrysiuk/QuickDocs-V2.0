@@ -13,26 +13,45 @@
             </StackPanel>
             
             <Button Grid.Column="1" Content="📋 Ver Historial" 
-                    Background="#64748B" Foreground="White" 
-                    Padding="12,8" CornerRadius="6" FontSize="13" FontWeight="Medium"
-                    VerticalAlignment="Top"/>
+                Command="{Binding NavegarAHistorialCommand}"
+                Background="#64748B" Foreground="White" 
+                Padding="12,8" CornerRadius="6" FontSize="13" FontWeight="Medium"
+                VerticalAlignment="Top"/>
         </Grid>
 
         <Border Grid.Row="1" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,15">
-            <Grid ColumnDefinitions="*, Auto" ColumnSpacing="20">
-                
-                <StackPanel Grid.Column="0" Spacing="5">
-                    <TextBlock Text="Cliente / Razón Social" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
-                    <TextBox Text="{Binding TextoBuscarCliente, Mode=TwoWay}" PlaceholderText="Escriba el nombre del cliente o empresa..." HorizontalAlignment="Stretch"/>
-                </StackPanel>
-                
-                <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Orientation="Horizontal" Spacing="8">
-                    <TextBlock Text="Documento válido por" FontSize="13" Foreground="#475569" VerticalAlignment="Center"/>
-                    <TextBox Text="{Binding DiasValidez, Mode=TwoWay}" Width="50" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
-                    <TextBlock Text="días." FontSize="13" Foreground="#475569" VerticalAlignment="Center"/>
-                </StackPanel>
-                
-            </Grid>
+            <StackPanel Spacing="12">
+                <Grid ColumnDefinitions="*, Auto" ColumnSpacing="20">
+                    <StackPanel Grid.Column="0" Spacing="5">
+                        <TextBlock Text="Cliente / Razón Social" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                        <AutoCompleteBox Text="{Binding TextoBuscarCliente, Mode=TwoWay}" 
+                            ItemsSource="{Binding SugerenciasClientes}"
+                            FilterMode="Contains"
+                            PlaceholderText="Escriba el nombre del cliente o empresa..." 
+                            HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="Documento válido por" FontSize="13" Foreground="#475569" VerticalAlignment="Center"/>
+                        <TextBox Text="{Binding DiasValidez, Mode=TwoWay}" Width="50" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="días." FontSize="13" Foreground="#475569" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid ColumnDefinitions="1*, 2*" ColumnSpacing="15">
+                    <StackPanel Grid.Column="0" Spacing="5">
+                        <TextBlock Text="CUIT / CUIL (Opcional)" FontSize="11" Foreground="#64748B"/>
+                        <TextBox Text="{Binding ClienteCuitLibre, Mode=TwoWay}" 
+                                 PlaceholderText="Ej. 20-XXXXXXXX-9"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Spacing="5">
+                        <TextBlock Text="Dirección Comercial (Opcional)" FontSize="11" Foreground="#64748B"/>
+                        <TextBox Text="{Binding ClienteDireccionLibre, Mode=TwoWay}" 
+                                 PlaceholderText="Ej. Av. 7 nro 123, La Plata"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
         </Border>
 
         <Border Grid.Row="2" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,15">
@@ -42,7 +61,10 @@
                 <Grid ColumnDefinitions="2*, 1*, 80, 120, Auto" ColumnSpacing="12">
                     <StackPanel Grid.Column="0" Spacing="5">
                         <TextBlock Text="Nombre / Descripción" FontSize="11" Foreground="#475569"/>
-                        <TextBox Text="{Binding DescripcionRenglon, Mode=TwoWay}" PlaceholderText="Ej. Tornillo Hexagonal"/>
+                        <AutoCompleteBox Text="{Binding TextoBuscarItem, Mode=TwoWay}" 
+                                        ItemsSource="{Binding SugerenciasItems}"
+                                        FilterMode="Contains"
+                                        PlaceholderText="Ej. Tornillo Hexagonal o busque en catálogo..."/>
                     </StackPanel>
                     
                     <StackPanel Grid.Column="1" Spacing="5">

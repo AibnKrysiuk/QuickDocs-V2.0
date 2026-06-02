@@ -1,0 +1,130 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:QuickDocs.UI.ViewModels"
+             x:Class="QuickDocs.UI.Views.PerfilView"
+             x:DataType="vm:PerfilViewModel">
+    
+    <Grid RowDefinitions="Auto, *" Margin="20" Background="Transparent">
+        
+        <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,15">
+            <TextBlock Text="⚙️ Configuración del Comercio" FontSize="22" FontWeight="Bold" Foreground="#0F172A"/>
+            <TextBlock Text="Personalice la información que aparecerá en sus documentos y facturas." FontSize="13" Foreground="#64748B"/>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="20">
+                
+                <Grid ColumnDefinitions="*, 2*" ColumnSpacing="20">
+                    
+                    <Border Grid.Column="0" Background="White" Padding="20" CornerRadius="10" BoxShadow="0 4 6 -1 #10000000" VerticalAlignment="Top">
+                        <StackPanel Spacing="15" HorizontalAlignment="Center">
+                            <TextBlock Text="Logo de la Empresa" FontSize="14" FontWeight="Bold" Foreground="#1E293B" HorizontalAlignment="Center"/>
+                            
+                            <Grid Width="180" Height="180">
+                                <Rectangle Fill="#F8FAFC" 
+                                        Stroke="#E2E8F0" 
+                                        StrokeThickness="2" 
+                                        StrokeDashArray="4,4" 
+                                        RadiusX="10" 
+                                        RadiusY="10"/>
+                                
+                                <TextBlock Text="📸" 
+                                        FontSize="48" 
+                                        HorizontalAlignment="Center" 
+                                        VerticalAlignment="Center" 
+                                        Opacity="0.2"
+                                        IsVisible="{Binding LogoImagen, Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
+
+                                <Image Source="{Binding LogoImagen}" 
+                                    Margin="8"
+                                    Stretch="Uniform"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    IsVisible="{Binding LogoImagen, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                            </Grid>
+                            
+                            <Button Content="Seleccionar Logo" Command="{Binding SeleccionarLogoCommand}" Background="#1E293B" Foreground="White" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="10" CornerRadius="6"/>
+                            <TextBlock Text="Formatos: PNG, JPG (Máx 2MB)" FontSize="11" Foreground="#94A3B8" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding LogoPath}" 
+                                    FontSize="10" 
+                                    Foreground="#64748B" 
+                                    HorizontalAlignment="Center" 
+                                    TextWrapping="Wrap" 
+                                    Margin="0,8,0,0"
+                                    IsVisible="{Binding LogoPath, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <StackPanel Grid.Column="1" Spacing="15">
+                        
+                        <Border Background="White" Padding="20" CornerRadius="10" BoxShadow="0 2 4 0 #10000000">
+                            <StackPanel Spacing="15">
+                                <TextBlock Text="Datos Identitarios" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
+                                
+                                <StackPanel Spacing="5">
+                                    <TextBlock Text="Nombre Comercial o Razón Social" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                                    <TextBox Text="{Binding NombreFantasia, Mode=TwoWay}" PlaceholderText="Ej. Mi Comercio S.H. / Juan Pérez Ventas"/>
+                                </StackPanel>
+
+                                <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
+                                    <StackPanel Grid.Column="0" Spacing="5">
+                                        <TextBlock Text="CUIT / CUIL" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                                        <TextBox Text="{Binding CuitCuil, Mode=TwoWay}" PlaceholderText="Ej. 20-XXXXXXXX-X"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Spacing="5">
+                                        <TextBlock Text="Condición frente al IVA" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                                        <TextBox Text="{Binding CondicionIva, Mode=TwoWay}" PlaceholderText="Ej. Responsable Inscripto / Monotributo"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="White" Padding="20" CornerRadius="10" BoxShadow="0 2 4 0 #10000000">
+                            <StackPanel Spacing="15">
+                                <TextBlock Text="Contacto y Ubicación" FontSize="14" FontWeight="Bold" Foreground="#1E293B"/>
+                                
+                                <Grid ColumnDefinitions="*, *" ColumnSpacing="15">
+                                    <StackPanel Grid.Column="0" Spacing="5">
+                                        <TextBlock Text="Teléfono Principal" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                                        <TextBox Text="{Binding TelefonoPrincipal, Mode=TwoWay}" PlaceholderText="Ej. 11 1234-5678"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Spacing="5">
+                                        <TextBlock Text="Teléfono Secundario" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                                        <TextBox Text="{Binding TelefonoSecundario, Mode=TwoWay}" PlaceholderText="Opcional..."/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <StackPanel Spacing="5">
+                                    <TextBlock Text="Correo Electrónico de Contacto" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                                    <TextBox Text="{Binding EmailContacto, Mode=TwoWay}" PlaceholderText="Ej. contacto@micomercio.com"/>
+                                </StackPanel>
+
+                                <StackPanel Spacing="5">
+                                    <TextBlock Text="Dirección Comercial Completa" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                                    <TextBox Text="{Binding Direccion, Mode=TwoWay}" PlaceholderText="Ej. Av. Siempre Viva 742, Morón, CABA"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+                <Grid ColumnDefinitions="*, *" ColumnSpacing="15" Margin="0,5,0,20">
+                    <Button Grid.Column="0"
+                            Content="👁️ Previsualizar Cabecera" 
+                            Command="{Binding PrevisualizarCabeceraCommand}"
+                            Background="#334155" Foreground="White" 
+                            Padding="15,16" FontSize="14" FontWeight="SemiBold" CornerRadius="8"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+
+                    <Button Grid.Column="1"
+                            Content="💾 Guardar Cambios del Perfil" 
+                            Command="{Binding GuardarPerfilCommand}"
+                            Background="#10B981" Foreground="White" 
+                            Padding="15,16" FontSize="14" FontWeight="Bold" CornerRadius="8"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                </Grid>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

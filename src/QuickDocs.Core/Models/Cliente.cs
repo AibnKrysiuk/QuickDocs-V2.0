@@ -22,6 +22,7 @@ namespace QuickDocs.Core.Models
 
         // Auditoría y Relación (Importante para la v2.0)
         public DateTime FechaAlta { get; set; } = DateTime.Now;
+        public bool EsProspecto { get; set; } = false;
         
     }
 }

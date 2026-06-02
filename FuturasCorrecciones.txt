@@ -1,0 +1,7 @@
+1/06/26 
+
+Cabecera de los documentos
+Agregar Campo Localidad al Perfil, duplicado en la impresion del PDF
+
+Presupuestos
+Agregar el numero de documento y las firmas al final.

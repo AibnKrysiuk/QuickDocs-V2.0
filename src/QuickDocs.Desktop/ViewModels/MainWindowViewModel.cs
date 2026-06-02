@@ -47,15 +47,38 @@ namespace QuickDocs.Desktop.ViewModels
         }
         private void EjecutarMostrarHistorial()
         {
-            ContenidoActual = new QuickDocs.UI.Views.HistorialView();
+            // Instancia limpia estándar
+            var vistaHistorial = new QuickDocs.UI.Views.HistorialView();
+
+            if (vistaHistorial.DataContext is QuickDocs.UI.ViewModels.HistorialViewModel historialVM)
+            {
+                historialVM.OnSolicitarModificacion += (presupuestoAEditar) =>
+                {
+                    Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                    {
+                        var presupuestoVM = new QuickDocs.UI.ViewModels.PresupuestoViewModel();
+                        presupuestoVM.CargarPresupuestoExistente(presupuestoAEditar);
+
+                        var vistaPresupuesto = new QuickDocs.UI.Views.PresupuestoView
+                        {
+                            DataContext = presupuestoVM
+                        };
+
+                        ContenidoActual = vistaPresupuesto;
+                    });
+                };
+            }
+
+            ContenidoActual = vistaHistorial;
         }
-        private void EjecutarMostrarPerfil() // 👈 Agregado
+
+        private void EjecutarMostrarPresupuesto()
         {
-            ContenidoActual = new PerfilView();
-        }
-        private void EjecutarMostrarPresupuesto() 
+            // Al ir directo, simplemente mostramos la vista limpia
+            ContenidoActual = new QuickDocs.UI.Views.PresupuestoView(); 
+        }        private void EjecutarMostrarPerfil() // 👈 Agregado
         {
-            ContenidoActual = new PresupuestoView();
+            ContenidoActual = new QuickDocs.UI.Views.PerfilView();
         }
         private void EjecutarMostrarClientes() // 👈 Nuevo
         {

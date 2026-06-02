@@ -9,6 +9,12 @@ namespace QuickDocs.Backend.Dtos
         public int UsuarioId { get; set; }
 
         public int? ClienteId { get; set; }
+        public string? ClienteNombreLibre { get; set; }
+        
+        // 🎯 PROPIEDADES NUEVAS: Para capturar CUIT, Dirección y los Días de validez desde la UI
+        public string? ClienteCuitLibre { get; set; }
+        public string? ClienteDireccionLibre { get; set; }
+        public int DiasValidez { get; set; } = 15;
 
         public double DescuentoGeneral { get; set; }
 

@@ -2,15 +2,108 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using QuickDocs.Core.Models;
-using System;
+// using System;
+// using System.IO;
+// using System.Threading.Tasks;
 
 namespace QuickDocs.Backend.Services
 {
     public class DocumentoPdfService
     {
+        // ─── 🏛️ MÉTODO CENTRALIZADO Y OPTIMIZADO PARA LA CABECERA ESTÉTICA ───
+        private void DibujarCabeceraComun(RowDescriptor row, Perfil perfil, string tituloDocumento, string subtituloInfo)
+        {
+            // LADO IZQUIERDO: Espacio exclusivo para el Logo corporativo
+            var colLogo = row.RelativeItem();
+            if (!string.IsNullOrEmpty(perfil.LogoPath) && File.Exists(perfil.LogoPath))
+            {
+                // Se aplica el alto guardado en el perfil si existe, o un alto estimado (ej. 60)
+                colLogo.Height(60).Image(perfil.LogoPath);
+            }
+            else
+            {
+                colLogo.Height(60).Placeholder();
+            }
+
+            // LADO DERECHO: Datos Identitarios, Fiscales y de Contacto alineados a la derecha
+            row.RelativeItem().Column(col =>
+            {
+                // 1. Tipo de Documento (Ej: "PRESUPUESTO")
+                col.Item().AlignRight().Text(tituloDocumento.ToUpper()).FontSize(20).Bold().FontColor(Colors.Blue.Medium);
+                
+                // 2. Nombre de Fantasía o Razón Social (Aplicando tamaño de fuente del perfil o 13 por defecto)
+                string nombreComercial = (perfil.NombreFantasia ?? "SIN NOMBRE COMERCIAL").ToUpper();
+                col.Item().AlignRight().Text(nombreComercial).FontSize(13).Bold();
+
+                // 3. Dirección Comercial
+                string direccion = !string.IsNullOrWhiteSpace(perfil.Direccion) ? perfil.Direccion : "Dirección no especificada";
+                col.Item().AlignRight().Text(direccion).FontSize(10);
+
+                // 4. Localidad / Ubicación
+                if (!string.IsNullOrWhiteSpace(perfil.Direccion))
+                {
+                    col.Item().AlignRight().Text(perfil.Direccion).FontSize(10);
+                }
+
+                // 5. CUIT / CUIL
+                string cuit = !string.IsNullOrWhiteSpace(perfil.CuitCuil) ? perfil.CuitCuil : "XX-XXXXXXXX-X";
+                col.Item().AlignRight().Text($"CUIT: {cuit}").FontSize(10);
+
+                // 6. Teléfonos (Unificados en una sola línea)
+                string telefonos = perfil.TelefonoPrincipal ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(perfil.TelefonoSecundario))
+                {
+                    telefonos += $" - {perfil.TelefonoSecundario}";
+                }
+                if (!string.IsNullOrWhiteSpace(telefonos))
+                {
+                    col.Item().AlignRight().Text($"Tel: {telefonos}").FontSize(10);
+                }
+
+                // 7. Email de contacto
+                string email = !string.IsNullOrWhiteSpace(perfil.EmailContacto) ? perfil.EmailContacto : "Email no especificado";
+                col.Item().AlignRight().Text(email).FontSize(10);
+
+                // 📄 Bloque dinámico adicional de información temporal (si existe)
+                if (!string.IsNullOrWhiteSpace(subtituloInfo))
+                {
+                    col.Item().PaddingTop(6).AlignRight().Text(subtituloInfo).FontSize(9).FontColor(Colors.Grey.Darken2);
+                }
+            });
+        }
+
+        // ─── ENDPOINT DE PREVISUALIZACIÓN PARA LA VENTANA DE PERFIL ───
+        public byte[] GenerarPdfPruebaCabecera(Perfil perfil)
+        {
+            return Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4);
+                    page.Margin(1, Unit.Centimetre);
+                    page.PageColor(Colors.White);
+
+                    page.Header().Row(row =>
+                    {
+                        DibujarCabeceraComun(row, perfil, "PRESUPUESTO", string.Empty);
+                    });
+
+                    page.Content().PaddingVertical(1.5f, Unit.Centimetre).Column(col =>
+                    {
+                        col.Item().Border(1).BorderColor(Colors.Grey.Lighten1).Padding(20).AlignCenter().Column(c =>
+                        {
+                            c.Item().Text("Vista Previa del Cuerpo del Documento").Bold().FontSize(12).FontColor(Colors.Blue.Medium);
+                            c.Item().PaddingTop(5).Text("Este recuadro simula el espacio donde se listarán tus artículos, renglones, subtotales y firmas según el comprobante que emitas (Presupuesto, Recibo, Remito o Nota de Crédito).").AlignCenter().FontSize(10).FontColor(Colors.Grey.Darken1);
+                        });
+                    });
+                });
+            }).GeneratePdf();
+        }
+
+        // ─── DOCUMENTO 1: PRESUPUESTO ───
         public byte[] GenerarPresupuestoPdf(Presupuesto presupuesto, Perfil perfil, Cliente cliente)
         {
-            var documento = Document.Create(container =>
+            return Document.Create(container =>
             {
                 container.Page(page =>
                 {
@@ -18,53 +111,46 @@ namespace QuickDocs.Backend.Services
                     page.Size(PageSizes.A4);
                     page.DefaultTextStyle(x => x.FontSize(10).FontFamily(Fonts.Arial));
 
-                    // 1. EL ENCABEZADO
                     page.Header().Row(row =>
                     {
-                        // Lado Izquierdo: Datos del Perfil
-                        row.RelativeItem().Column(col =>
-                        {
-                            col.Item().Text(perfil.NombreFantasia).FontSize(20).Bold().FontColor(Colors.Blue.Darken3);
-                            col.Item().Text($"Dirección: {perfil.Direccion}");
-                            col.Item().Text($"Teléfono: {perfil.TelefonoPrincipal}");
-                        });
-
-                        // Lado Derecho: Datos del Presupuesto (Alineados correctamente)
-                        row.RelativeItem().AlignRight().Column(col =>
-                        {
-                            col.Item().Text("PRESUPUESTO").FontSize(18).Bold();
-                            col.Item().Text($"Fecha: {presupuesto.FechaEmision.ToLocalTime():dd/MM/yyyy}");
-                            col.Item().Text($"Vence: {presupuesto.FechaVencimiento.ToLocalTime():dd/MM/yyyy}");
-                            col.Item().Text($"Estado: {presupuesto.Estado}").Bold();
-                        });
+                        string info = $"Fecha: {presupuesto.FechaEmision.ToLocalTime():dd/MM/yyyy}\n" +
+                                     $"Estado: {presupuesto.Estado}";
+                        DibujarCabeceraComun(row, perfil, "PRESUPUESTO", info);
                     });
 
-                    // 2. EL CONTENIDO
                     page.Content().PaddingVertical(1, Unit.Centimetre).Column(col =>
                     {
-                        // Recuadro del Cliente
+                        // 🎯 BLOQUE DE CLIENTE ELÁSTICO CONDICIONAL
                         col.Item().Border(1).BorderColor(Colors.Grey.Lighten2).Padding(10).Background(Colors.Grey.Lighten3).Column(c =>
                         {
                             c.Item().Text("CLIENTE:").Bold().FontSize(11);
-                            c.Item().Text($"Nombre: {cliente.Nombre}");
-                            c.Item().Text($"CUIT/CUIL: {cliente.CuitCuil}");
-                            c.Item().Text($"Dirección: {cliente.Direccion}");
+                            
+                            // Al garantizar un objeto Cliente real, leemos directo de sus propiedades
+                            c.Item().Text($"Nombre: {cliente?.Nombre ?? "Consumidor Final / Público General"}");
+                            
+                            if (!string.IsNullOrWhiteSpace(cliente?.CuitCuil))
+                            {
+                                c.Item().Text($"CUIT/CUIL: {cliente.CuitCuil}");
+                            }
+                            
+                            if (!string.IsNullOrWhiteSpace(cliente?.Direccion))
+                            {
+                                c.Item().Text($"Dirección: {cliente.Direccion}");
+                            }
                         });
 
                         col.Item().PaddingTop(1, Unit.Centimetre);
 
-                        // La Tabla de Renglones
                         col.Item().Table(tabla =>
                         {
                             tabla.ColumnsDefinition(columns =>
                             {
-                                columns.ConstantColumn(50);  // Cantidad
-                                columns.RelativeColumn();      // Descripción
-                                columns.ConstantColumn(80);  // Precio Unitario
-                                columns.ConstantColumn(80);  // Importe Total
+                                columns.ConstantColumn(50);  
+                                columns.RelativeColumn();      
+                                columns.ConstantColumn(80);  
+                                columns.ConstantColumn(80);  
                             });
 
-                            // Encabezado de la Tabla
                             tabla.Header(header =>
                             {
                                 header.Cell().Background(Colors.Blue.Darken3).Padding(5).Text("Cant.").FontColor(Colors.White).Bold();
@@ -73,7 +159,6 @@ namespace QuickDocs.Backend.Services
                                 header.Cell().Background(Colors.Blue.Darken3).Padding(5).AlignRight().Text("Importe").FontColor(Colors.White).Bold();
                             });
 
-                            // Renglones
                             foreach (var detalle in presupuesto.Detalles)
                             {
                                 tabla.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(5).Text($"{detalle.Cantidad:G}");
@@ -83,52 +168,42 @@ namespace QuickDocs.Backend.Services
                             }
                         });
 
-                        // Bloque de Totales
-                        col.Item().AlignRight().PaddingTop(20).Width(200).Column(totalesCol =>
+                        // BLOQUE INFERIOR DE TOTALES Y VALIDEZ
+                        col.Item().PaddingTop(20).Row(rowTotales =>
                         {
-                            totalesCol.Item().Row(r => 
-                            { 
-                                r.RelativeItem().Text("Subtotal:"); 
-                                r.ConstantItem(80).AlignRight().Text($"${presupuesto.Subtotal:N2}"); 
-                            });
-                            
-                            if (presupuesto.Descuento > 0)
+                            // Lado izquierdo inferior: Frase dinámica de validez
+                            int diasCalculados = (presupuesto.FechaVencimiento.Date - presupuesto.FechaEmision.Date).Days;
+                            if (diasCalculados <= 0) diasCalculados = 15; // Contingencia por horas UTC
+
+                            rowTotales.RelativeItem().AlignLeft().AlignBottom().Column(colValidez =>
                             {
-                                totalesCol.Item().Row(r => 
-                                { 
-                                    r.RelativeItem().Text("Descuento:").FontColor(Colors.Red.Medium); 
-                                    r.ConstantItem(80).AlignRight().Text($"-${presupuesto.Descuento:N2}").FontColor(Colors.Red.Medium); 
-                                });
-                            }
-                            
-                            totalesCol.Item().Row(r => 
-                            { 
-                                r.RelativeItem().Text("TOTAL:").Bold().FontSize(12); 
-                                r.ConstantItem(80).AlignRight().Text($"${presupuesto.Total:N2}").Bold().FontSize(12); 
+                                colValidez.Item().Text($"📌 Documento válido por {diasCalculados} días.").FontSize(10).Italic().Bold().FontColor(Colors.Grey.Darken3);
+                            });
+
+                            // Lado derecho inferior: Totales numéricos
+                            rowTotales.ConstantItem(200).Column(totalesCol =>
+                            {
+                                totalesCol.Item().Row(r => { r.RelativeItem().Text("Subtotal:"); r.ConstantItem(80).AlignRight().Text($"${presupuesto.Subtotal:N2}"); });
+                                if (presupuesto.Descuento > 0)
+                                {
+                                    totalesCol.Item().Row(r => { r.RelativeItem().Text("Descuento:").FontColor(Colors.Red.Medium); r.ConstantItem(80).AlignRight().Text($"-${presupuesto.Descuento:N2}").FontColor(Colors.Red.Medium); });
+                                }
+                                totalesCol.Item().Row(r => { r.RelativeItem().Text("TOTAL:").Bold().FontSize(12); r.ConstantItem(80).AlignRight().Text($"${presupuesto.Total:N2}").Bold().FontSize(12); });
                             });
                         });
                     });
 
-                    // 3. EL PIE DE PÁGINA
-                    page.Footer().AlignCenter().Text(x =>
-                    {
-                        x.CurrentPageNumber();
-                        x.Span(" / "); // ¡Cambiado de Text a Span!
-                        x.TotalPages();
-                    });
+                    page.Footer().AlignCenter().Text(x => { x.CurrentPageNumber(); x.Span(" / "); x.TotalPages(); });
                 });
-            });
-
-            return documento.GeneratePdf();
+            }).GeneratePdf();
         }
-    
-        // 🎯 NUEVO MÉTODO PARA GENERAR EL PDF DEL RECIBO
+
+        // ─── DOCUMENTO 2: RECIBO ───
         public async Task<byte[]> GenerarReciboPdfAsync(Recibo recibo, Perfil perfil, Cliente cliente)
         {
-            // Usamos Task.Run para que corra de forma asíncrona sin bloquear el hilo principal de la API
             return await Task.Run(() =>
             {
-                var documento = Document.Create(container =>
+                return Document.Create(container =>
                 {
                     container.Page(page =>
                     {
@@ -136,44 +211,24 @@ namespace QuickDocs.Backend.Services
                         page.Size(PageSizes.A4);
                         page.DefaultTextStyle(x => x.FontSize(10).FontFamily(Fonts.Arial));
 
-                        // 1. EL ENCABEZADO (Mismo diseño azul que el presupuesto)
                         page.Header().Row(row =>
                         {
-                            // Lado Izquierdo: Datos del Perfil (Tu tía)
-                            row.RelativeItem().Column(col =>
-                            {
-                                col.Item().Text(perfil.NombreFantasia).FontSize(20).Bold().FontColor(Colors.Blue.Darken3);
-                                col.Item().Text($"Dirección: {perfil.Direccion}");
-                                col.Item().Text($"Teléfono: {perfil.TelefonoPrincipal}");
-                            });
-
-                            // Lado Derecho: Datos del Recibo
-                            row.RelativeItem().AlignRight().Column(col =>
-                            {
-                                col.Item().Text("RECIBO DE PAGO").FontSize(18).Bold().FontColor(Colors.Green.Darken3);
-                                col.Item().Text($"Fecha: {recibo.FechaEmision.ToLocalTime():dd/MM/yyyy}");
-                                if (recibo.RemitoId.HasValue)
-                                {
-                                    col.Item().Text($"Remito Asociado: #{recibo.RemitoId.Value}");
-                                }
-                                col.Item().Text($"Comprobante: #{recibo.Id.ToString("D8")}"); // Formato 00000001
-                            });
+                            string info = $"Fecha: {recibo.FechaEmision.ToLocalTime():dd/MM/yyyy}\n" +
+                                         (recibo.RemitoId.HasValue ? $"Remito Asociado: #{recibo.RemitoId.Value}\n" : "") +
+                                         $"Comprobante: #{recibo.Id.ToString("D8")}";
+                            DibujarCabeceraComun(row, perfil, "RECIBO DE PAGO", info);
                         });
 
-                        // 2. EL CONTENIDO
                         page.Content().PaddingVertical(1, Unit.Centimetre).Column(col =>
                         {
-                            // Bloque Destacado: El Importe En Grande
                             col.Item().Border(2).BorderColor(Colors.Green.Darken3).Background(Colors.Green.Lighten5).Padding(15).Row(row =>
                             {
                                 row.RelativeItem().AlignMiddle().Text("RECIBIMOS LA SUMA DE:").Bold().FontSize(12).FontColor(Colors.Green.Darken4);
-                                row.ConstantItem(150).AlignRight().AlignMiddle().Background(Colors.White).Border(1).BorderColor(Colors.Green.Darken3).Padding(5).AlignCenter()
-                                    .Text($"${recibo.ImporteRecibido:N2}").FontSize(16).Bold().FontColor(Colors.Green.Darken4);
+                                row.ConstantItem(150).AlignRight().AlignMiddle().Background(Colors.White).Border(1).BorderColor(Colors.Green.Darken3).Padding(5).AlignCenter().Text($"${recibo.ImporteRecibido:N2}").FontSize(16).Bold().FontColor(Colors.Green.Darken4);
                             });
 
                             col.Item().PaddingTop(0.5f, Unit.Centimetre);
 
-                            // Recuadro del Cliente (Mismo estilo gris que el presupuesto para mantener coherencia)
                             col.Item().Border(1).BorderColor(Colors.Grey.Lighten2).Padding(10).Background(Colors.Grey.Lighten3).Column(c =>
                             {
                                 c.Item().Text("DE / PARA:").Bold().FontSize(11);
@@ -188,30 +243,16 @@ namespace QuickDocs.Backend.Services
 
                             col.Item().PaddingTop(1, Unit.Centimetre);
 
-                            // Detalles del Recibo (Concepto y Forma de Pago)
                             col.Item().Background(Colors.Grey.Lighten4).Border(1).BorderColor(Colors.Grey.Lighten2).Padding(12).Column(det =>
-                            {
-                                det.Item().Row(r =>
                                 {
-                                    r.ConstantItem(120).Text("En Concepto de:").Bold();
-                                    r.RelativeItem().Text(string.IsNullOrEmpty(recibo.Detalle) ? "Pago / Entrega general a cuenta." : recibo.Detalle);
+                                    det.Item().Row(r => { r.ConstantItem(120).Text("En Concepto de:").Bold(); r.RelativeItem().Text(string.IsNullOrEmpty(recibo.Detalle) ? "Pago / Entrega general a cuenta." : recibo.Detalle); });
+                                    det.Item().PaddingVertical(5).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
+                                    det.Item().Row(r => { r.ConstantItem(120).Text("Forma de Pago:").Bold(); string formaTexto = recibo.FormaPago.ToString(); r.RelativeItem().Text(formaTexto).Bold().FontColor(Colors.Blue.Darken3); });
                                 });
 
-                                det.Item().PaddingVertical(5).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
-
-                                det.Item().Row(r =>
-                                {
-                                    r.ConstantItem(120).Text("Forma de Pago:").Bold();
-                                    // Mapea el Enum a texto (podes personalizar el switch según tus Enums reales)
-                                    string formaTexto = recibo.FormaPago.ToString(); 
-                                    r.RelativeItem().Text(formaTexto).Bold().FontColor(Colors.Blue.Darken3);
-                                });
-                            });
-
-                            // Espacio para la firma (Muy importante en los recibos físicos que imprima tu tía)
                             col.Item().PaddingTop(3, Unit.Centimetre).Row(row =>
                             {
-                                row.RelativeItem(); // Espacio vacío izquierdo
+                                row.RelativeItem();
                                 row.ConstantItem(200).Column(firmaCol =>
                                 {
                                     firmaCol.Item().BorderTop(1).BorderColor(Colors.Grey.Darken1).PaddingTop(5).AlignCenter().Text("Firma y Aclaración").FontSize(9);
@@ -220,26 +261,18 @@ namespace QuickDocs.Backend.Services
                             });
                         });
 
-                        // 3. EL PIE DE PÁGINA
-                        page.Footer().AlignCenter().Text(x =>
-                        {
-                            x.CurrentPageNumber();
-                            x.Span(" / ");
-                            x.TotalPages();
-                        });
+                        page.Footer().AlignCenter().Text(x => { x.CurrentPageNumber(); x.Span(" / "); x.TotalPages(); });
                     });
-                });
-
-                return documento.GeneratePdf();
+                }).GeneratePdf();
             });
         }
-    
-        // 🎯 MÉTODO PARA GENERAR EL PDF DEL REMITO (Logística y Entrega)
+
+        // ─── DOCUMENTO 3: REMITO ───
         public async Task<byte[]> GenerarRemitoPdfAsync(Remito remito, Perfil perfil, Cliente cliente)
         {
             return await Task.Run(() =>
             {
-                var documento = Document.Create(container =>
+                return Document.Create(container =>
                 {
                     container.Page(page =>
                     {
@@ -247,49 +280,28 @@ namespace QuickDocs.Backend.Services
                         page.Size(PageSizes.A4);
                         page.DefaultTextStyle(x => x.FontSize(10).FontFamily(Fonts.Arial));
 
-                        // 1. EL ENCABEZADO (Diseño en tonos Grafito/Gris Oscuro)
                         page.Header().Row(row =>
                         {
-                            // Lado Izquierdo: Datos de tu tía (Emisor)
-                            row.RelativeItem().Column(col =>
-                            {
-                                col.Item().Text(perfil.NombreFantasia).FontSize(20).Bold().FontColor(Colors.Grey.Darken3);
-                                col.Item().Text($"Dirección: {perfil.Direccion}");
-                                col.Item().Text($"Teléfono: {perfil.TelefonoPrincipal}");
-                            });
-
-                            // Lado Derecho: Datos del Remito
-                            row.RelativeItem().AlignRight().Column(col =>
-                            {
-                                col.Item().Text("REMITO").FontSize(22).Bold().FontColor(Colors.Grey.Darken4);
-                                col.Item().Text($"Documento No Válido como Factura").FontSize(8).Italic().FontColor(Colors.Red.Medium);
-                                col.Item().Text($"Fecha Emisión: {remito.FechaEmision.ToLocalTime():dd/MM/yyyy}");
-                                if (remito.PresupuestoId.HasValue)
-                                {
-                                    col.Item().Text($"Origen Presupuesto: #{remito.PresupuestoId.Value}");
-                                }
-                                col.Item().Text($"Número: #{remito.Id.ToString("D8")}");
-                            });
+                            string info = $"Documento No Válido como Factura\nFecha Emisión: {remito.FechaEmision.ToLocalTime():dd/MM/yyyy}\n" +
+                                         (remito.PresupuestoId.HasValue ? $"Origen Presupuesto: #{remito.PresupuestoId.Value}\n" : "") +
+                                         $"Número: #{remito.Id.ToString("D8")}";
+                            DibujarCabeceraComun(row, perfil, "REMITO", info);
                         });
 
-                        // 2. EL CONTENIDO
                         page.Content().PaddingVertical(1, Unit.Centimetre).Column(col =>
                         {
-                            // Fila con dos columnas: Datos del Cliente (izq) y Datos de Entrega (der)
                             col.Item().Row(row =>
                             {
-                                // Datos del Cliente
                                 row.RelativeItem().Border(1).BorderColor(Colors.Grey.Lighten2).Padding(10).Background(Colors.Grey.Lighten4).Column(c =>
                                 {
                                     c.Item().Text("DESTINATARIO:").Bold().FontSize(11).FontColor(Colors.Grey.Darken3);
                                     c.Item().Text($"Nombre: {cliente.Nombre}");
                                     c.Item().Text($"CUIT/CUIL: {cliente.CuitCuil}");
-                                    c.Item().Text($"Teléfono Ref: {cliente.Direccion}"); // Usa campos genéricos si no tenés teléfono en el modelo
+                                    c.Item().Text($"Teléfono Ref: {cliente.Direccion}");
                                 });
 
-                                row.ConstantItem(15); // Espacio de separación del medio
+                                row.ConstantItem(15);
 
-                                // Bloque de Logística: Dirección de Entrega Destacada
                                 row.RelativeItem().Border(1).BorderColor(Colors.Orange.Darken2).Padding(10).Background(Colors.Orange.Lighten5).Column(d =>
                                 {
                                     d.Item().Text("LUGAR DE ENTREGA:").Bold().FontSize(11).FontColor(Colors.Orange.Darken3);
@@ -300,17 +312,9 @@ namespace QuickDocs.Backend.Services
 
                             col.Item().PaddingTop(0.8f, Unit.Centimetre);
 
-                            // La Tabla de Renglones (Acá se listan los productos a entregar)
                             col.Item().Table(tabla =>
                             {
-                                tabla.ColumnsDefinition(columns =>
-                                {
-                                    columns.ConstantColumn(60);   // Cantidad
-                                    columns.RelativeColumn();       // Descripción / Artículo
-                                    columns.ConstantColumn(100);  // Observaciones / Estado
-                                });
-
-                                // Encabezado de la Tabla (Gris Oscuro)
+                                tabla.ColumnsDefinition(columns => { columns.ConstantColumn(60); columns.RelativeColumn(); columns.ConstantColumn(100); });
                                 tabla.Header(header =>
                                 {
                                     header.Cell().Background(Colors.Grey.Darken3).Padding(6).Text("Cant.").FontColor(Colors.White).Bold();
@@ -318,62 +322,44 @@ namespace QuickDocs.Backend.Services
                                     header.Cell().Background(Colors.Grey.Darken3).Padding(6).Text("Control").FontColor(Colors.White).Bold();
                                 });
 
-                                // Renglones de la mercadería
                                 foreach (var detalle in remito.Detalles)
                                 {
                                     tabla.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(6).Text($"{detalle.Cantidad:G}");
                                     tabla.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(6).Text(detalle.DescripcionSnapshot);
-                                    // Renglón vacío o con guiones para que el transportista o cliente tilde manualmente al contar
                                     tabla.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(6).Text("[  ] Ok").FontColor(Colors.Grey.Lighten1);
                                 }
                             });
 
-                            // 3. SECCIÓN DE CONFORMIDAD Y RECEPCIÓN (Pie del contenido del Remito)
                             col.Item().PaddingTop(2.5f, Unit.Centimetre).Row(row =>
                             {
-                                // Espacio izquierdo para aclaraciones del chofer
                                 row.RelativeItem().Column(nota =>
                                 {
                                     nota.Item().Text("Notas del Transportista:").FontSize(9).Bold().FontColor(Colors.Grey.Darken1);
                                     nota.Item().PaddingTop(5).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
                                     nota.Item().PaddingTop(12).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
                                 });
-
-                                row.ConstantItem(40); // Separador
-
-                                // Cuadro de Firma de conformidad de recepción
+                                row.ConstantItem(40);
                                 row.RelativeItem().Column(firmaCol =>
                                 {
-                                    firmaCol.Item().BorderTop(1).BorderColor(Colors.Grey.Darken1).PaddingTop(5).AlignCenter()
-                                        .Text("Firma de Quien Recibe").FontSize(10).Bold();
-                                    
+                                    firmaCol.Item().BorderTop(1).BorderColor(Colors.Grey.Darken1).PaddingTop(5).AlignCenter().Text("Firma de Quien Recibe").FontSize(10).Bold();
                                     firmaCol.Item().PaddingTop(15).Text("Aclaración: ___________________________").FontSize(9).FontColor(Colors.Grey.Darken2);
                                     firmaCol.Item().PaddingTop(8).Text("DNI/CI:       ___________________________").FontSize(9).FontColor(Colors.Grey.Darken2);
-                                    firmaCol.Item().PaddingTop(8).Text("Fecha/Hora:  ____/____/____  ____:____ hs").FontSize(9).FontColor(Colors.Grey.Darken2);
                                 });
                             });
                         });
 
-                        // 4. EL PIE DE PÁGINA (Paginado estándar)
-                        page.Footer().AlignCenter().Text(x =>
-                        {
-                            x.CurrentPageNumber();
-                            x.Span(" / ");
-                            x.TotalPages();
-                        });
+                        page.Footer().AlignCenter().Text(x => { x.CurrentPageNumber(); x.Span(" / "); x.TotalPages(); });
                     });
-                });
-
-                return documento.GeneratePdf();
+                }).GeneratePdf();
             });
         }
-    
-        // 🎯 MÉTODO PARA GENERAR EL PDF DE LA NOTA DE CRÉDITO (Saldos a Favor / Devoluciones)
+
+        // ─── DOCUMENTO 4: NOTA DE CRÉDITO ───
         public async Task<byte[]> GenerarNotaCreditoPdfAsync(NotaCredito notaCredito, Perfil perfil, Cliente cliente)
         {
             return await Task.Run(() =>
             {
-                var documento = Document.Create(container =>
+                return Document.Create(container =>
                 {
                     container.Page(page =>
                     {
@@ -381,46 +367,28 @@ namespace QuickDocs.Backend.Services
                         page.Size(PageSizes.A4);
                         page.DefaultTextStyle(x => x.FontSize(10).FontFamily(Fonts.Arial));
 
-                        // 1. EL ENCABEZADO (Diseño en tonos Bordó / Rojo Oscuro)
                         page.Header().Row(row =>
                         {
-                            // Lado Izquierdo: Datos del Perfil Emisor (Tu tía)
-                            row.RelativeItem().Column(col =>
-                            {
-                                col.Item().Text(perfil.NombreFantasia).FontSize(20).Bold().FontColor(Colors.Red.Darken3);
-                                col.Item().Text($"Dirección: {perfil.Direccion}");
-                                col.Item().Text($"Teléfono: {perfil.TelefonoPrincipal}");
-                            });
-
-                            // Lado Derecho: Datos de la Nota de Crédito
-                            row.RelativeItem().AlignRight().Column(col =>
-                            {
-                                col.Item().Text("NOTA DE CRÉDITO").FontSize(20).Bold().FontColor(Colors.Red.Darken4);
-                                col.Item().Text($"Fecha Emisión: {notaCredito.FechaEmision.ToLocalTime():dd/MM/yyyy}");
-                                col.Item().Text($"Vence (Saldo Válido): {notaCredito.FechaVencimiento.ToLocalTime():dd/MM/yyyy}").FontSize(9).Italic();
-                                col.Item().Text($"Comprobante: #{notaCredito.Id.ToString("D8")}");
-                            });
+                            string info = $"Fecha Emisión: {notaCredito.FechaEmision.ToLocalTime():dd/MM/yyyy}\n" +
+                                         $"Vence (Saldo Válido): {notaCredito.FechaVencimiento.ToLocalTime():dd/MM/yyyy}\n" +
+                                         $"Comprobante: #{notaCredito.Id.ToString("D8")}";
+                            DibujarCabeceraComun(row, perfil, "NOTA DE CRÉDITO", info);
                         });
 
-                        // 2. EL CONTENIDO
                         page.Content().PaddingVertical(1, Unit.Centimetre).Column(col =>
                         {
-                            // Bloque Destacado: El Saldo a Favor / Crédito en Grande
                             col.Item().Border(2).BorderColor(Colors.Red.Darken3).Background(Colors.Red.Lighten5).Padding(15).Row(row =>
                             {
                                 row.RelativeItem().AlignMiddle().Text("CRÉDITO A FAVOR DEL CLIENTE:").Bold().FontSize(12).FontColor(Colors.Red.Darken4);
-                                row.ConstantItem(150).AlignRight().AlignMiddle().Background(Colors.White).Border(1).BorderColor(Colors.Red.Darken3).Padding(5).AlignCenter()
-                                    .Text($"${notaCredito.Total:N2}").FontSize(16).Bold().FontColor(Colors.Red.Darken4);
+                                row.ConstantItem(150).AlignRight().AlignMiddle().Background(Colors.White).Border(1).BorderColor(Colors.Red.Darken3).Padding(5).AlignCenter().Text($"${notaCredito.Total:N2}").FontSize(16).Bold().FontColor(Colors.Red.Darken4);
                             });
 
                             col.Item().PaddingTop(0.5f, Unit.Centimetre);
 
-                            // Recuadro del Cliente (Estilo gris estándar para mantener la línea)
                             col.Item().Border(1).BorderColor(Colors.Grey.Lighten2).Padding(10).Background(Colors.Grey.Lighten3).Column(c =>
                             {
                                 c.Item().Text("CLIENTE / BENEFICIARIO:").Bold().FontSize(11).FontColor(Colors.Grey.Darken3);
                                 c.Item().Text($"Nombre: {cliente.Nombre}");
-                                c.Item().Text($"Id Cliente: {(cliente.Id > 0 ? cliente.Id.ToString() : "No registrado / Público General")}");
                                 if (!string.IsNullOrEmpty(cliente.CuitCuil) && cliente.CuitCuil != "00-00000000-0")
                                 {
                                     c.Item().Text($"CUIT/CUIL: {cliente.CuitCuil}");
@@ -430,35 +398,16 @@ namespace QuickDocs.Backend.Services
 
                             col.Item().PaddingTop(1, Unit.Centimetre);
 
-                            // Detalles y Concepto de la Nota de Crédito
                             col.Item().Background(Colors.Grey.Lighten4).Border(1).BorderColor(Colors.Grey.Lighten2).Padding(12).Column(det =>
                             {
-                                det.Item().Row(r =>
-                                {
-                                    r.ConstantItem(140).Text("Concepto / Motivo:").Bold();
-                                    r.RelativeItem().Text(string.IsNullOrEmpty(notaCredito.Detalle) ? "Devolución de mercadería / Ajuste de saldo." : notaCredito.Detalle);
-                                });
-
+                                det.Item().Row(r => { r.ConstantItem(140).Text("Concepto / Motivo:").Bold(); r.RelativeItem().Text(string.IsNullOrEmpty(notaCredito.Detalle) ? "Devolución de mercadería / Ajuste de saldo." : notaCredito.Detalle); });
                                 det.Item().PaddingVertical(5).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
-
-                                det.Item().Row(r =>
-                                {
-                                    r.ConstantItem(140).Text("Estado del Comprobante:").Bold();
-                                    r.RelativeItem().Text(notaCredito.Estado.ToString()).Bold().FontColor(Colors.Green.Darken3);
-                                });
-
-                                det.Item().PaddingVertical(5).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
-
-                                det.Item().Row(r =>
-                                {
-                                    r.RelativeItem().Text("* Este documento representa un saldo disponible que el cliente podrá utilizar como parte de pago en futuras compras antes de su fecha de vencimiento.").FontSize(8).Italic().FontColor(Colors.Grey.Darken1);
-                                });
+                                det.Item().Row(r => { r.ConstantItem(140).Text("Estado del Comprobante:").Bold(); r.RelativeItem().Text(notaCredito.Estado.ToString()).Bold().FontColor(Colors.Green.Darken3); });
                             });
 
-                            // Firma autorizada del comercio
                             col.Item().PaddingTop(3, Unit.Centimetre).Row(row =>
                             {
-                                row.RelativeItem(); // Desplazar a la derecha
+                                row.RelativeItem();
                                 row.ConstantItem(200).Column(firmaCol =>
                                 {
                                     firmaCol.Item().BorderTop(1).BorderColor(Colors.Grey.Darken1).PaddingTop(5).AlignCenter().Text("Firma Autorizada").FontSize(9);
@@ -467,17 +416,9 @@ namespace QuickDocs.Backend.Services
                             });
                         });
 
-                        // 3. EL PIE DE PÁGINA
-                        page.Footer().AlignCenter().Text(x =>
-                        {
-                            x.CurrentPageNumber();
-                            x.Span(" / ");
-                            x.TotalPages();
-                        });
+                        page.Footer().AlignCenter().Text(x => { x.CurrentPageNumber(); x.Span(" / "); x.TotalPages(); });
                     });
-                });
-
-                return documento.GeneratePdf();
+                }).GeneratePdf();
             });
         }
     }

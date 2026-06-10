@@ -20,9 +20,11 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\QuickDocs.Core\QuickDocs.Core.csproj" />
+    <ProjectReference Include="..\..\QuickDocs.Backend\QuickDocs.Backend.csproj" />
   </ItemGroup>
 </Project>

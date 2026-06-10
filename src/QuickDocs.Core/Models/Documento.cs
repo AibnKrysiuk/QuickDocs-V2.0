@@ -2,6 +2,7 @@ using System;
 
 namespace QuickDocs.Core.Models
 {
+    
     public class Documento
     {
         public int Id { get; set; }

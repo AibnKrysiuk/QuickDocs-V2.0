@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using QuickDocs.Desktop.ViewModels;
 using QuickDocs.UI.ViewModels;
 using QuickDocs.UI.Views;
+using QuickDocs.Core.Models; // 🎯 Aseguramos el acceso a TipoDocumento
 using System;
 
 namespace QuickDocs.Desktop.Views
@@ -18,33 +19,58 @@ namespace QuickDocs.Desktop.Views
             DataContext = mainVm;
 
             // 🛠️ DETECTOR DINÁMICO DE PESTAÑAS
-            // Escuchamos cada vez que cambie el contenido del panel derecho
             mainVm.PropertyChanged += (s, args) =>
             {
                 if (args.PropertyName == nameof(MainWindowViewModel.ContenidoActual))
                 {
-                    // Si la vista activa es un UserControl y su DataContext es el del Historial...
                     if (mainVm.ContenidoActual is UserControl userControl 
                         && userControl.DataContext is HistorialViewModel historialVm)
                     {
-                        // Evitamos que se dupliquen hilos
                         historialVm.OnSolicitarModificacion = null;
 
-                        // 🪝 Enganchamos la acción del botón Editar
-                        // 🪝 Enganchamos la acción del botón Editar (agregamos async aquí)
-                        historialVm.OnSolicitarModificacion = async (presupuestoViejo) =>
+                        historialVm.OnSolicitarModificacion = async (docViejo) =>
                         {
-                            System.Console.WriteLine($"[MAIN] ¡Puente activado! Recibido ID: {presupuestoViejo.Id}");
+                            System.Console.WriteLine($"[MAIN] ¡Puente activado! Recibido ID: {docViejo.Id}, Tipo: {docViejo.Tipo}");
 
-                            // Creamos la pantalla de destino nueva
-                            var presupuestoView = new PresupuestoView();
-                            if (presupuestoView.DataContext is PresupuestoViewModel presupuestoVm)
+                            // 🎯 CAMBIO: Evaluamos todos los tipos de documento para abrir la vista correcta
+                            switch (docViejo.Tipo)
                             {
-                                // 🔥 MODIFICADO: Agregamos await aquí para esperar la sincronización
-                                await presupuestoVm.CargarPresupuestoExistente(presupuestoViejo);
-                                
-                                // Forzamos el salto visual en el panel derecho
-                                mainVm.ContenidoActual = presupuestoView;
+                                case TipoDocumento.Remito:
+                                    var remitoView = new RemitoView();
+                                    if (remitoView.DataContext is RemitoViewModel remitoVm)
+                                    {
+                                        await remitoVm.CargarRemitoExistente(docViejo);
+                                        mainVm.ContenidoActual = remitoView;
+                                    }
+                                    break;
+
+                                case TipoDocumento.Recibo:
+                                    var reciboView = new ReciboView();
+                                    if (reciboView.DataContext is ReciboViewModel reciboVm)
+                                    {
+                                        await reciboVm.CargarReciboExistente(docViejo);
+                                        mainVm.ContenidoActual = reciboView;
+                                    }
+                                    break;
+
+                                case TipoDocumento.NotaCredito:
+                                    var notaCreditoView = new NotaCreditoView();
+                                    if (notaCreditoView.DataContext is NotaCreditoViewModel notaCreditoVm)
+                                    {
+                                        await notaCreditoVm.CargarNotaCreditoExistente(docViejo);
+                                        mainVm.ContenidoActual = notaCreditoView;
+                                    }
+                                    break;
+
+                                case TipoDocumento.Presupuesto:
+                                default:
+                                    var presupuestoView = new PresupuestoView();
+                                    if (presupuestoView.DataContext is PresupuestoViewModel presupuestoVm)
+                                    {
+                                        await presupuestoVm.CargarPresupuestoExistente(docViejo);
+                                        mainVm.ContenidoActual = presupuestoView;
+                                    }
+                                    break;
                             }
                         };
                     }
@@ -52,7 +78,6 @@ namespace QuickDocs.Desktop.Views
             };
         }
 
-        // Lógica para el botón Salir (se mantiene intacta)
         private void BotonSalir_Click(object? sender, RoutedEventArgs e)
         {
             if (Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

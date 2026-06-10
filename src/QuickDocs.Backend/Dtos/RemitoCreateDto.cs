@@ -9,6 +9,7 @@ namespace QuickDocs.Backend.Dtos
         public int UsuarioId { get; set; }
 
         public int? ClienteId { get; set; }
+        public string? ClienteNombreLibre { get; set; }
 
         [Required(ErrorMessage = "La dirección de entrega es obligatoria para el remito")]
         public string DireccionEntrega { get; set; } = string.Empty;
@@ -26,6 +27,9 @@ namespace QuickDocs.Backend.Dtos
     {
         [Required]
         public int ItemId { get; set; }
+
+        [Required]
+        public string Descripcion { get; set; } = string.Empty;
 
         [Required]
         [Range(0.01, double.MaxValue, ErrorMessage = "La cantidad debe ser mayor a 0")]

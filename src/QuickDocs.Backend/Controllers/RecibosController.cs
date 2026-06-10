@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using QuickDocs.Backend.Dtos;
 using QuickDocs.Backend.Data;
 using QuickDocs.Core.Models;
-using QuickDocs.Backend.Services; // Asegurate de que este namespace apunte a tu IPdfService
+using QuickDocs.Backend.Services; 
 using System;
 using System.Threading.Tasks;
 
@@ -14,7 +14,7 @@ namespace QuickDocs.Backend.Controllers
     public class RecibosController : ControllerBase
     {
         private readonly AppDbContext _context;
-        private readonly DocumentoPdfService _pdfService; // 1. Inyectamos el servicio de PDF
+        private readonly DocumentoPdfService _pdfService; 
 
         public RecibosController(AppDbContext context, DocumentoPdfService pdfService)
         {
@@ -25,7 +25,8 @@ namespace QuickDocs.Backend.Controllers
         [HttpPost]
         public async Task<ActionResult> CrearRecibo(ReciboCreateDto dto)
         {
-            // 1. VALIDACIÓN BLINDADA: Solo busca al cliente si el ClienteId tiene valor
+            string nombreClienteFinal = "Consumidor Final / Público General";
+
             if (dto.ClienteId.HasValue && dto.ClienteId.Value > 0)
             {
                 var cliente = await _context.Clientes.FirstOrDefaultAsync(c => c.Id == dto.ClienteId.Value && c.UsuarioId == dto.UsuarioId);
@@ -33,38 +34,75 @@ namespace QuickDocs.Backend.Controllers
                 {
                     return BadRequest("El cliente especificado no existe o no pertenece a este usuario.");
                 }
+                nombreClienteFinal = cliente.Nombre; 
             }
-
-            // 2. VALIDACIÓN OPCIONAL: Si viene un RemitoId, verificar que exista y sea del mismo usuario
-            if (dto.RemitoId.HasValue)
+            else if (!string.IsNullOrEmpty(dto.ClienteNombreLibre))
             {
-                var remito = await _context.Documentos
-                    .OfType<Remito>()
-                    .FirstOrDefaultAsync(r => r.Id == dto.RemitoId.Value && r.UsuarioId == dto.UsuarioId);
-                
-                if (remito == null)
-                {
-                    return BadRequest($"El remito con ID {dto.RemitoId.Value} no existe o no pertenece a este usuario.");
-                }
+                nombreClienteFinal = dto.ClienteNombreLibre; 
             }
 
-            // 3. GENERACIÓN DEL DOCUMENTO (ClienteId acepta null perfectamente acá)
+            int ultimoNumero = await _context.Documentos
+                .Where(d => d.UsuarioId == dto.UsuarioId && d.Tipo == TipoDocumento.Recibo)
+                .Select(d => (int?)d.NumeroCorrelativo)
+                .MaxAsync() ?? 0;
+
             var recibo = new Recibo
             {
                 UsuarioId = dto.UsuarioId,
                 ClienteId = dto.ClienteId,
+                ClienteNombre = nombreClienteFinal, 
+                Tipo = TipoDocumento.Recibo, 
                 FechaEmision = DateTime.UtcNow,
+                PuntoEmision = 1,                         
+                NumeroCorrelativo = ultimoNumero + 1,     
                 ImporteRecibido = dto.ImporteRecibido,
                 FormaPago = dto.FormaPago, 
                 Detalle = dto.Detalle,
-                RemitoId = dto.RemitoId
             };
 
-            // 4. PERSISTENCIA EN LA BASE DE DATOS
             _context.Documentos.Add(recibo);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(ObtenerReciboPorId), new { id = recibo.Id }, recibo);
+        }
+
+        // 🎯 NUEVO: Método para actualizar un recibo existente
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ActualizarRecibo(int id, ReciboCreateDto dto)
+        {
+            var recibo = await _context.Documentos
+                .OfType<Recibo>()
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (recibo == null)
+                return NotFound($"El recibo con ID {id} no existe.");
+
+            string nombreClienteFinal = "Consumidor Final / Público General";
+
+            if (dto.ClienteId.HasValue && dto.ClienteId.Value > 0)
+            {
+                var cliente = await _context.Clientes.FirstOrDefaultAsync(c => c.Id == dto.ClienteId.Value && c.UsuarioId == dto.UsuarioId);
+                if (cliente == null)
+                {
+                    return BadRequest("El cliente especificado no existe o no pertenece a este usuario.");
+                }
+                nombreClienteFinal = cliente.Nombre;
+            }
+            else if (!string.IsNullOrEmpty(dto.ClienteNombreLibre))
+            {
+                nombreClienteFinal = dto.ClienteNombreLibre;
+            }
+
+            // Actualizamos los campos mutables sin alterar numeración ni fecha original
+            recibo.ClienteId = dto.ClienteId;
+            recibo.ClienteNombre = nombreClienteFinal;
+            recibo.ImporteRecibido = dto.ImporteRecibido;
+            recibo.FormaPago = dto.FormaPago;
+            recibo.Detalle = dto.Detalle;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(recibo); 
         }
 
         [HttpGet("{id}")]
@@ -82,11 +120,9 @@ namespace QuickDocs.Backend.Controllers
             return recibo;
         }
 
-        // 🎯 5. ENDPOINT PARA GENERAR Y DESCARGAR EL PDF DEL RECIBO
         [HttpGet("{id}/pdf")]
         public async Task<IActionResult> ObtenerPdfRecibo(int id)
         {
-            // Buscamos el recibo
             var recibo = await _context.Documentos
                 .OfType<Recibo>()
                 .FirstOrDefaultAsync(r => r.Id == id);
@@ -94,19 +130,17 @@ namespace QuickDocs.Backend.Controllers
             if (recibo == null)
                 return NotFound("El recibo especificado no existe.");
 
-            // Buscamos el perfil del emisor (tu tía)
             var perfil = await _context.Perfiles.FirstOrDefaultAsync(p => p.UsuarioId == recibo.UsuarioId);
             if (perfil == null)
                 return BadRequest("El usuario no tiene un perfil comercial configurado.");
 
-            // Lógica del cliente a prueba de nulos
             Cliente clienteData;
             if (recibo.ClienteId.HasValue && recibo.ClienteId.Value > 0)
             {
                 var clienteReal = await _context.Clientes.FirstOrDefaultAsync(c => c.Id == recibo.ClienteId.Value);
                 clienteData = clienteReal ?? new Cliente
                 {
-                    Nombre = "Consumidor Final / Público General",
+                    Nombre = !string.IsNullOrEmpty(recibo.ClienteNombre) ? recibo.ClienteNombre : "Consumidor Final / Público General",
                     CuitCuil = "00-00000000-0",
                     Direccion = "No especificada"
                 };
@@ -115,18 +149,33 @@ namespace QuickDocs.Backend.Controllers
             {
                 clienteData = new Cliente
                 {
-                    Nombre = "Consumidor Final / Público General",
+                    Nombre = !string.IsNullOrEmpty(recibo.ClienteNombre) ? recibo.ClienteNombre : "Consumidor Final / Público General",
                     CuitCuil = "00-00000000-0",
                     Direccion = "No especificada"
                 };
             }
 
-            // Generamos los bytes del PDF usando el servicio
-            // Nota: Asumo que en tu IPdfService vas a implementar un método específico para recibos
             byte[] pdfBytes = await _pdfService.GenerarReciboPdfAsync(recibo, perfil, clienteData);
 
             string nombreArchivo = $"Recibo_{recibo.Id}_{DateTime.Now:yyyyMMdd}.pdf";
             return File(pdfBytes, "application/pdf", nombreArchivo);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> BorrarRecibo(int id)
+        {
+            var recibo = await _context.Documentos
+                .OfType<Recibo>()
+                .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (recibo == null) 
+                return NotFound($"El recibo con ID {id} no existe o ya fue eliminado.");
+
+            _context.Documentos.Remove(recibo);
+            await _context.SaveChangesAsync();
+
+            System.Console.WriteLine($"[OK] Recibo ID {id} eliminado físicamente de SQLite.");
+            return NoContent();
         }
     }
 }

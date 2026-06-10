@@ -1,6 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="QuickDocs.Desktop.Views.ReciboView">
+             xmlns:vm="using:QuickDocs.UI.ViewModels"
+             x:Class="QuickDocs.UI.Views.ReciboView"
+             x:DataType="vm:ReciboViewModel">
     
     <Grid RowDefinitions="Auto, *, Auto" Margin="15" Background="Transparent">
         
@@ -22,23 +24,43 @@
                 <Grid ColumnDefinitions="2*, *" ColumnSpacing="20">
                     <StackPanel Grid.Column="0" Spacing="5">
                         <TextBlock Text="Recibí de (Cliente / Razón Social)" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
-                        <TextBox PlaceholderText="Nombre de la persona o empresa..." HorizontalAlignment="Stretch"/>
+                        <AutoCompleteBox Text="{Binding TextoBuscarCliente, Mode=TwoWay}"
+                            ItemsSource="{Binding SugerenciasClientes}"
+                            FilterMode="Contains"
+                            PlaceholderText="Escriba el nombre del cliente o empresa..." 
+                            HorizontalAlignment="Stretch"/>
                     </StackPanel>
                     
                     <StackPanel Grid.Column="1" Spacing="5">
                         <TextBlock Text="La suma de (Monto en $)" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
-                        <TextBox PlaceholderText="0.00" HorizontalContentAlignment="Right" FontWeight="Bold" Foreground="#10B981"/>
+                        <TextBox Text="{Binding ImporteRecibido, Mode=TwoWay}" 
+                                PlaceholderText="0.00" 
+                                HorizontalContentAlignment="Right" 
+                                FontWeight="Bold" 
+                                Foreground="#10B981"/>
                     </StackPanel>
+
+                    
                 </Grid>
 
                 <StackPanel Spacing="5">
                     <TextBlock Text="En concepto de (Detalle del pago)" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
-                    <TextBox PlaceholderText="Ej. Cancelación de saldo / Pago entrega de mercadería..." 
-                             HorizontalAlignment="Stretch" 
-                             Height="80" 
-                             AcceptsReturn="True" 
-                             TextWrapping="Wrap"/>
+                    <TextBox Text="{Binding Detalle, Mode=TwoWay}" 
+                            PlaceholderText="Ej. Cancelación de saldo / Pago entrega de mercadería..." 
+                            HorizontalAlignment="Stretch" 
+                            Height="80" 
+                            AcceptsReturn="True" 
+                            TextWrapping="Wrap"/>
                 </StackPanel>
+
+                <StackPanel Spacing="5">
+                        <TextBlock Text="Forma de Pago" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                        <ComboBox SelectedItem="{Binding FormaPago}" HorizontalAlignment="Stretch">
+                            <ComboBoxItem Content="Efectivo" />
+                            <ComboBoxItem Content="Transferencia" />
+                            <ComboBoxItem Content="Cheque" />
+                        </ComboBox>
+                    </StackPanel>
 
                 <TextBlock Text="* Los datos de la empresa emisora y la fecha actual se incluirán automáticamente al generar el documento." 
                            FontSize="11" 
@@ -48,10 +70,11 @@
         </Border>
 
         <Grid Grid.Row="2" ColumnDefinitions="*, Auto" Margin="0,20,0,0">
-            <Button Grid.Column="0" Content="⚙️ Generar Recibo e Imprimir" 
-                    Background="#10B981" Foreground="White" 
-                    Padding="24,14" FontSize="15" FontWeight="Bold" CornerRadius="6" 
-                    HorizontalAlignment="Left"/>
+            <Button Grid.Column="0" Content="💾 Guardar y Generar PDF" 
+                Command="{Binding GuardarReciboCommand}" 
+                Background="#10B981" Foreground="White" 
+                Padding="24,14" FontSize="15" FontWeight="Bold" CornerRadius="6" 
+                HorizontalAlignment="Left"/>
         </Grid>
         
     </Grid>

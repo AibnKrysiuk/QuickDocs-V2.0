@@ -193,7 +193,38 @@ namespace QuickDocs.Backend.Services
                         });
                     });
 
-                    page.Footer().AlignCenter().Text(x => { x.CurrentPageNumber(); x.Span(" / "); x.TotalPages(); });
+                    // ✍️ PIE DE PÁGINA: Numeración y Bloque de Firmas unificados
+                    page.Footer().Column(footerCol =>
+                    {
+                        // Sección de Firmas bien espaciada respecto al contenido
+                        footerCol.Item().PaddingBottom(15).Row(rowFirmas =>
+                        {
+                            // Firma del Comercio (Izquierda)
+                            rowFirmas.RelativeItem().PaddingRight(40).Column(fComercio =>
+                            {
+                                fComercio.Item().PaddingTop(30).LineHorizontal(1).LineColor(Colors.Grey.Darken1);
+                                fComercio.Item().PaddingTop(4).AlignCenter().Text("Firma Autorizada Comercio").FontSize(9).FontColor(Colors.Grey.Darken2);
+                            });
+
+                            // Espacio intermedio vacío
+                            rowFirmas.RelativeItem();
+
+                            // Firma del Cliente (Derecha)
+                            rowFirmas.RelativeItem().PaddingLeft(40).Column(fCliente =>
+                            {
+                                fCliente.Item().PaddingTop(30).LineHorizontal(1).LineColor(Colors.Grey.Darken1);
+                                fCliente.Item().PaddingTop(4).AlignCenter().Text("Conformidad del Cliente").FontSize(9).FontColor(Colors.Grey.Darken2);
+                            });
+                        });
+
+                        // Numeración de página estándar al fondo
+                        footerCol.Item().AlignCenter().Text(x => 
+                        { 
+                            x.CurrentPageNumber(); 
+                            x.Span(" / "); 
+                            x.TotalPages(); 
+                        });
+                    });
                 });
             }).GeneratePdf();
         }
@@ -324,7 +355,8 @@ namespace QuickDocs.Backend.Services
 
                                 foreach (var detalle in remito.Detalles)
                                 {
-                                    tabla.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(6).Text($"{detalle.Cantidad:G}");
+                                    // Muestra el número de forma limpia y remueve ceros decimales innecesarios (ej: "10" en vez de "10.00")
+                                    tabla.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(6).Text(detalle.Cantidad.ToString("0.##"));
                                     tabla.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(6).Text(detalle.DescripcionSnapshot);
                                     tabla.Cell().BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Padding(6).Text("[  ] Ok").FontColor(Colors.Grey.Lighten1);
                                 }

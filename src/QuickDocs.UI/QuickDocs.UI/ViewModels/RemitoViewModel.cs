@@ -12,15 +12,18 @@ using Avalonia.Threading;
 
 namespace QuickDocs.UI.ViewModels
 {
-    public partial class PresupuestoViewModel : ObservableObject
+    public partial class RemitoViewModel : ObservableObject
     {
         private readonly HttpClient _httpClient;
-        private const string ApiUrlPresupuestos = "http://localhost:5018/api/presupuestos";
+        private const string ApiUrlRemitos = "http://localhost:5018/api/remitos";
         private const string ApiUrlClientes = "http://localhost:5018/api/clientes";
         private const string ApiUrlItems = "http://localhost:5018/api/items";
 
-        // Id del presupuesto en caso de que estemos MODIFICANDO uno existente
-        private int _presupuestoIdActual = 0;
+        // Id del remito en caso de que estemos MODIFICANDO uno existente
+        private int _remitoIdActual = 0;
+
+        // ID del presupuesto si este remito se generó a partir de uno
+        private int? _presupuestoIdOrigen;
 
         // --- Listas de ayuda para autocompletar desde la API ---
         private List<Cliente> _todosLosClientes = new();
@@ -31,7 +34,6 @@ namespace QuickDocs.UI.ViewModels
         public ObservableCollection<string> SugerenciasItems { get; } = new();
 
         public IRelayCommand NavegarAHistorialCommand { get; }
-        
 
         // --- Bindings de la Cabecera ---
         [ObservableProperty]
@@ -40,15 +42,9 @@ namespace QuickDocs.UI.ViewModels
         [ObservableProperty]
         private Cliente? _clienteSeleccionado;
 
+        // 🎯 CAMBIO LOGÍSTICO: Dirección de entrega obligatoria para el remito
         [ObservableProperty]
-        private int _diasValidez = 15;
-
-        // 🎯 PROPIEDADES NUEVAS: Para soportar CUIT y Dirección editables o del cliente seleccionado
-        [ObservableProperty]
-        private string _clienteCuitLibre = string.Empty;
-
-        [ObservableProperty]
-        private string _clienteDireccionLibre = string.Empty;
+        private string _direccionEntrega = string.Empty;
 
         // --- Bindings del formulario de ingreso de Renglones ---
         [ObservableProperty]
@@ -69,18 +65,14 @@ namespace QuickDocs.UI.ViewModels
         [ObservableProperty]
         private decimal _precioRenglon = 0;
 
-        // --- Totales Finales ---
+        // --- Totales Finales (Para control interno del formulario) ---
         [ObservableProperty]
         private decimal _total = 0;
 
-        // 🎯 NUEVO: Propiedad para controlar la visibilidad del botón "Convertir a Remito"
-        [ObservableProperty]
-        private bool _esEdicion = false;
-
-        // --- Colección de Renglones de la Grilla Actual ---
+        // --- Colección de Renglones de la Grilla Actual (Reutiliza el mismo molde temporal) ---
         public ObservableCollection<DetallePresupuestoTemporal> Detalles { get; } = new();
 
-        // --- Estado de Selección de la Grilla Actual (para modificar/quitar) ---
+        // --- Estado de Selección de la Grilla Actual ---
         [ObservableProperty]
         private DetallePresupuestoTemporal? _detalleSeleccionado;
 
@@ -89,12 +81,9 @@ namespace QuickDocs.UI.ViewModels
         public IRelayCommand AgregarRenglonCommand { get; }
         public IRelayCommand QuitarRenglonCommand { get; }
         public IRelayCommand SeleccionarRenglonParaModificarCommand { get; }
-        public IAsyncRelayCommand GuardarPresupuestoCommand { get; }
-        
-        // 🎯 NUEVO: Comando para ejecutar la conversión
-        public IAsyncRelayCommand ConvertirARemitoCommand { get; }
+        public IAsyncRelayCommand GuardarRemitoCommand { get; }
 
-        public PresupuestoViewModel()
+        public RemitoViewModel()
         {
             _httpClient = new HttpClient();
 
@@ -102,11 +91,10 @@ namespace QuickDocs.UI.ViewModels
             AgregarRenglonCommand = new RelayCommand(AgregarRenglon);
             QuitarRenglonCommand = new RelayCommand(QuitarRenglon);
             SeleccionarRenglonParaModificarCommand = new RelayCommand(SeleccionarRenglonParaModificar);
-            GuardarPresupuestoCommand = new AsyncRelayCommand(GuardarPresupuestoAsync);
-            ConvertirARemitoCommand = new AsyncRelayCommand(ConvertirARemitoAsync);
+            GuardarRemitoCommand = new AsyncRelayCommand(GuardarRemitoAsync);
             NavegarAHistorialCommand = new RelayCommand(NavegarAHistorial);
 
-            // Carga asíncrona de clientes e ítems para los selectores al iniciar
+            // Carga asíncrona de clientes e ítems al iniciar
             Dispatcher.UIThread.Post(async () => await CargarDatosInicialesAsync());
         }
 
@@ -137,7 +125,7 @@ namespace QuickDocs.UI.ViewModels
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error al precargar catálogos: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Error al precargar catálogos en Remitos: {ex.Message}");
             }
         }
 
@@ -199,24 +187,23 @@ namespace QuickDocs.UI.ViewModels
             Total = Detalles.Sum(d => d.Importe);
         }
 
-        private async Task GuardarPresupuestoAsync()
+        private async Task GuardarRemitoAsync()
         {
             if (Detalles.Count == 0) return;
 
+            // Armamos el DTO adaptado de manera idéntica a presupuestos
             var dto = new
             {
                 UsuarioId = 1,
-                ClienteId = ClienteSeleccionado?.Id ?? 0, 
+                ClienteId = ClienteSeleccionado?.Id, 
                 ClienteNombreLibre = ClienteSeleccionado == null ? TextoBuscarCliente : null,
-                ClienteCuitLibre = !string.IsNullOrWhiteSpace(this.ClienteCuitLibre) ? this.ClienteCuitLibre : null,
-                ClienteDireccionLibre = !string.IsNullOrWhiteSpace(this.ClienteDireccionLibre) ? this.ClienteDireccionLibre : null,
-                DiasValidez = DiasValidez,
+                DireccionEntrega = DireccionEntrega,
+                PresupuestoId = _presupuestoIdOrigen ?? 0,
                 DescuentoGeneral = 0.0, 
                 Detalles = Detalles.Select(d => new
                 {
                     ItemId = d.ItemId ?? 0,
                     Descripcion = d.Descripcion, 
-                    Precio = d.PrecioUnitario,   
                     Cantidad = d.Cantidad
                 }).ToList()
             };
@@ -224,44 +211,56 @@ namespace QuickDocs.UI.ViewModels
             try
             {
                 HttpResponseMessage response;
-                if (_presupuestoIdActual == 0)
+
+                // 🎯 LÓGICA DE CONVERSIÓN/EDICIÓN: Si ya existe un ID, hacemos PUT para actualizar
+                if (_remitoIdActual > 0)
                 {
-                    response = await _httpClient.PostAsJsonAsync(ApiUrlPresupuestos, dto);
+                    Console.WriteLine($"[DEBUG] Modificando Remito existente ID: {_remitoIdActual} mediante PUT...");
+                    response = await _httpClient.PutAsJsonAsync($"http://localhost:5018/api/remitos/{_remitoIdActual}", dto);
                 }
                 else
                 {
-                    response = await _httpClient.PutAsJsonAsync($"{ApiUrlPresupuestos}/{_presupuestoIdActual}", dto);
+                    Console.WriteLine("[DEBUG] Creando nuevo Remito mediante POST...");
+                    response = await _httpClient.PostAsJsonAsync("http://localhost:5018/api/remitos", dto);
                 }
 
                 if (!response.IsSuccessStatusCode)
                 {
                     string errorApi = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"La API devolvió un error ({response.StatusCode}): {errorApi}");
+                    throw new Exception($"La API de Remitos devolvió un error ({response.StatusCode}): {errorApi}");
                 }
 
                 string jsonRespuesta = await response.Content.ReadAsStringAsync();
-                System.Console.WriteLine($"[DEBUG] Respuesta exitosa de la API: {jsonRespuesta}");
+                System.Console.WriteLine($"[DEBUG] Respuesta exitosa de la API (Remito): {jsonRespuesta}");
 
+                // 🎯 Extracción 100% segura del ID usando System.Text.Json (Evita mezclar con IDs de los detalles)
                 int idGenerado = 0;
-                var oPresupuesto = await response.Content.ReadFromJsonAsync<Presupuesto>();
-                if (oPresupuesto != null)
+                try
                 {
-                    idGenerado = oPresupuesto.Id;
+                    using (var doc = System.Text.Json.JsonDocument.Parse(jsonRespuesta))
+                    {
+                        if (doc.RootElement.TryGetProperty("id", out var idProp))
+                        {
+                            idGenerado = idProp.GetInt32();
+                        }
+                    }
                 }
-                else
+                catch (Exception exJson)
                 {
-                    var match = System.Text.RegularExpressions.Regex.Match(jsonRespuesta, @"""id""\s*:\s*(\d+)");
-                    if (match.Success) idGenerado = int.Parse(match.Groups[1].Value);
+                    Console.WriteLine($"[WARN] Error al parsear JSON con JsonDocument: {exJson.Message}");
+                    // Fallback por Regex estricta si algo falla
+                    var matchCierre = System.Text.RegularExpressions.Regex.Match(jsonRespuesta, @"""id""\s*:\s*(\d+)\s*,\s*""usuarioId""");
+                    if (matchCierre.Success) idGenerado = int.Parse(matchCierre.Groups[1].Value);
                 }
 
                 if (idGenerado > 0)
                 {
-                    Console.WriteLine($"[DEBUG] Intentando descargar e imprimir PDF para ID: {idGenerado}");
+                    Console.WriteLine($"[DEBUG] Intentando descargar e imprimir PDF para Remito ID: {idGenerado}");
                     await DescargarYAbrirPdfAsync(idGenerado);
                 }
                 else
                 {
-                    Console.WriteLine("[WARN] No se pudo determinar el ID del presupuesto guardado.");
+                    Console.WriteLine("[WARN] No se pudo determinar el ID del remito guardado.");
                 }
 
                 await Dispatcher.UIThread.InvokeAsync(() =>
@@ -272,89 +271,37 @@ namespace QuickDocs.UI.ViewModels
             catch (Exception ex)
             {
                 System.Console.WriteLine($"==================================================");
-                System.Console.WriteLine($"🚨 ERROR CRÍTICO EN GUARDAR PRESUPUESTO:");
+                System.Console.WriteLine($"🚨 ERROR CRÍTICO EN GUARDAR REMITO:");
                 System.Console.WriteLine(ex.ToString());
                 System.Console.WriteLine($"==================================================");
             }
         }
 
-        // 🎯 NUEVO: Lógica del comando de conversión a Remito
-        private async Task ConvertirARemitoAsync()
-        {
-            if (_presupuestoIdActual == 0) return;
-
-            try
-            {
-                string urlConvertir = $"{ApiUrlPresupuestos}/{_presupuestoIdActual}/convertir";
-                var response = await _httpClient.PostAsync(urlConvertir, null);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    string errorApi = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"La API devolvió un error al convertir ({response.StatusCode}): {errorApi}");
-                }
-
-                //Convertir a remito
-                var remitoCreado = await response.Content.ReadFromJsonAsync<Remito>();
-                if (remitoCreado != null)
-                {
-                    System.Console.WriteLine($"[OK] Presupuesto convertido a Remito con éxito. Nuevo ID: {remitoCreado.Id}");
-
-                    await Dispatcher.UIThread.InvokeAsync(() =>
-                    {
-                        // Disparamos la navegación directa al nuevo remito usando reflexión
-                        if (Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
-                        {
-                            var mainDataContext = desktop.MainWindow?.DataContext;
-                            if (mainDataContext != null)
-                            {
-                                var metodoNavegar = mainDataContext.GetType().GetMethod("NavegarADocumentoDirecto");
-                                if (metodoNavegar != null)
-                                {
-                                    metodoNavegar.Invoke(mainDataContext, new object[] { remitoCreado });
-                                }
-                            }
-                        }
-
-                        LimpiarFormularioCompleto();
-                    });
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Console.WriteLine($"==================================================");
-                System.Console.WriteLine($"🚨 ERROR AL CONVERTIR A REMITO:");
-                System.Console.WriteLine(ex.ToString());
-                System.Console.WriteLine($"==================================================");
-            }
-        }
-
-        private async Task DescargarYAbrirPdfAsync(int presupuestoId)
+        private async Task DescargarYAbrirPdfAsync(int remitoId)
         {
             try
             {
-                string urlPdf = $"{ApiUrlPresupuestos}/{presupuestoId}/pdf";
+                string urlPdf = $"{ApiUrlRemitos}/{remitoId}/pdf";
                 Console.WriteLine($"[DEBUG] Pidiendo bytes a la URL: {urlPdf}");
                 
                 byte[] pdfBytes = await _httpClient.GetByteArrayAsync(urlPdf);
                 Console.WriteLine($"[DEBUG] Bytes recibidos con éxito. Tamaño: {pdfBytes.Length} bytes.");
 
                 string carpetaDocumentos = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                string carpetaQuickDocs = System.IO.Path.Combine(carpetaDocumentos, "QuickDocs", "Presupuestos");
+                string carpetaQuickDocs = System.IO.Path.Combine(carpetaDocumentos, "QuickDocs", "Remitos");
 
                 if (!System.IO.Directory.Exists(carpetaQuickDocs))
                 {
                     System.IO.Directory.CreateDirectory(carpetaQuickDocs);
                 }
 
-                string rutaArchivo = System.IO.Path.Combine(carpetaQuickDocs, $"Presupuesto_{presupuestoId}.pdf");
+                string rutaArchivo = System.IO.Path.Combine(carpetaQuickDocs, $"Remito_{remitoId}.pdf");
                 await System.IO.File.WriteAllBytesAsync(rutaArchivo, pdfBytes);
                 
                 System.Console.WriteLine($"[OK] PDF guardado físicamente en: {rutaArchivo}");
 
                 if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux))
                 {
-                    Console.WriteLine($"[DEBUG] Ejecutando xdg-open para el archivo...");
                     System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                     {
                         FileName = "xdg-open",
@@ -377,27 +324,34 @@ namespace QuickDocs.UI.ViewModels
             catch (Exception ex)
             {
                 System.Console.WriteLine($"==================================================");
-                System.Console.WriteLine($"🚨 ERROR CRÍTICO EN DESCARGA/APERTURA PDF:");
+                System.Console.WriteLine($"🚨 ERROR CRÍTICO EN DESCARGA/APERTURA PDF REMITO:");
                 System.Console.WriteLine(ex.ToString());
                 System.Console.WriteLine($"==================================================");
             }
         }
 
-        public async Task CargarPresupuestoExistente(Documento documentoBase)
+        // Método auxiliar para cuando cargamos un Remito existente desde el historial
+
+        public async Task CargarRemitoExistente(Documento documentoBase)
         {
+            // 1. Usamos el ID del documento base para hacer una petición GET específica
+            // Esto garantiza que el Backend traiga el objeto con todos sus detalles incluidos
             try 
             {
-                string url = $"http://localhost:5018/api/presupuestos/{documentoBase.Id}";
-                var presupuesto = await _httpClient.GetFromJsonAsync<Presupuesto>(url);
+                string url = $"http://localhost:5018/api/remitos/{documentoBase.Id}";
+                var remito = await _httpClient.GetFromJsonAsync<Remito>(url);
 
-                if (presupuesto == null)
+                if (remito == null)
                 {
-                    System.Console.WriteLine("[ERROR] No se pudo obtener el presupuesto desde la API.");
+                    System.Console.WriteLine("[ERROR] No se pudo obtener el remito desde la API.");
                     return;
                 }
 
-                _presupuestoIdActual = presupuesto.Id;
+                // 2. Ahora cargamos los datos con el objeto 'remito' ya completo y bien tipado
+                _remitoIdActual = remito.Id;
+                _presupuestoIdOrigen = remito.PresupuestoId;
 
+                // Espera a que los catálogos estén listos
                 int intentos = 0;
                 while ((_todosLosClientes.Count == 0 || _todosLosItems.Count == 0) && intentos < 30)
                 {
@@ -405,36 +359,30 @@ namespace QuickDocs.UI.ViewModels
                     intentos++;
                 }
 
-                ClienteSeleccionado = _todosLosClientes.FirstOrDefault(c => c.Id == presupuesto.ClienteId);
+                ClienteSeleccionado = _todosLosClientes.FirstOrDefault(c => c.Id == remito.ClienteId);
 
                 if (ClienteSeleccionado != null)
                 {
                     TextoBuscarCliente = ClienteSeleccionado.Nombre ?? string.Empty;
-                    ClienteCuitLibre = ClienteSeleccionado.CuitCuil ?? string.Empty;
-                    ClienteDireccionLibre = ClienteSeleccionado.Direccion ?? string.Empty;
                 }
                 else
                 {
-                    TextoBuscarCliente = presupuesto.ClienteNombre ?? string.Empty;
-                    ClienteCuitLibre = string.Empty;
-                    ClienteDireccionLibre = string.Empty;
+                    TextoBuscarCliente = remito.ClienteNombre ?? string.Empty;
                 }
 
-                if (presupuesto.FechaVencimiento >= presupuesto.FechaEmision)
-                {
-                    DiasValidez = (presupuesto.FechaVencimiento - presupuesto.FechaEmision).Days;
-                }
+                DireccionEntrega = remito.DireccionEntrega ?? string.Empty;
 
                 Detalles.Clear();
-                if (presupuesto.Detalles != null)
+                if (remito.Detalles != null)
                 {
-                    foreach (var det in presupuesto.Detalles)
+                    foreach (var det in remito.Detalles)
                     {
+                        var itemDelCatalogo = _todosLosItems.FirstOrDefault(i => i.Id == det.ItemId);
                         Detalles.Add(new DetallePresupuestoTemporal
                         {
                             ItemId = det.ItemId,
                             Descripcion = det.DescripcionSnapshot,
-                            Marca = "Sin Marca", 
+                            Marca = itemDelCatalogo?.Marca ?? "Sin Marca", 
                             Cantidad = det.Cantidad,
                             PrecioUnitario = det.PrecioAplicado
                         });
@@ -442,27 +390,47 @@ namespace QuickDocs.UI.ViewModels
                 }
                 
                 RecalcularTotal();
-                
-                // 🎯 NUEVO: Como estamos editando un registro que ya existe en la BD, activamos la bandera
-                EsEdicion = true;
-
-                System.Console.WriteLine($"[DEBUG-FORM] Éxito. Renglones cargados: {Detalles.Count}. Cliente: {presupuesto.ClienteNombre}");
+                System.Console.WriteLine($"[DEBUG] Remito {remito.Id} cargado exitosamente mediante API.");
             }
             catch (Exception ex)
             {
-                System.Console.WriteLine($"[ERROR] Falló la carga del presupuesto: {ex.Message}");
+                System.Console.WriteLine($"[ERROR] Falló la carga del remito: {ex.Message}");
             }
+        }
+
+        // 🎯 MÉTODO DE CONVERSIÓN: Para cuando abrís el remito trayendo los bultos de un Presupuesto
+        public void CargarDesdePresupuestoDeOrigen(Presupuesto presupuesto)
+        {
+            LimpiarFormularioCompleto();
+            
+            _presupuestoIdOrigen = presupuesto.Id;
+            ClienteSeleccionado = _todosLosClientes.FirstOrDefault(c => c.Id == presupuesto.ClienteId);
+            TextoBuscarCliente = ClienteSeleccionado != null ? (ClienteSeleccionado.Nombre ?? string.Empty) : (presupuesto.ClienteNombre ?? string.Empty);
+
+            if (presupuesto.Detalles != null)
+            {
+                foreach (var det in presupuesto.Detalles)
+                {
+                    var itemDelCatalogo = _todosLosItems.FirstOrDefault(i => i.Id == det.ItemId);
+                    Detalles.Add(new DetallePresupuestoTemporal
+                    {
+                        ItemId = det.ItemId,
+                        Descripcion = det.DescripcionSnapshot,
+                        Marca = itemDelCatalogo?.Marca ?? "Sin Marca",
+                        Cantidad = det.Cantidad,
+                        PrecioUnitario = det.PrecioAplicado
+                    });
+                }
+            }
+            RecalcularTotal();
         }
 
         partial void OnTextoBuscarClienteChanged(string value)
         {
             var coincidencia = _todosLosClientes.FirstOrDefault(c => string.Equals(c.Nombre, value, StringComparison.OrdinalIgnoreCase));
-            
             if (coincidencia != null)
             {
                 ClienteSeleccionado = coincidencia;
-                ClienteCuitLibre = coincidencia.CuitCuil ?? string.Empty;
-                ClienteDireccionLibre = coincidencia.Direccion ?? string.Empty;
             }
             else
             {
@@ -473,9 +441,7 @@ namespace QuickDocs.UI.ViewModels
         partial void OnTextoBuscarItemChanged(string value)
         {
             DescripcionRenglon = value; 
-
             var coincidencia = _todosLosItems.FirstOrDefault(i => string.Equals(i.Descripcion, value, StringComparison.OrdinalIgnoreCase));
-            
             if (coincidencia != null)
             {
                 ItemSeleccionado = coincidencia;
@@ -499,18 +465,13 @@ namespace QuickDocs.UI.ViewModels
 
         private void LimpiarFormularioCompleto()
         {
-            _presupuestoIdActual = 0;
+            _remitoIdActual = 0;
+            _presupuestoIdOrigen = null;
             ClienteSeleccionado = null;
             TextoBuscarCliente = string.Empty;
-            ClienteCuitLibre = string.Empty;
-            ClienteDireccionLibre = string.Empty;
-            DiasValidez = 15;
+            DireccionEntrega = string.Empty;
             Detalles.Clear();
             Total = 0;
-            
-            // 🎯 NUEVO: Reseteamos el estado de edición al limpiar
-            EsEdicion = false;
-            
             LimpiarCamposRenglon();
         }
     
@@ -519,7 +480,6 @@ namespace QuickDocs.UI.ViewModels
             if (Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
             {
                 var mainDataContext = desktop.MainWindow?.DataContext;
-
                 if (mainDataContext != null)
                 {
                     var propiedadComando = mainDataContext.GetType().GetProperty("MostrarHistorial");
@@ -534,15 +494,5 @@ namespace QuickDocs.UI.ViewModels
                 }
             }
         }
-    }
-
-    public class DetallePresupuestoTemporal
-    {
-        public int? ItemId { get; set; }
-        public string Descripcion { get; set; } = string.Empty;
-        public string Marca { get; set; } = string.Empty;
-        public decimal Cantidad { get; set; }
-        public decimal PrecioUnitario { get; set; }
-        public decimal Importe => Cantidad * PrecioUnitario;
     }
 }

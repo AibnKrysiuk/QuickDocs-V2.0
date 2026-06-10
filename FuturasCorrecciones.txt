@@ -5,3 +5,24 @@ Agregar Campo Localidad al Perfil, duplicado en la impresion del PDF
 
 Presupuestos
 Agregar el numero de documento y las firmas al final.
+
+🚀 Plan de Acción para Mañana
+
+Hoja de ruta para mañana:
+
+Reparar el Casting (Edición): Vamos a forzar la carga completa de las propiedades de navegación (Detalles, etc.) desde el backend para que el casting no falle.
+
+Filtros en Historial: Implementaremos un comando AplicarFiltrosCommand que invoque nuevamente al CargarHistorialAsync, pero pasando los parámetros del ComboBox y el TextBox.
+
+Documentos Restantes: Comenzaremos la estructura base para Recibos y Notas de Crédito.
+
+Conversión Presupuesto -> Remito: Crearemos el endpoint que tome un PresupuestoId y transforme sus datos a un nuevo Remito, manteniendo la trazabilidad.
+
+📱 Bloque 4: Investigación & Diseño — Módulo WhatsApp
+Item 4.1: Brainstorming e integración de WhatsApp
+
+Analizar la viabilidad técnica de los dos enfoques:
+
+Enfoque Web: Abrir el navegador del sistema con https://wa.me/telefono?text=... para enviar el link o aviso.
+
+Enfoque Automatizado: Ver cómo adjuntar directamente el PDF generado localmente.

@@ -52,7 +52,6 @@ namespace QuickDocs.Backend.Controllers
         }
 
         [HttpPost]
-        [HttpPost]
         public async Task<ActionResult> CrearPresupuesto(PresupuestoCreateDto dto)
         {
             int idUsuarioReal = dto.UsuarioId <= 0 ? 1 : dto.UsuarioId;
@@ -60,17 +59,15 @@ namespace QuickDocs.Backend.Controllers
             var perfilEmisor = await _context.Perfiles.FirstOrDefaultAsync(p => p.UsuarioId == idUsuarioReal);
             if (perfilEmisor == null) return BadRequest("El usuario no tiene un Perfil comercial configurado.");
 
-            // 🎯 INTERCEPCIÓN PASO 2: Si es un cliente libre/nuevo, lo creamos como Prospecto antes de seguir
             int? clienteIdAsignado = (dto.ClienteId.HasValue && dto.ClienteId.Value > 0) ? dto.ClienteId.Value : null;
 
             if (clienteIdAsignado.HasValue)
             {
                 var clienteExiste = await _context.Clientes.AnyAsync(c => c.Id == clienteIdAsignado.Value && c.UsuarioId == idUsuarioReal);
-                if (!clienteExiste) return BadRequest("El cliente especificado no existe o no pertenece a este usuario.");
+                if (!clienteExiste) return BadRequest("El cliente especificado no existe o no belongs a este usuario.");
             }
             else if (!string.IsNullOrWhiteSpace(dto.ClienteNombreLibre))
             {
-                // Es un cliente libre tipeado a mano. Lo persistimos en la tabla Clientes como Prospecto.
                 var nuevoClienteProspecto = new Cliente
                 {
                     UsuarioId = idUsuarioReal,
@@ -82,7 +79,7 @@ namespace QuickDocs.Backend.Controllers
                 };
 
                 _context.Clientes.Add(nuevoClienteProspecto);
-                await _context.SaveChangesAsync(); // Impactamos para obtener el Id autogenerado
+                await _context.SaveChangesAsync(); 
 
                 clienteIdAsignado = nuevoClienteProspecto.Id;
             }
@@ -97,7 +94,7 @@ namespace QuickDocs.Backend.Controllers
             var presupuesto = new Presupuesto
             {
                 UsuarioId = idUsuarioReal,
-                ClienteId = clienteIdAsignado, // 🎯 Siempre va a tener un ID real si se escribió un nombre
+                ClienteId = clienteIdAsignado, 
                 Tipo = TipoDocumento.Presupuesto, 
                 FechaEmision = DateTime.UtcNow,
                 FechaVencimiento = DateTime.UtcNow.AddDays(diasAsignados), 
@@ -135,7 +132,6 @@ namespace QuickDocs.Backend.Controllers
                 });
             }
 
-            // 🎯 Asignamos el nombre definitivo al presupuesto usando el ID consolidado
             if (presupuesto.ClienteId.HasValue && presupuesto.ClienteId.Value > 0)
             {
                 var c = await _context.Clientes.FindAsync(presupuesto.ClienteId.Value);
@@ -155,6 +151,62 @@ namespace QuickDocs.Backend.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(ObtenerPresupuestoPorId), new { id = presupuesto.Id }, presupuesto);
+        }
+
+        // 🎯 NUEVO: Endpoint para convertir un Presupuesto existente en un Remito oficial
+        [HttpPost("{id}/convertir")]
+        public async Task<ActionResult> ConvertirARemito(int id)
+        {
+            var presupuesto = await _context.Documentos
+                .OfType<Presupuesto>()
+                .Include(p => p.Detalles)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (presupuesto == null) 
+                return NotFound("El presupuesto solicitado no existe para ser convertido.");
+
+            // Calculamos el próximo número correlativo para los Remitos de este usuario específico
+            int ultimoNumeroRemito = await _context.Remitos
+                .Where(r => r.UsuarioId == presupuesto.UsuarioId)
+                .Select(r => (int?)r.NumeroCorrelativo)
+                .MaxAsync() ?? 0;
+
+            // Instanciamos el Remito copiando de forma exacta los valores correspondientes del presupuesto origen
+            var nuevoRemito = new Remito
+            {
+                UsuarioId = presupuesto.UsuarioId,
+                ClienteId = presupuesto.ClienteId,
+                ClienteNombre = presupuesto.ClienteNombre,
+                PresupuestoId = presupuesto.Id,
+                Tipo = TipoDocumento.Remito,
+                FechaEmision = DateTime.UtcNow,
+                DireccionEntrega = string.Empty, // Queda en blanco listo para ser editado si se requiere en el destino
+                Estado = EstadoRemito.Vigente,
+                PuntoEmision = 1,
+                NumeroCorrelativo = ultimoNumeroRemito + 1,
+                Subtotal = presupuesto.Subtotal,
+                Descuento = presupuesto.Descuento,
+                Total = presupuesto.Total,
+                Detalles = new List<DetalleRemito>()
+            };
+
+            // Mapeamos renglón por renglón los detalles
+            foreach (var detallePre in presupuesto.Detalles)
+            {
+                nuevoRemito.Detalles.Add(new DetalleRemito
+                {
+                    ItemId = detallePre.ItemId,
+                    DescripcionSnapshot = detallePre.DescripcionSnapshot,
+                    Cantidad = detallePre.Cantidad,
+                    PrecioAplicado = detallePre.PrecioAplicado
+                });
+            }
+
+            // Persistimos directamente en el DbSet específico de Remitos tal cual lo exige tu arquitectura
+            _context.Remitos.Add(nuevoRemito);
+            await _context.SaveChangesAsync();
+
+            return Ok(nuevoRemito);
         }
 
         [HttpGet("{id}")]
@@ -196,7 +248,6 @@ namespace QuickDocs.Backend.Controllers
             }
             else
             {
-                // Si es un cliente libre/manual, generamos el objeto de transporte temporal sin datos rígidos falsos
                 clienteData = new Cliente
                 {
                     Nombre = presupuesto.ClienteNombre,
@@ -230,7 +281,6 @@ namespace QuickDocs.Backend.Controllers
                 if (!clienteExiste) return BadRequest("El cliente especificado no existe o no pertenece a este usuario.");
             }
 
-            // 🎯 Usamos los días de validez dinámicos enviados por el DTO en la modificación
             int diasAsignados = dto.DiasValidez <= 0 ? 15 : dto.DiasValidez;
 
             presupuestoExistente.ClienteId = dto.ClienteId == 0 ? null : dto.ClienteId;
@@ -285,21 +335,25 @@ namespace QuickDocs.Backend.Controllers
             presupuestoExistente.Subtotal = subtotalAcumulado;
             presupuestoExistente.Descuento = (decimal)dto.DescuentoGeneral;
             presupuestoExistente.Total = subtotalAcumulado - presupuestoExistente.Descuento;
-            if (presupuestoExistente.Total < 0m) presupuestoExistente.Total = 0m;
-
-            _context.Entry(presupuestoExistente).State = EntityState.Modified;
-
-            try
+            if (presupuestoExistente.ClienteId.HasValue && presupuestoExistente.ClienteId.Value > 0)
             {
-                await _context.SaveChangesAsync();
-                System.Console.WriteLine($"[OK] Presupuesto ID {id} modificado y recalculado con éxito en la BD.");
+                var c = await _context.Clientes.FindAsync(presupuestoExistente.ClienteId.Value);
+                if (c != null) 
+                {
+                    if (!string.IsNullOrWhiteSpace(dto.ClienteNombreLibre)) c.Nombre = dto.ClienteNombreLibre;
+                    presupuestoExistente.ClienteNombre = c.Nombre;
+                }
             }
-            catch (DbUpdateConcurrencyException)
+            else if (!string.IsNullOrWhiteSpace(dto.ClienteNombreLibre))
             {
-                if (!await _context.Documentos.AnyAsync(e => e.Id == id)) return NotFound();
-                else throw;
+                presupuestoExistente.ClienteNombre = dto.ClienteNombreLibre;
+            }
+            else
+            {
+                presupuestoExistente.ClienteNombre = "Consumidor Final / Público General";
             }
 
+            await _context.SaveChangesAsync();
             return Ok(presupuestoExistente);
         }
 

@@ -126,11 +126,18 @@
         </Border>
 
         <Grid Grid.Row="4" ColumnDefinitions="*, Auto" Margin="0,15,0,0">
-            <Button Grid.Column="0" Content="⚙️ Generar PDF e Imprimir" 
-                    Command="{Binding GuardarPresupuestoCommand}"
-                    Background="#10B981" Foreground="White" 
-                    Padding="24,14" FontSize="15" FontWeight="Bold" CornerRadius="6" 
-                    HorizontalAlignment="Left"/>
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12" HorizontalAlignment="Left">
+                <Button Content="⚙️ Generar PDF e Imprimir" 
+                        Command="{Binding GuardarPresupuestoCommand}"
+                        Background="#10B981" Foreground="White" 
+                        Padding="24,14" FontSize="15" FontWeight="Bold" CornerRadius="6"/>
+                
+                <Button Content="🚚 Convertir a Remito" 
+                        Command="{Binding ConvertirARemitoCommand}"
+                        IsVisible="{Binding EsEdicion}"
+                        Background="#2563EB" Foreground="White" 
+                        Padding="24,14" FontSize="15" FontWeight="Bold" CornerRadius="6"/>
+            </StackPanel>
             
             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
                 <TextBlock Text="TOTAL:" FontSize="18" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>

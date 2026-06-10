@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:QuickDocs.UI.ViewModels"
+             x:Class="QuickDocs.UI.Views.NotaCreditoView"
+             x:DataType="vm:NotaCreditoViewModel"> <Grid RowDefinitions="Auto, *, Auto" Margin="15" Background="Transparent">
+        
+        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
+            <StackPanel Grid.Column="0" Spacing="5">
+                <TextBlock Text="💸 Nueva Nota de Crédito" FontSize="22" FontWeight="Bold" Foreground="#0F172A"/>
+                <TextBlock Text="Registre saldos a favor del cliente." FontSize="13" Foreground="#64748B"/>
+            </StackPanel>
+            
+            <Button Grid.Column="1" Content="📋 Ver Historial" 
+                    Background="#64748B" Foreground="White" 
+                    Padding="12,8" CornerRadius="6" FontSize="13" FontWeight="Medium"
+                    VerticalAlignment="Top"/>
+        </Grid>
+
+        <Border Grid.Row="1" Background="White" Padding="25" CornerRadius="10" BoxShadow="0 4 6 -1 #10000000, 0 2 4 -1 #06000000" VerticalAlignment="Top">
+            <StackPanel Spacing="20">
+                
+                <Grid ColumnDefinitions="2*, *" ColumnSpacing="20">
+                    <StackPanel Grid.Column="0" Spacing="5">
+                        <TextBlock Text="Emitida a favor de" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                        <AutoCompleteBox Text="{Binding TextoBuscarCliente, Mode=TwoWay}"
+                                         ItemsSource="{Binding SugerenciasClientes}"
+                                         FilterMode="Contains"
+                                         PlaceholderText="Nombre del cliente..." />
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="1" Spacing="5">
+                        <TextBlock Text="Crédito a asignar ($)" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                        <TextBox Text="{Binding Total, Mode=TwoWay}" PlaceholderText="0.00" HorizontalContentAlignment="Right" FontWeight="Bold" Foreground="#6366F1"/>
+                    </StackPanel>
+                </Grid>
+
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Motivo de la emisión" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                    <TextBox Text="{Binding Detalle, Mode=TwoWay}" 
+                             PlaceholderText="Ej. Devolución de mercadería..." 
+                             Height="70" AcceptsReturn="True" TextWrapping="Wrap"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="2" ColumnDefinitions="*, Auto" Margin="0,20,0,0">
+            <Button Grid.Column="0" Content="⚙️ Generar Nota de Crédito" 
+                    Command="{Binding GuardarNotaCreditoCommand}" 
+                    Background="#10B981" Foreground="White" 
+                    Padding="24,14" FontSize="15" FontWeight="Bold" CornerRadius="6" 
+                    HorizontalAlignment="Left"/>
+        </Grid>
+        
+    </Grid>
+</UserControl>

@@ -21,14 +21,18 @@
 
                 <StackPanel Grid.Row="1" Spacing="8">
     
-                    <Button Content="📊 Inicio" 
-                            HorizontalAlignment="Stretch" 
+                    <Button HorizontalAlignment="Stretch" 
                             Padding="12,10"
                             Background="#334155" 
                             Foreground="#F8FAFC"
                             CornerRadius="6"
                             HorizontalContentAlignment="Left"
-                            Command="{Binding MostrarInicio}"/>
+                            Command="{Binding MostrarInicio}">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="📊" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                            <TextBlock Text="Inicio" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
                     
                     <Expander Header="➕ Crear Documento"
                                 HorizontalAlignment="Stretch"
@@ -61,6 +65,15 @@
                                     HorizontalContentAlignment="Left"
                                     Command="{Binding MostrarPresupuesto}"/>
                                     
+                            <Button Content="🚚 Remito" 
+                                    HorizontalAlignment="Stretch" 
+                                    Padding="10,8"
+                                    Background="Transparent"
+                                    Foreground="#94A3B8"
+                                    FontSize="13"
+                                    HorizontalContentAlignment="Left"
+                                    Command="{Binding MostrarRemito}"/>
+
                             <Button Content="🧾 Recibo" 
                                     HorizontalAlignment="Stretch" 
                                     Padding="10,8"
@@ -70,23 +83,18 @@
                                     HorizontalContentAlignment="Left"
                                     Command="{Binding MostrarRecibo}"/>
                                     
-                            <Button Content="🚚 Remito" 
-                                    HorizontalAlignment="Stretch" 
+                            <Button HorizontalAlignment="Stretch" 
                                     Padding="10,8"
                                     Background="Transparent"
                                     Foreground="#94A3B8"
                                     FontSize="13"
                                     HorizontalContentAlignment="Left"
-                                    Command="{Binding MostrarRemito}"/>
-                                    
-                            <Button Content="💳 Nota de Crédito" 
-                                    HorizontalAlignment="Stretch" 
-                                    Padding="10,8"
-                                    Background="Transparent"
-                                    Foreground="#94A3B8"
-                                    FontSize="13"
-                                    HorizontalContentAlignment="Left"
-                                    Command="{Binding MostrarNotaCredito}"/>
+                                    Command="{Binding MostrarNotaCredito}">
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <TextBlock Text="💳" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Nota de Crédito" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
                         </StackPanel>
                     </Expander>
 
@@ -108,14 +116,18 @@
                             HorizontalContentAlignment="Left"
                             Command="{Binding MostrarClientes}"/>
 
-                    <Button Content="📦 Artículos e Ítems" 
-                            HorizontalAlignment="Stretch" 
+                    <Button HorizontalAlignment="Stretch" 
                             Padding="12,10"
                             Background="Transparent"
                             Foreground="#E2E8F0"
                             CornerRadius="6"
                             HorizontalContentAlignment="Left"
-                            Command="{Binding MostrarArticulos}"/>
+                            Command="{Binding MostrarArticulos}">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="📦" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                            <TextBlock Text="Artículos e Ítems" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
 
                     <Button Content="⚙️ Mi Perfil" 
                             HorizontalAlignment="Stretch" 

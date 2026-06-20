@@ -469,6 +469,7 @@ namespace QuickDocs.UI.ViewModels
                 ClienteSeleccionado = null; 
             }
         }
+        
 
         partial void OnTextoBuscarItemChanged(string value)
         {
@@ -545,4 +546,5 @@ namespace QuickDocs.UI.ViewModels
         public decimal PrecioUnitario { get; set; }
         public decimal Importe => Cantidad * PrecioUnitario;
     }
+
 }

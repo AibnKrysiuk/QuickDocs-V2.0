@@ -1,0 +1,193 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+
+    <Style Selector="TextBox">
+        <Setter Property="CaretBrush" Value="#0F172A" /> </Style>
+
+    <Style Selector="AutoCompleteBox /template/ TextBox">
+        <Setter Property="CaretBrush" Value="#0F172A" />
+    </Style>
+    <Style Selector="TextBox">
+        <Setter Property="Background" Value="#FFFFFF"/>
+        <Setter Property="BorderBrush" Value="#CBD5E1"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Foreground" Value="#0F172A"/> <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Padding" Value="10,7"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="WatermarkForeground" Value="#94A3B8"/>
+    </Style>
+
+    <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+        <Setter Property="Background" Value="#FFFFFF"/>
+        <Setter Property="BorderBrush" Value="#2563EB"/>
+        <Setter Property="BorderThickness" Value="1.5"/>
+    </Style>
+    <Style Selector="TextBox:focus">
+        <Setter Property="Foreground" Value="#0F172A"/>
+    </Style>
+
+    <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+        <Setter Property="BorderBrush" Value="#94A3B8"/>
+    </Style>
+<!-- ================ autoCompleteBox ============== -->
+    <Style Selector="AutoCompleteBox">
+        <Setter Property="Background" Value="#FFFFFF"/>
+        <Setter Property="BorderBrush" Value="#CBD5E1"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Foreground" Value="#0F172A"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Padding" Value="10,7"/>
+        <Setter Property="FontSize" Value="13"/>
+    </Style>
+
+    <Style Selector="AutoCompleteBox /template/ TextBox:focus /template/ Border#PART_BorderElement">
+        <Setter Property="Background" Value="#FFFFFF"/>
+        <Setter Property="BorderBrush" Value="#2563EB"/> 
+        <Setter Property="BorderThickness" Value="1.5"/>
+    </Style>
+
+    <Style Selector="AutoCompleteBox /template/ TextBox:focus">
+        <Setter Property="Foreground" Value="#0F172A"/>
+    </Style>
+
+    <Style Selector="AutoCompleteBox /template/ TextBox:pointerover /template/ Border#PART_BorderElement">
+        <Setter Property="BorderBrush" Value="#94A3B8"/>
+    </Style>
+
+    <Style Selector="AutoCompleteBox">
+        <Style.Resources>
+            <SolidColorBrush x:Key="ListBoxBackground">#FFFFFF</SolidColorBrush>
+            <SolidColorBrush x:Key="ListBoxBorderBrush">#CBD5E1</SolidColorBrush>
+        </Style.Resources>
+    </Style>
+
+    <Style Selector="ListBoxItem">
+        <Setter Property="Padding" Value="10,8"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Foreground" Value="#0F172A"/>
+        <Style.Resources>
+            <SolidColorBrush x:Key="ListBoxItemBackgroundPointerOver">#F1F5F9</SolidColorBrush>
+            <SolidColorBrush x:Key="ListBoxItemForegroundPointerOver">#0F172A</SolidColorBrush>
+
+            <SolidColorBrush x:Key="ListBoxItemBackgroundSelected">#2563EB</SolidColorBrush>
+            <SolidColorBrush x:Key="ListBoxItemForegroundSelected">#FFFFFF</SolidColorBrush>
+
+            <SolidColorBrush x:Key="ListBoxItemBackgroundSelectedPointerOver">#1D4ED8</SolidColorBrush>
+            <SolidColorBrush x:Key="ListBoxItemForegroundSelectedPointerOver">#FFFFFF</SolidColorBrush>
+        </Style.Resources>
+    </Style>
+<!-- =============================== CmboBox ========================== -->
+    <Style Selector="ComboBox">
+        <Setter Property="Background" Value="#FFFFFF"/>
+        <Setter Property="BorderBrush" Value="#CBD5E1"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Foreground" Value="#0F172A"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+
+    <Style Selector="ComboBox:focus /template/ Border#PART_BorderElement, ComboBox:dropdownopen /template/ Border#PART_BorderElement">
+        <Setter Property="Background" Value="#FFFFFF"/>
+        <Setter Property="BorderBrush" Value="#2563EB"/> 
+        <Setter Property="BorderThickness" Value="1.5"/>
+    </Style>
+
+    <Style Selector="ComboBox:pointerover /template/ Border#PART_BorderElement">
+        <Setter Property="BorderBrush" Value="#94A3B8"/>
+    </Style>
+
+    <Style Selector="ComboBox:dropdownopen /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="#0F172A"/>
+    </Style>
+    <Style Selector="ComboBox:focus /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="TextBlock.Foreground" Value="#0F172A"/>
+    </Style>
+
+    <Style Selector="ComboBox">
+        <Style.Resources>
+            <SolidColorBrush x:Key="ComboBoxDropDownBackground">#FFFFFF</SolidColorBrush>
+            <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush">#CBD5E1</SolidColorBrush>
+        </Style.Resources>
+    </Style>
+
+    <Style Selector="ComboBoxItem">
+        <Setter Property="Padding" Value="10,8"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Foreground" Value="#0F172A"/>
+        <Style.Resources>
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundPointerOver">#F1F5F9</SolidColorBrush>
+            <SolidColorBrush x:Key="ComboBoxItemForegroundPointerOver">#0F172A</SolidColorBrush>
+
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelected">#E2E8F0</SolidColorBrush>
+            <SolidColorBrush x:Key="ComboBoxItemForegroundSelected">#0F172A</SolidColorBrush>
+
+            <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPointerOver">#CBD5E1</SolidColorBrush>
+            <SolidColorBrush x:Key="ComboBoxItemForegroundSelectedPointerOver">#0F172A</SolidColorBrush>
+        </Style.Resources>
+    </Style>
+
+    <!-- CheckBox -->
+    <Style Selector="CheckBox">
+        <Setter Property="Foreground" Value="#334155"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="CornerRadius" Value="4"/>
+    </Style>
+
+    <Style Selector="CheckBox /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Foreground" Value="#334155"/>
+    </Style>
+
+    <Style Selector="CheckBox /template/ Border">
+        <Setter Property="CornerRadius" Value="4"/>
+    </Style>
+
+    <Style Selector="CheckBox:pointerover">
+        <Setter Property="Foreground" Value="#1E293B"/>
+    </Style>
+
+    <Style Selector="CheckBox:checked">
+        <Setter Property="RenderTransform" Value="none"/>
+    </Style>
+
+    <Style Selector="CheckBox">
+        <Style.Resources>
+            <SolidColorBrush x:Key="CheckBoxCardBackground">#FFFFFF</SolidColorBrush>
+            <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeChecked">#2563EB</SolidColorBrush>
+            <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked">#2563EB</SolidColorBrush>
+            <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked">#CBD5E1</SolidColorBrush>
+            <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUnchecked">#FFFFFF</SolidColorBrush>
+            
+            <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeCheckedPointerOver">#1D4ED8</SolidColorBrush>
+            <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillCheckedPointerOver">#1D4ED8</SolidColorBrush>
+            <SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUncheckedPointerOver">#94A3B8</SolidColorBrush>
+            <SolidColorBrush x:Key="CheckBoxCheckBackgroundFillUncheckedPointerOver">#F8FAFC</SolidColorBrush>
+
+            <SolidColorBrush x:Key="CheckBoxForegroundPointerOver">#334155</SolidColorBrush>
+            <SolidColorBrush x:Key="CheckBoxForegroundCheckedPointerOver">#334155</SolidColorBrush>
+            <SolidColorBrush x:Key="CheckBoxForegroundPressed">#1E293B</SolidColorBrush>
+            <SolidColorBrush x:Key="CheckBoxForegroundCheckedPressed">#1E293B</SolidColorBrush>
+        </Style.Resources>
+    </Style>
+
+    <!-- =========== Item Selected ================= -->
+    <Style Selector="ListBoxItem">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="#0F172A"/>
+    </Style>
+
+    <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="#E2E8F0"/> <Setter Property="TextBlock.Foreground" Value="#0F172A"/> </Style>
+
+    <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="#F1F5F9"/> <Setter Property="TextBlock.Foreground" Value="#0F172A"/>
+    </Style>
+
+    <Style Selector="ListBoxItem:selected:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+        <Setter Property="Background" Value="#CBD5E1"/> <Setter Property="TextBlock.Foreground" Value="#0F172A"/>
+    </Style>
+</Styles>

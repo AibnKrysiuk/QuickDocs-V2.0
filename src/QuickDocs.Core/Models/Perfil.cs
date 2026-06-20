@@ -12,8 +12,9 @@ namespace QuickDocs.Core.Models
 
         // Datos de Identidad Comercial (Para el membrete del PDF)
         public string NombreFantasia { get; set; } = string.Empty;
-        public string Direccion { get; set; } = string.Empty;
         public string CuitCuil { get; set; } = string.Empty; // 🎯 NUEVO CAMPO: CUIT / CUIL fiscal
+        public string Direccion { get; set; } = string.Empty;
+        public string Localidad { get; set; } = string.Empty;
         public string? TelefonoPrincipal { get; set; }
         public string? TelefonoSecundario { get; set; }
         public string EmailContacto { get; set; } = string.Empty;

@@ -8,15 +8,24 @@
         
         <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
             <StackPanel Grid.Column="0" Spacing="5">
-                <TextBlock Text="📄 Nuevo Presupuesto" FontSize="22" FontWeight="Bold" Foreground="#0F172A"/>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="📄" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                    <TextBlock Text="Nuevo Presupuesto" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                </StackPanel>
+                
                 <TextBlock Text="Cargue los datos del cliente y los artículos para el documento." FontSize="13" Foreground="#64748B"/>
             </StackPanel>
             
-            <Button Grid.Column="1" Content="📋 Ver Historial" 
-                Command="{Binding NavegarAHistorialCommand}"
-                Background="#64748B" Foreground="White" 
-                Padding="12,8" CornerRadius="6" FontSize="13" FontWeight="Medium"
-                VerticalAlignment="Top"/>
+            <Button Grid.Column="1" 
+                    Command="{Binding NavegarAHistorialCommand}"
+                    Classes="btn-secondary"
+                    FontSize="13" FontWeight="Medium"
+                    VerticalAlignment="Top">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="📋" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                    <TextBlock Text="Historial" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
         </Grid>
 
         <Border Grid.Row="1" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,15">
@@ -56,15 +65,18 @@
 
         <Border Grid.Row="2" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,15">
             <StackPanel Spacing="10">
-                <TextBlock Text="📥 Ingresar Artículo / Servicio" FontSize="13" FontWeight="Bold" Foreground="#1E293B"/>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="📥" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="13" FontWeight="Bold" Foreground="#1E293B" VerticalAlignment="Center"/>
+                    <TextBlock Text="Ingresar Artículo / Servicio" FontSize="13" FontWeight="Bold" Foreground="#1E293B" VerticalAlignment="Center"/>
+                </StackPanel>
                 
                 <Grid ColumnDefinitions="2*, 1*, 80, 120, Auto" ColumnSpacing="12">
                     <StackPanel Grid.Column="0" Spacing="5">
                         <TextBlock Text="Nombre / Descripción" FontSize="11" Foreground="#475569"/>
                         <AutoCompleteBox Text="{Binding TextoBuscarItem, Mode=TwoWay}" 
-                                        ItemsSource="{Binding SugerenciasItems}"
-                                        FilterMode="Contains"
-                                        PlaceholderText="Ej. Tornillo Hexagonal o busque en catálogo..."/>
+                            ItemsSource="{Binding SugerenciasItems}"
+                            FilterMode="Contains"
+                            PlaceholderText="Ej. Tornillo Hexagonal o busque en catálogo..."/>
                     </StackPanel>
                     
                     <StackPanel Grid.Column="1" Spacing="5">
@@ -82,16 +94,20 @@
                         <TextBox Text="{Binding PrecioRenglon, Mode=TwoWay}" PlaceholderText="0.00" HorizontalContentAlignment="Right"/>
                     </StackPanel>
                     
-                    <Button Grid.Column="4" Content="➕ Agregar" 
+                    <Button Grid.Column="4" 
                             Command="{Binding AgregarRenglonCommand}"
-                            Background="#1E293B" Foreground="White" 
-                            Padding="15,0" Height="32" CornerRadius="6"
-                            VerticalAlignment="Bottom" FontWeight="SemiBold" FontSize="13"/>
+                            Classes="btn-primary-compact"
+                            VerticalAlignment="Bottom">
+                        <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+                            <TextBlock Text="➕" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="12" VerticalAlignment="Center"/>
+                            <TextBlock Text="Agregar" FontSize="13" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
                 </Grid>
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="3" Background="White" CornerRadius="8" Padding="15" BoxShadow="0 2 4 0 #10000000">
+        <Border Grid.Row="3" Background="White" CornerRadius="8" Padding="5" BoxShadow="0 2 4 0 #10000000">
             <Grid RowDefinitions="Auto, *, Auto" RowSpacing="10">
                 
                 <Grid Grid.Row="0" ColumnDefinitions="2*, 1*, 80, 120, 120" Margin="5,0,5,5">
@@ -103,10 +119,17 @@
                 </Grid>
                 <Separator Grid.Row="0" VerticalAlignment="Bottom" Background="#E2E8F0"/>
 
-                <ListBox Grid.Row="1" ItemsSource="{Binding Detalles}" SelectedItem="{Binding DetalleSeleccionado, Mode=TwoWay}" Background="Transparent" BorderThickness="0" MaxHeight="300">
+                <ListBox Grid.Row="1" 
+                        ItemsSource="{Binding Detalles}" 
+                        SelectedItem="{Binding DetalleSeleccionado, Mode=TwoWay}" 
+                        PointerPressed="DeseleccionarLista_OnPointerPressed" 
+                        Background="Transparent" 
+                        BorderThickness="0" 
+                        Padding="0"
+                        MaxHeight="500">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Grid ColumnDefinitions="2*, 1*, 80, 120, 120" Margin="0,4">
+                            <Grid ColumnDefinitions="2*, 1*, 80, 120, 120" Margin="0,2">
                                 <TextBlock Grid.Column="0" Text="{Binding Descripcion}" VerticalAlignment="Center" Foreground="#0F172A"/>
                                 <TextBlock Grid.Column="1" Text="{Binding Marca}" VerticalAlignment="Center" Foreground="#475569"/>
                                 <TextBlock Grid.Column="2" Text="{Binding Cantidad}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0F172A"/>
@@ -117,9 +140,28 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
 
-                <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Left" Margin="0,5,0,0">
-                    <Button Content="✏️ Modificar Ítem" Command="{Binding SeleccionarRenglonParaModificarCommand}" Background="#F1F5F9" Foreground="#334155" Padding="12,6" CornerRadius="4" FontSize="12" FontWeight="Medium"/>
-                    <Button Content="🗑️ Quitar Ítem" Command="{Binding QuitarRenglonCommand}" Background="#FEE2E2" Foreground="#EF4444" Padding="12,6" CornerRadius="4" FontSize="12" FontWeight="Medium"/>
+                <StackPanel Grid.Row="2" 
+                            Orientation="Horizontal" 
+                            Spacing="10" 
+                            HorizontalAlignment="Left" 
+                            Margin="0,5,0,0"
+                            IsVisible="{Binding DetalleSeleccionado, Converter={x:Static ObjectConverters.IsNotNull}}">
+                    
+                    <Button Command="{Binding SeleccionarRenglonParaModificarCommand}" 
+                            Classes="btn-secondary-compact">
+                        <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+                            <TextBlock Text="✏️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                            <TextBlock Text="Editar" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                            
+                    <Button Command="{Binding QuitarRenglonCommand}" 
+                            Classes="btn-danger-compact">
+                        <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+                            <TextBlock Text="🗑️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                            <TextBlock Text="Quitar" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
                 
             </Grid>
@@ -127,16 +169,22 @@
 
         <Grid Grid.Row="4" ColumnDefinitions="*, Auto" Margin="0,15,0,0">
             <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12" HorizontalAlignment="Left">
-                <Button Content="⚙️ Generar PDF e Imprimir" 
-                        Command="{Binding GuardarPresupuestoCommand}"
-                        Background="#10B981" Foreground="White" 
-                        Padding="24,14" FontSize="15" FontWeight="Bold" CornerRadius="6"/>
+                <Button Command="{Binding GuardarPresupuestoCommand}"
+                        Classes="btn-success">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="⚙️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                        <TextBlock Text="Emitir" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
                 
-                <Button Content="🚚 Convertir a Remito" 
-                        Command="{Binding ConvertirARemitoCommand}"
+                <Button Command="{Binding ConvertirARemitoCommand}"
                         IsVisible="{Binding EsEdicion}"
-                        Background="#2563EB" Foreground="White" 
-                        Padding="24,14" FontSize="15" FontWeight="Bold" CornerRadius="6"/>
+                        Classes="btn-accent">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="🚚" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                        <TextBlock Text="Convertir" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
             </StackPanel>
             
             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">

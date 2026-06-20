@@ -1,0 +1,225 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <Style Selector="Button.btn-primary">
+    <Setter Property="Background" Value="#1E293B" /> <Setter Property="Foreground" Value="White" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="FontSize" Value="15" />
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Padding" Value="24,14" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Transitions">
+        <Transitions>
+            <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" Easing="CubicEaseOut"/>
+        </Transitions>
+    </Setter>
+    </Style>
+    <Style Selector="Button.btn-primary /template/ ContentPresenter#PART_ContentPresenter:pointerover">
+        <Setter Property="Background" Value="#334155" /> <Setter Property="Foreground" Value="White" />
+        <Setter Property="RenderTransform" Value="scale(1.03)" />
+    </Style>
+
+    <Style Selector="Button.btn-success">
+    <Setter Property="Background" Value="#10B981" /> <Setter Property="Foreground" Value="White" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="FontSize" Value="15" />
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Padding" Value="24,14" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Transitions">
+        <Transitions>
+            <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" Easing="CubicEaseOut"/>
+        </Transitions>
+    </Setter>
+    </Style>
+    <Style Selector="Button.btn-success /template/ ContentPresenter#PART_ContentPresenter:pointerover">
+        <Setter Property="Background" Value="#059669" /> <Setter Property="Foreground" Value="White" />
+        <Setter Property="RenderTransform" Value="scale(1.03)" />
+    </Style>
+
+    <Style Selector="Button.btn-secondary">
+    <Setter Property="Background" Value="#E2E8F0" />
+    <Setter Property="Foreground" Value="#334155" />
+    <Setter Property="BorderBrush" Value="#CBD5E1" /> <Setter Property="BorderThickness" Value="1" />    <Setter Property="Padding" Value="12,8" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Transitions">
+        <Transitions>
+            <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" Easing="CubicEaseOut"/>
+        </Transitions>
+    </Setter>
+    </Style>
+    <Style Selector="Button.btn-secondary /template/ ContentPresenter#PART_ContentPresenter:pointerover">
+        <Setter Property="Background" Value="#CBD5E1" />
+        <Setter Property="Foreground" Value="#334155" />
+        <Setter Property="BorderBrush" Value="#94A3B8" /> <Setter Property="RenderTransform" Value="scale(1.02)" />
+    </Style>
+
+    <Style Selector="Button.btn-accent">
+    <Setter Property="Background" Value="#2563EB" /> <Setter Property="Foreground" Value="White" />
+    <Setter Property="FontWeight" Value="Bold" />
+    <Setter Property="FontSize" Value="15" />
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Padding" Value="24,14" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Transitions">
+        <Transitions>
+            <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" Easing="CubicEaseOut"/>
+        </Transitions>
+    </Setter>
+    </Style>
+    <Style Selector="Button.btn-accent /template/ ContentPresenter#PART_ContentPresenter:pointerover">
+        <Setter Property="Background" Value="#1D4ED8" /> <Setter Property="Foreground" Value="White" />
+        <Setter Property="RenderTransform" Value="scale(1.03)" />
+    </Style>
+
+    <Style Selector="Button.btn-danger">
+    <Setter Property="Background" Value="#FEE2E2" />
+    <Setter Property="Foreground" Value="#EF4444" />
+    <Setter Property="Padding" Value="12,6" />
+    <Setter Property="CornerRadius" Value="6" />
+    <Setter Property="Transitions">
+        <Transitions>
+            <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.15" Easing="CubicEaseOut"/>
+        </Transitions>
+    </Setter>
+    </Style>
+    <Style Selector="Button.btn-danger /template/ ContentPresenter#PART_ContentPresenter:pointerover">
+        <Setter Property="Background" Value="#FCA5A5" /> <Setter Property="Foreground" Value="#B91C1C" /> <Setter Property="RenderTransform" Value="scale(1.02)" />
+    </Style>
+
+    <!-- Boton de Agregar dentro de las listas de renglones -->
+    <Style Selector="Button.btn-primary-compact">
+    <Setter Property="Background" Value="#EFF6FF"/> <Setter Property="BorderBrush" Value="#BFDBFE"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="#1D4ED8"/> <Setter Property="Height" Value="32"/>
+    <Setter Property="Padding" Value="12,0"/>
+    <Setter Property="CornerRadius" Value="6"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Transitions">
+        <Transitions>
+            <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.075"/>
+        </Transitions>
+    </Setter>
+    </Style>
+
+    <Style Selector="Button.btn-primary-compact:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#DBEAFE"/>
+        <Setter Property="BorderBrush" Value="#93C5FD"/>
+        <Setter Property="Foreground" Value="#1E40AF"/>
+    </Style>
+
+    <!-- success chico -->
+     <Style Selector="Button.btn-success-compact">
+    <Setter Property="Background" Value="#10B981"/>
+    <Setter Property="Foreground" Value="#FFFFFF"/>
+    <Setter Property="Padding" Value="7,4"/>
+    <Setter Property="Height" Value="32"/>
+    <Setter Property="MinWidth" Value="90"/>
+    <Setter Property="CornerRadius" Value="6"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="FontWeight" Value="Medium"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Transitions">
+        <Transitions>
+            <BrushTransition Property="Background" Duration="0:0:0.15"/>
+        </Transitions>
+    </Setter>
+    </Style>
+
+    <Style Selector="Button.btn-success-compact:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#059669"/> <Setter Property="TextBlock.Foreground" Value="#FFFFFF"/>
+    </Style>
+
+    <Style Selector="Button.btn-success-compact:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="#047857"/> <Setter Property="TextBlock.Foreground" Value="#FFFFFF"/>
+    </Style>
+
+    <Style Selector="Button.btn-secondary-compact">
+    <Setter Property="Background" Value="#F1F5F9"/>
+    <Setter Property="BorderBrush" Value="#CBD5E1"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="Foreground" Value="#475569"/>
+    <Setter Property="Padding" Value="7,4"/>
+    <Setter Property="Height" Value="32"/>
+    <Setter Property="MinWidth" Value="90"/>
+    <Setter Property="CornerRadius" Value="6"/>
+    <Setter Property="FontSize" Value="12"/>
+    <Setter Property="FontWeight" Value="Medium"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Transitions">
+        <Transitions>
+            <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.075"/>
+        </Transitions>
+    </Setter>
+    </Style>
+    <Style Selector="Button.btn-secondary-compact:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#E2E8F0"/>
+        <Setter Property="BorderBrush" Value="#94A3B8"/>
+        <Setter Property="Foreground" Value="#1E293B"/>
+    </Style>
+    <Style Selector="Button.btn-secondary-compact:pressed">
+        <Setter Property="RenderTransform" Value="scale(0.98)"/>
+    </Style>
+
+    <Style Selector="Button.btn-danger-compact">
+        <Setter Property="Background" Value="#FEE2E2"/>
+        <Setter Property="Foreground" Value="#991B1B"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="MinWidth" Value="90"/>
+        <Setter Property="Padding" Value="7,4"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.075"/>
+            </Transitions>
+        </Setter>
+    </Style>
+    <Style Selector="Button.btn-danger-compact:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#FCA5A5"/>
+        <Setter Property="Foreground" Value="#7F1D1D"/>
+    </Style>
+    <Style Selector="Button.btn-danger-compact:pressed">
+        <Setter Property="RenderTransform" Value="scale(0.98)"/>
+    </Style>
+
+    <!-- ========================= Boton Cancelar de Clientes y Articulos =============================== -->
+    <Style Selector="Button.btn-tertiary">
+        <Setter Property="Background" Value="#E2E8F0"/> 
+        <Setter Property="BorderBrush" Value="#334155"/>
+        <Setter Property="Foreground" Value="#334155"/> 
+        <Setter Property="Padding" Value="24,14"/>       
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.15"/>
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.btn-tertiary:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#CBD5E1"/> <Setter Property="TextBlock.Foreground" Value="#334155"/>
+    </Style>
+
+    <Style Selector="Button.btn-tertiary:pressed /template/ ContentPresenter">
+        <Setter Property="Background" Value="#94A3B8"/>
+        <Setter Property="TextBlock.Foreground" Value="#334155"/>
+    </Style>
+</Styles>

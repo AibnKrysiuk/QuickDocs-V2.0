@@ -52,6 +52,9 @@ namespace QuickDocs.UI.ViewModels
         }
 
         private Item? _itemSeleccionado;
+        private Item? _itemActual;
+
+        public bool EsEdicion => _itemActual != null;
         public Item? ItemSeleccionado
         {
             get => _itemSeleccionado;
@@ -69,6 +72,7 @@ namespace QuickDocs.UI.ViewModels
         public IAsyncRelayCommand GuardarItemCommand { get; }
         public IAsyncRelayCommand<Item> BorrarItemCommand { get; }
         public IRelayCommand LimpiarFormularioCommand { get; }
+        public IRelayCommand LimpiarFiltrosCommand { get; }
 
         public ArticulosViewModel()
         {
@@ -78,6 +82,7 @@ namespace QuickDocs.UI.ViewModels
             GuardarItemCommand = new AsyncRelayCommand(GuardarItemAsync);
             BorrarItemCommand = new AsyncRelayCommand<Item>(BorrarItemAsync);
             LimpiarFormularioCommand = new RelayCommand(LimpiarCampos);
+            LimpiarFiltrosCommand = new RelayCommand(LimpiarFiltros);
 
             Dispatcher.UIThread.Post(async () => await CargarItemsAsync());
         }
@@ -192,6 +197,9 @@ namespace QuickDocs.UI.ViewModels
 
         private void CargarItemEnFormulario(Item? item)
         {
+            _itemActual = item; 
+            OnPropertyChanged(nameof(EsEdicion)); 
+
             if (item == null)
             {
                 LimpiarCampos();
@@ -205,10 +213,18 @@ namespace QuickDocs.UI.ViewModels
             UnidadSeleccionada = item.UnidadMedida ?? "u.";
         }
 
+        private void LimpiarFiltros()
+        {
+            TextoBuscar = string.Empty; // Vacía la caja de búsqueda
+            LimpiarCampos();            // Resetea el formulario y deselecciona la grilla
+        }
+
         private void LimpiarCampos()
         {
             _itemSeleccionado = null;
+            _itemActual = null;
             OnPropertyChanged(nameof(ItemSeleccionado));
+            OnPropertyChanged(nameof(EsEdicion));
 
             Descripcion = string.Empty;
             Marca = string.Empty;

@@ -54,6 +54,9 @@ namespace QuickDocs.UI.ViewModels
 
         // --- Estado de Selección ---
         private Cliente? _clienteSeleccionado;
+        private Cliente? _clienteActual;
+
+        public bool EsEdicion => _clienteActual != null;
         public Cliente? ClienteSeleccionado
         {
             get => _clienteSeleccionado;
@@ -72,6 +75,7 @@ namespace QuickDocs.UI.ViewModels
         public IAsyncRelayCommand GuardarClienteCommand { get; }
         public IAsyncRelayCommand<Cliente> BorrarClienteCommand { get; }
         public IRelayCommand LimpiarFormularioCommand { get; }
+        public IRelayCommand LimpiarFiltrosCommand { get; }
 
         // --- Constructor ---
         public ClientesViewModel()
@@ -82,6 +86,7 @@ namespace QuickDocs.UI.ViewModels
             GuardarClienteCommand = new AsyncRelayCommand(GuardarClienteAsync);
             BorrarClienteCommand = new AsyncRelayCommand<Cliente>(BorrarClienteAsync);
             LimpiarFormularioCommand = new RelayCommand(LimpiarCampos);
+            LimpiarFiltrosCommand = new RelayCommand(LimpiarFiltros);
 
             Dispatcher.UIThread.Post(async () => await CargarClientesAsync());
         }
@@ -201,12 +206,18 @@ namespace QuickDocs.UI.ViewModels
 
         private void CargarClienteEnFormulario(Cliente? cliente)
         {
+            _clienteActual = cliente; 
+            
+            // Avisamos a la vista que cambie la visibilidad del botón Cancelar
+            OnPropertyChanged(nameof(EsEdicion)); 
+
             if (cliente == null)
             {
                 LimpiarCampos();
                 return;
             }
 
+            // Cargamos los TextBox de la izquierda
             Nombre = cliente.Nombre;
             CuitCuil = cliente.CuitCuil;
             Email = cliente.Email;
@@ -215,10 +226,18 @@ namespace QuickDocs.UI.ViewModels
             Localidad = cliente.Localidad;
         }
 
+        private void LimpiarFiltros()
+        {
+            TextoBuscar = string.Empty; // Vacía la caja de búsqueda
+            LimpiarCampos();            // Resetea el formulario y deselecciona la grilla
+        }
         private void LimpiarCampos()
         {
-            _clienteSeleccionado = null;
-            OnPropertyChanged(nameof(ClienteSeleccionado));
+            _clienteActual = null;
+            _clienteSeleccionado = null; // Deseleccionamos también la fila de la lista
+            
+            OnPropertyChanged(nameof(EsEdicion));
+            OnPropertyChanged(nameof(ClienteSeleccionado)); // Avisamos la deselección
 
             Nombre = string.Empty;
             CuitCuil = string.Empty;
@@ -226,9 +245,6 @@ namespace QuickDocs.UI.ViewModels
             Telefono = string.Empty;
             Direccion = string.Empty;
             Localidad = string.Empty;
-
-            // Al cancelar o limpiar, vaciamos el cuadro de búsqueda para listar todos de nuevo
-            TextoBuscar = string.Empty;
         }
     }
 }

@@ -197,7 +197,8 @@ namespace QuickDocs.UI.ViewModels
 
                     if (nota.ClienteId.HasValue && nota.ClienteId.Value > 0)
                     {
-                        ClienteSeleccionado = _todosLosClientes.FirstOrDefault(c => c.Id == nota.ClienteId.Value);
+                        //ClienteSeleccionado = _todosLosClientes.FirstOrDefault(c => c.Id == nota.ClienteId.Value);
+                        ClienteSeleccionado = _todosLosClientes?.FirstOrDefault(c => c.Id == nota.ClienteId.Value);
                         TextoBuscarCliente = ClienteSeleccionado?.Nombre ?? nota.ClienteNombre ?? string.Empty;
                     }
                     else

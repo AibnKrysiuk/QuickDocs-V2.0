@@ -7,7 +7,10 @@
     <Grid RowDefinitions="Auto, *" Margin="20" Background="Transparent">
         
         <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,15">
-            <TextBlock Text="⚙️ Configuración del Comercio" FontSize="22" FontWeight="Bold" Foreground="#0F172A"/>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="⚙️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                <TextBlock Text="Configuración del Comercio" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+            </StackPanel>
             <TextBlock Text="Personalice la información que aparecerá en sus documentos y facturas." FontSize="13" Foreground="#64748B"/>
         </StackPanel>
 
@@ -29,11 +32,12 @@
                                         RadiusY="10"/>
                                 
                                 <TextBlock Text="📸" 
-                                        FontSize="48" 
-                                        HorizontalAlignment="Center" 
-                                        VerticalAlignment="Center" 
-                                        Opacity="0.2"
-                                        IsVisible="{Binding LogoImagen, Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
+                                    FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji"
+                                    FontSize="48" 
+                                    HorizontalAlignment="Center" 
+                                    VerticalAlignment="Center" 
+                                    Opacity="0.2"
+                                    IsVisible="{Binding LogoImagen, Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
 
                                 <Image Source="{Binding LogoImagen}" 
                                     Margin="8"
@@ -43,7 +47,10 @@
                                     IsVisible="{Binding LogoImagen, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
                             </Grid>
                             
-                            <Button Content="Seleccionar Logo" Command="{Binding SeleccionarLogoCommand}" Background="#1E293B" Foreground="White" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Padding="10" CornerRadius="6"/>
+                            <Button Content="Seleccionar Logo" 
+                                Command="{Binding SeleccionarLogoCommand}" 
+                                Classes="btn-primary" 
+                                HorizontalAlignment="Stretch"/>
                             <TextBlock Text="Formatos: PNG, JPG (Máx 2MB)" FontSize="11" Foreground="#94A3B8" HorizontalAlignment="Center"/>
                             <TextBlock Text="{Binding LogoPath}" 
                                     FontSize="10" 
@@ -99,10 +106,16 @@
                                     <TextBox Text="{Binding EmailContacto, Mode=TwoWay}" PlaceholderText="Ej. contacto@micomercio.com"/>
                                 </StackPanel>
 
-                                <StackPanel Spacing="5">
-                                    <TextBlock Text="Dirección Comercial Completa" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
-                                    <TextBox Text="{Binding Direccion, Mode=TwoWay}" PlaceholderText="Ej. Av. Siempre Viva 742, Morón, CABA"/>
-                                </StackPanel>
+                                <Grid ColumnDefinitions="2*, *" ColumnSpacing="15">
+                                    <StackPanel Grid.Column="0" Spacing="5">
+                                        <TextBlock Text="Dirección Comercial" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                                        <TextBox Text="{Binding Direccion, Mode=TwoWay}" PlaceholderText="Ej. Av. Siempre Viva 742"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Spacing="5">
+                                        <TextBlock Text="Localidad" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                                        <TextBox Text="{Binding Localidad, Mode=TwoWay}" PlaceholderText="Ej. La Plata"/>
+                                    </StackPanel>
+                                </Grid>
                             </StackPanel>
                         </Border>
                     </StackPanel>
@@ -110,18 +123,24 @@
 
                 <Grid ColumnDefinitions="*, *" ColumnSpacing="15" Margin="0,5,0,20">
                     <Button Grid.Column="0"
-                            Content="👁️ Previsualizar Cabecera" 
                             Command="{Binding PrevisualizarCabeceraCommand}"
-                            Background="#334155" Foreground="White" 
-                            Padding="15,16" FontSize="14" FontWeight="SemiBold" CornerRadius="8"
-                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                            Classes="btn-primary"
+                            HorizontalAlignment="Stretch">
+                        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+                            <TextBlock Text="👁️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                            <TextBlock Text="Previsualizar Cabecera" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
 
                     <Button Grid.Column="1"
-                            Content="💾 Guardar Cambios del Perfil" 
                             Command="{Binding GuardarPerfilCommand}"
-                            Background="#10B981" Foreground="White" 
-                            Padding="15,16" FontSize="14" FontWeight="Bold" CornerRadius="8"
-                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                            Classes="btn-success"
+                            HorizontalAlignment="Stretch">
+                        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+                            <TextBlock Text="💾" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                            <TextBlock Text="Guardar Cambios del Perfil" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
                 </Grid>
 
             </StackPanel>

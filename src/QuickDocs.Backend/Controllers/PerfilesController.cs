@@ -66,6 +66,7 @@ namespace QuickDocs.Backend.Controllers
             // Mapeamos los campos del DTO al Modelo
             perfil.NombreFantasia = dto.NombreFantasia;
             perfil.Direccion = dto.Direccion;
+            perfil.Localidad = dto.Localidad; // 🎯 ASIGNACIÓN DEL NUEVO CAMPO
             perfil.CuitCuil = dto.CuitCuil;
             perfil.TelefonoPrincipal = dto.TelefonoPrincipal;
             perfil.TelefonoSecundario = dto.TelefonoSecundario;
@@ -133,7 +134,8 @@ namespace QuickDocs.Backend.Controllers
             if (string.IsNullOrWhiteSpace(perfilParaPdf.NombreFantasia))
             {
                 perfilParaPdf.NombreFantasia = "MI EMPRESA GENÉRICA S.A.";
-                perfilParaPdf.Direccion = "Av. Siempre Viva 742, Localidad";
+                perfilParaPdf.Direccion = "Av. Siempre Viva 742";
+                perfilParaPdf.Localidad = "Springfield"; // 🎯 VALOR POR DEFECTO PARA PREVISUALIZACIÓN
                 perfilParaPdf.CondicionIva = "Monotributista / Responsable Inscripto";
                 perfilParaPdf.TelefonoPrincipal = "+54 11 1234-5678";
             }

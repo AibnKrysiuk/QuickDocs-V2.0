@@ -494,5 +494,13 @@ namespace QuickDocs.UI.ViewModels
                 }
             }
         }
+
+        [ObservableProperty]
+        private bool _mostrarPreciosImpresion;
+
+        partial void OnMostrarPreciosImpresionChanged(bool value)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Remito] Mostrar precios impresión cambiado a: {value}");
+        }
     }
 }

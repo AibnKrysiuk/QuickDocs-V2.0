@@ -1,65 +1,13 @@
 ================ Funcionalidades ==================================
 ===================================================================
 
-Presupuesto 
-    Reparaciones compartidas: 
-    - Editar no imprime correctamente el nuevo.
-    - Check-Box para la informacion que quiero o no imprimir.
-    - Agregar Fecha
-    - Agregar número de documento
-    - Modificar el Total en el PDF para que no se corte el numero. Sucede con valores altos 10 000 000 000 , 00
-    - Modificar textos de las firmas.
-    
-Recibo
-    Reparaciones Locales:
-    - Verificar la creacion del PDF --- Listo
-    - Poner guias para saber la cantidad de ceros al completar el importe.
-    - Boton para redirigir a historial.
-    
-Remito
-    Reparaciones Locales:
-    - Optimizar informacion de direccion de entrega
-    - modificar campos de telefeno del destinatario.
-    
-Nota de Crédito
-    Comenzar. --- listo
-    
-Inicio 
-    Comenzar.
-    
-Historial
-    Reparaciones compartidas:
-    - Ediciones, no funcionan correctamente.
-    
-    Reparaciones locales:
-    - Separar campos direccion y localidad.
-    - Hacer Visible todos los documentos y optimizar la busqueda aplicando filtros. --- todos los documentos visibles listos
-    
-    Funcionalidades futuras:
-    - Formato de los textos y tamaños de imagen
-    - visualizacion de formatos de los documentos y modificaciónes.
 
-Clientes
-    Reparaciones compartidas:
-    - Boton cancelar, modificar o cambiar.
-        - Idea: Que se active al clickear un cliente/articulo.
-    
-    Reparaciones locales:
-    - Boton limpiar inservible, modificar o eliminar.
-    
-    
-Articulos
-    Reparaciones compartidas:
-    - Boton cancelar, modificar o cambiar.
-        - Idea: Que se active al clickear un cliente/articulo.
-        
-    Reparaciones locales:
-    - Boton limpiar inservible, modificar o eliminar.
+================ Trabajo ==========================================
+===================================================================
+- Editar vencimiento de Nota de credito.
 
 
-General Ui 
-    Cambiar Hover
-    
+
 ================ Futuros ==========================================
 ===================================================================
 - Envio por wsp incorporado.

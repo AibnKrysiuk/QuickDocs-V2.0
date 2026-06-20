@@ -11,5 +11,7 @@
   
     <Application.Styles>
         <FluentTheme />
+        <StyleInclude Source="avares://QuickDocs.UI/Styles/Botones.axaml" />
+        <StyleInclude Source="avares://QuickDocs.UI/Styles/Formularios.axaml" />
     </Application.Styles>
 </Application>

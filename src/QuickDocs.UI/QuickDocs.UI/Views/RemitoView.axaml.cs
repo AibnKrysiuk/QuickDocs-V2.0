@@ -13,5 +13,13 @@ namespace QuickDocs.UI.Views
             DataContext = new RemitoViewModel();
         }
 
+        private void DeseleccionarLista_OnPointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+        {
+            if (DataContext is QuickDocs.UI.ViewModels.RemitoViewModel vm)
+            {
+                vm.DetalleSeleccionado = null;
+            }
+        }
+
     }
 }

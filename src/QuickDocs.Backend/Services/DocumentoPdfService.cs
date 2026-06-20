@@ -17,39 +17,45 @@ namespace QuickDocs.Backend.Services
             var colLogo = row.RelativeItem();
             if (!string.IsNullOrEmpty(perfil.LogoPath) && File.Exists(perfil.LogoPath))
             {
-                // Se aplica el alto guardado en el perfil si existe, o un alto estimado (ej. 60)
-                colLogo.Height(60).Image(perfil.LogoPath);
+                colLogo.Height(80).Image(perfil.LogoPath);
             }
             else
             {
-                colLogo.Height(60).Placeholder();
+                colLogo.Height(80).Placeholder();
             }
 
             // LADO DERECHO: Datos Identitarios, Fiscales y de Contacto alineados a la derecha
             row.RelativeItem().Column(col =>
             {
-                // 1. Tipo de Documento (Ej: "PRESUPUESTO")
-                col.Item().AlignRight().Text(tituloDocumento.ToUpper()).FontSize(20).Bold().FontColor(Colors.Blue.Medium);
+                // 1. Tipo de Documento (Ej: "PRESUPUESTO" o "REMITO")
+                col.Item().AlignRight().Text(tituloDocumento.ToUpper()).FontSize(18).Bold().FontColor(Colors.Blue.Medium);
                 
-                // 2. Nombre de Fantasía o Razón Social (Aplicando tamaño de fuente del perfil o 13 por defecto)
+                // ⚠️ LEYENDA LEGAL MANDATORIA: Destacada, más grande y justo debajo del título
+                col.Item().PaddingBottom(4).AlignRight()
+                    .Text("DOCUMENTO NO VÁLIDO COMO FACTURA")
+                    .FontSize(11) // Más grande que el resto de los datos fiscales
+                    .Bold()
+                    .FontColor(Colors.Grey.Darken3); // Un gris oscuro imponente (o Colors.Red.Medium si preferís máxima alerta)
+
+                // 2. Nombre de Fantasía o Razón Social
                 string nombreComercial = (perfil.NombreFantasia ?? "SIN NOMBRE COMERCIAL").ToUpper();
-                col.Item().AlignRight().Text(nombreComercial).FontSize(13).Bold();
+                col.Item().AlignRight().Text(nombreComercial).FontSize(12).Bold();
 
                 // 3. Dirección Comercial
                 string direccion = !string.IsNullOrWhiteSpace(perfil.Direccion) ? perfil.Direccion : "Dirección no especificada";
                 col.Item().AlignRight().Text(direccion).FontSize(10);
 
-                // 4. Localidad / Ubicación
-                if (!string.IsNullOrWhiteSpace(perfil.Direccion))
+                // 4. Localidad / Ubicación (Corregido el chequeo de la propiedad)
+                if (!string.IsNullOrWhiteSpace(perfil.Localidad))
                 {
-                    col.Item().AlignRight().Text(perfil.Direccion).FontSize(10);
+                    col.Item().AlignRight().Text(perfil.Localidad).FontSize(10);
                 }
 
                 // 5. CUIT / CUIL
                 string cuit = !string.IsNullOrWhiteSpace(perfil.CuitCuil) ? perfil.CuitCuil : "XX-XXXXXXXX-X";
                 col.Item().AlignRight().Text($"CUIT: {cuit}").FontSize(10);
 
-                // 6. Teléfonos (Unificados en una sola línea)
+                // 6. Teléfonos
                 string telefonos = perfil.TelefonoPrincipal ?? string.Empty;
                 if (!string.IsNullOrWhiteSpace(perfil.TelefonoSecundario))
                 {
@@ -64,14 +70,13 @@ namespace QuickDocs.Backend.Services
                 string email = !string.IsNullOrWhiteSpace(perfil.EmailContacto) ? perfil.EmailContacto : "Email no especificado";
                 col.Item().AlignRight().Text(email).FontSize(10);
 
-                // 📄 Bloque dinámico adicional de información temporal (si existe)
+                // 📄 Bloque dinámico adicional (Fecha, N° Comprobante, Vencimientos, etc.)
                 if (!string.IsNullOrWhiteSpace(subtituloInfo))
                 {
                     col.Item().PaddingTop(6).AlignRight().Text(subtituloInfo).FontSize(9).FontColor(Colors.Grey.Darken2);
                 }
             });
         }
-
         // ─── ENDPOINT DE PREVISUALIZACIÓN PARA LA VENTANA DE PERFIL ───
         public byte[] GenerarPdfPruebaCabecera(Perfil perfil)
         {
@@ -113,8 +118,8 @@ namespace QuickDocs.Backend.Services
 
                     page.Header().Row(row =>
                     {
-                        string info = $"Fecha: {presupuesto.FechaEmision.ToLocalTime():dd/MM/yyyy}\n" +
-                                     $"Estado: {presupuesto.Estado}";
+                        string info = $"Fecha: {presupuesto.FechaEmision.ToLocalTime():dd/MM/yyyy}\n" + 
+                                    $"N° Comprobante: {presupuesto.NumeroFormateado}\n";
                         DibujarCabeceraComun(row, perfil, "PRESUPUESTO", info);
                     });
 
@@ -171,7 +176,7 @@ namespace QuickDocs.Backend.Services
                         // BLOQUE INFERIOR DE TOTALES Y VALIDEZ
                         col.Item().PaddingTop(20).Row(rowTotales =>
                         {
-                            // Lado izquierdo inferior: Frase dinámica de validez
+                            // 📌 Lado izquierdo inferior: Frase dinámica de validez
                             int diasCalculados = (presupuesto.FechaVencimiento.Date - presupuesto.FechaEmision.Date).Days;
                             if (diasCalculados <= 0) diasCalculados = 15; // Contingencia por horas UTC
 
@@ -180,15 +185,40 @@ namespace QuickDocs.Backend.Services
                                 colValidez.Item().Text($"📌 Documento válido por {diasCalculados} días.").FontSize(10).Italic().Bold().FontColor(Colors.Grey.Darken3);
                             });
 
-                            // Lado derecho inferior: Totales numéricos
-                            rowTotales.ConstantItem(200).Column(totalesCol =>
+                            // 📦 Lado derecho inferior: Cajita Gris de Totales con mayor espacio
+                            // 📦 Lado derecho inferior: Cajita Gris de Totales (Línea corregida y simplificada)
+                            rowTotales.ConstantItem(220).Background(Colors.Grey.Lighten4).Padding(10).Column(totalesCol =>
                             {
-                                totalesCol.Item().Row(r => { r.RelativeItem().Text("Subtotal:"); r.ConstantItem(80).AlignRight().Text($"${presupuesto.Subtotal:N2}"); });
-                                if (presupuesto.Descuento > 0)
-                                {
-                                    totalesCol.Item().Row(r => { r.RelativeItem().Text("Descuento:").FontColor(Colors.Red.Medium); r.ConstantItem(80).AlignRight().Text($"-${presupuesto.Descuento:N2}").FontColor(Colors.Red.Medium); });
-                                }
-                                totalesCol.Item().Row(r => { r.RelativeItem().Text("TOTAL:").Bold().FontSize(12); r.ConstantItem(80).AlignRight().Text($"${presupuesto.Total:N2}").Bold().FontSize(12); });
+                                // 1. Subtotal
+                                totalesCol.Item().Row(r => 
+                                { 
+                                    r.RelativeItem().Text("Subtotal:").FontSize(10).FontColor(Colors.Grey.Darken3); 
+                                    r.AutoItem().Text($"${presupuesto.Subtotal:N2}").FontSize(10); 
+                                });
+                                
+                                // 2. Descuento (Visible fijo, muestra $0.00 si está en cero por ahora)
+                                totalesCol.Item().PaddingTop(2).Row(r => 
+                                { 
+                                    r.RelativeItem().Text("Descuento:").FontSize(10).FontColor(Colors.Red.Medium); 
+                                    r.AutoItem().Text($"-${presupuesto.Descuento:N2}").FontSize(10).FontColor(Colors.Red.Medium); 
+                                });
+
+                                // 3. IVA % (Estructura fija lista para cuando mapees el porcentaje)
+                                totalesCol.Item().PaddingTop(2).Row(r => 
+                                { 
+                                    r.RelativeItem().Text("IVA %:").FontSize(10).FontColor(Colors.Grey.Darken3); 
+                                    r.AutoItem().Text("$0.00").FontSize(10); 
+                                });
+
+                                // Línea divisoria sutil antes del Total
+                                totalesCol.Item().PaddingVertical(4).LineHorizontal(0.5f).LineColor(Colors.Grey.Lighten2);
+
+                                // 4. Total
+                                totalesCol.Item().Row(r => 
+                                { 
+                                    r.RelativeItem().Text("Total:").Bold().FontSize(12).FontColor(Colors.Blue.Darken4); 
+                                    r.AutoItem().Text($"${presupuesto.Total:N2}").Bold().FontSize(12).FontColor(Colors.Blue.Darken4); 
+                                });
                             });
                         });
                     });
@@ -245,8 +275,7 @@ namespace QuickDocs.Backend.Services
                         page.Header().Row(row =>
                         {
                             string info = $"Fecha: {recibo.FechaEmision.ToLocalTime():dd/MM/yyyy}\n" +
-                                         (recibo.RemitoId.HasValue ? $"Remito Asociado: #{recibo.RemitoId.Value}\n" : "") +
-                                         $"Comprobante: #{recibo.Id.ToString("D8")}";
+                                         $"N° Comprobante: {recibo.NumeroFormateado}\n";
                             DibujarCabeceraComun(row, perfil, "RECIBO DE PAGO", info);
                         });
 
@@ -264,7 +293,6 @@ namespace QuickDocs.Backend.Services
                             {
                                 c.Item().Text("DE / PARA:").Bold().FontSize(11);
                                 c.Item().Text($"Nombre: {cliente.Nombre}");
-                                c.Item().Text($"Id Cliente: {(cliente.Id > 0 ? cliente.Id.ToString() : "No registrado")}");
                                 if (!string.IsNullOrEmpty(cliente.CuitCuil) && cliente.CuitCuil != "00-00000000-0")
                                 {
                                     c.Item().Text($"CUIT/CUIL: {cliente.CuitCuil}");
@@ -313,9 +341,8 @@ namespace QuickDocs.Backend.Services
 
                         page.Header().Row(row =>
                         {
-                            string info = $"Documento No Válido como Factura\nFecha Emisión: {remito.FechaEmision.ToLocalTime():dd/MM/yyyy}\n" +
-                                         (remito.PresupuestoId.HasValue ? $"Origen Presupuesto: #{remito.PresupuestoId.Value}\n" : "") +
-                                         $"Número: #{remito.Id.ToString("D8")}";
+                            string info = $"Fecha Emisión: {remito.FechaEmision.ToLocalTime():dd/MM/yyyy}\n" +
+                                        $"N° Comprobante: {remito.NumeroFormateado}\n";
                             DibujarCabeceraComun(row, perfil, "REMITO", info);
                         });
 
@@ -327,8 +354,7 @@ namespace QuickDocs.Backend.Services
                                 {
                                     c.Item().Text("DESTINATARIO:").Bold().FontSize(11).FontColor(Colors.Grey.Darken3);
                                     c.Item().Text($"Nombre: {cliente.Nombre}");
-                                    c.Item().Text($"CUIT/CUIL: {cliente.CuitCuil}");
-                                    c.Item().Text($"Teléfono Ref: {cliente.Direccion}");
+                                    c.Item().Text($"Teléfono Ref: {cliente.Telefono}");
                                 });
 
                                 row.ConstantItem(15);
@@ -337,7 +363,6 @@ namespace QuickDocs.Backend.Services
                                 {
                                     d.Item().Text("LUGAR DE ENTREGA:").Bold().FontSize(11).FontColor(Colors.Orange.Darken3);
                                     d.Item().Text(string.IsNullOrEmpty(remito.DireccionEntrega) ? "Se retira por el local del emisor" : remito.DireccionEntrega).Bold();
-                                    d.Item().PaddingTop(5).Text($"Estado del Envío: {remito.Estado}").FontSize(9).Italic();
                                 });
                             });
 
@@ -401,9 +426,9 @@ namespace QuickDocs.Backend.Services
 
                         page.Header().Row(row =>
                         {
-                            string info = $"Fecha Emisión: {notaCredito.FechaEmision.ToLocalTime():dd/MM/yyyy}\n" +
-                                         $"Vence (Saldo Válido): {notaCredito.FechaVencimiento.ToLocalTime():dd/MM/yyyy}\n" +
-                                         $"Comprobante: #{notaCredito.Id.ToString("D8")}";
+                            string info = $"Fecha Emisión: {notaCredito.FechaEmision.ToLocalTime():dd/MM/yyyy}\n" + 
+                                        $"N° Comprobante: {notaCredito.NumeroFormateado}\n" +
+                                        $"Vence (Saldo Válido): {notaCredito.FechaVencimiento.ToLocalTime():dd/MM/yyyy}\n";
                             DibujarCabeceraComun(row, perfil, "NOTA DE CRÉDITO", info);
                         });
 

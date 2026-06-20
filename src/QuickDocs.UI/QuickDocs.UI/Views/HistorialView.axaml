@@ -7,23 +7,54 @@
     <Grid RowDefinitions="Auto, Auto, *, Auto" Margin="15" Background="Transparent">
         
         <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,15">
-            <TextBlock Text="📋 Historial de Documentos" FontSize="22" FontWeight="Bold" Foreground="#0F172A"/>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="📋" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                <TextBlock Text="Historial de Documentos" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+            </StackPanel>
             <TextBlock Text="Consulte, filtre y gestione todos los comprobantes emitidos por el sistema." FontSize="13" Foreground="#64748B"/>
         </StackPanel>
 
         <Border Grid.Row="1" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,15">
             <StackPanel Spacing="10">
-                <TextBlock Text="🔍 Filtros de Búsqueda" FontSize="12" FontWeight="Bold" Foreground="#334155"/>
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock Text="🔍" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="12" FontWeight="Bold" Foreground="#334155" VerticalAlignment="Center"/>
+                    <TextBlock Text="Filtros de Búsqueda" FontSize="12" FontWeight="Bold" Foreground="#334155" VerticalAlignment="Center"/>
+                </StackPanel>
                 
                 <Grid ColumnDefinitions="*, *, *, Auto" ColumnSpacing="15">
                     <StackPanel Grid.Column="0" Spacing="5">
                         <TextBlock Text="Tipo de Documento" FontSize="11" Foreground="#475569"/>
-                        <ComboBox HorizontalAlignment="Stretch" SelectedIndex="{Binding TipoDocumentoSeleccionado, Mode=TwoWay}">
-                            <ComboBoxItem>📁 Todos los documentos</ComboBoxItem>
-                            <ComboBoxItem>📄 Presupuestos</ComboBoxItem>
-                            <ComboBoxItem>🚚 Remitos</ComboBoxItem>
-                            <ComboBoxItem>💰 Recibos</ComboBoxItem>
-                            <ComboBoxItem>💳 Notas de Crédito</ComboBoxItem>
+                        <ComboBox SelectedIndex="{Binding TipoDocumentoSeleccionado, Mode=TwoWay}">
+                            <ComboBoxItem>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="📁" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Todos los documentos" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="📄" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Presupuestos" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="🚚" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Remitos" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="💰" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Recibos" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="💳" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Notas de Crédito" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
 
@@ -34,24 +65,52 @@
 
                     <StackPanel Grid.Column="2" Spacing="5">
                         <TextBlock Text="Período" FontSize="11" Foreground="#475569"/>
-                        <ComboBox HorizontalAlignment="Stretch" SelectedIndex="{Binding PeriodoSeleccionado, Mode=TwoWay}">
-                            <ComboBoxItem>📅 Cualquier fecha</ComboBoxItem>
-                            <ComboBoxItem>☀️ Hoy</ComboBoxItem>
-                            <ComboBoxItem>📅 Últimos 7 días</ComboBoxItem>
-                            <ComboBoxItem>🗓️ Este mes</ComboBoxItem>
+                        <ComboBox SelectedIndex="{Binding PeriodoSeleccionado, Mode=TwoWay}">
+                            <ComboBoxItem>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="📅" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Cualquier fecha" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="☀️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Hoy" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="📅" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Últimos 7 días" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="🗓️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Este mes" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ComboBoxItem>
                         </ComboBox>
                     </StackPanel>
 
                     <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="10" VerticalAlignment="Bottom">
-                        <Button Content="🧹 Limpiar" 
-                                Command="{Binding LimpiarFiltrosCommand}"
-                                Background="#F1F5F9" Foreground="#475569" 
-                                Padding="15,0" Height="32" CornerRadius="6" FontSize="12" FontWeight="Medium"/>
+                        <Button Command="{Binding LimpiarFiltrosCommand}"
+                                Classes="btn-secondary-compact"
+                                FontSize="12" FontWeight="Medium">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="🧹" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                <TextBlock Text="Limpiar" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
                                 
-                        <Button Content="🔄 Refrescar" 
-                                Command="{Binding CargarHistorialCommand}"
-                                Background="#E2E8F0" Foreground="#1E293B" 
-                                Padding="15,0" Height="32" CornerRadius="6" FontSize="12" FontWeight="Medium"/>
+                        <Button Command="{Binding CargarHistorialCommand}"
+                                Classes="btn-secondary-compact"
+                                FontSize="12" FontWeight="Medium">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                <TextBlock Text="🔄" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                <TextBlock Text="Refrescar" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
                 </Grid>
             </StackPanel>
@@ -60,20 +119,20 @@
         <Border Grid.Row="2" Background="White" CornerRadius="8" Padding="15" BoxShadow="0 2 4 0 #10000000">
             <Grid RowDefinitions="Auto, *">
                 
-                <Grid Grid.Row="0" ColumnDefinitions="90, 130, 120, 2*, 100, 250" Margin="5,0,5,5">
+                <Grid Grid.Row="0" ColumnDefinitions="100, 130, 140, 250, *, 300" Margin="5,0,5,5">
                     <TextBlock Grid.Column="0" Text="Fecha" FontWeight="SemiBold" Foreground="#334155"/>
                     <TextBlock Grid.Column="1" Text="Tipo" FontWeight="SemiBold" Foreground="#334155"/>
                     <TextBlock Grid.Column="2" Text="Número" FontWeight="SemiBold" Foreground="#334155"/>
                     <TextBlock Grid.Column="3" Text="Cliente / Detalle" FontWeight="SemiBold" Foreground="#334155"/>
-                    <TextBlock Grid.Column="4" Text="Total" FontWeight="SemiBold" Foreground="#334155" HorizontalAlignment="Right"/>
-                    <TextBlock Grid.Column="5" Text="Acciones" FontWeight="SemiBold" Foreground="#334155" HorizontalAlignment="Center"/>
+                    
+                    <TextBlock Grid.Column="6" Text="Acciones" FontWeight="SemiBold" Foreground="#334155" HorizontalAlignment="Center"/>
                 </Grid>
                 <Separator Grid.Row="0" VerticalAlignment="Bottom" Background="#E2E8F0"/>
 
                 <ListBox Grid.Row="1" ItemsSource="{Binding Documentos}" Background="Transparent" BorderThickness="0">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Grid ColumnDefinitions="90, 130, 120, 2*, 100, 250" Margin="0,4">
+                            <Grid ColumnDefinitions="100, 130, 140, 250, *,300" Margin="0,4">
                                 
                                 <TextBlock Grid.Column="0" Text="{Binding FechaEmision, StringFormat='{}{0:dd/MM/yyyy}'}" VerticalAlignment="Center" Foreground="#475569" FontSize="13"/>
                                 
@@ -83,24 +142,37 @@
                                 
                                 <TextBlock Grid.Column="2" Text="{Binding NumeroFormateado}" VerticalAlignment="Center" Foreground="#475569" FontSize="13" FontFamily="Courier New"/>
                                 
-                                <TextBlock Grid.Column="3" Text="{Binding ClienteNombre}" VerticalAlignment="Center" Foreground="#0F172A" FontWeight="Medium" FontSize="13"/>
+                                <TextBlock Grid.Column="3" Text="{Binding ClienteNombre}" VerticalAlignment="Center" Foreground="#0F172A" FontWeight="Medium" FontSize="13" TextTrimming="CharacterEllipsis"/>
                                 
-                                
-                                <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
-                                    <Button Content="✏️ Editar" 
-                                            Command="{Binding $parent[UserControl].DataContext.EditarDocumentoCommand}"
-                                            CommandParameter="{Binding}"
-                                            Background="#E0F2FE" Foreground="#0369A1" Padding="8,4" FontSize="11" CornerRadius="4"/>
+                                <StackPanel Grid.Column="6" 
+                                            Orientation="Horizontal" 
+                                            Spacing="8" 
+                                            HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center">
                                     
-                                    <Button Content="🖨️ PDF" 
-                                            Command="{Binding ((vm:HistorialViewModel)DataContext).ReimprimirPdfCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    <Button Command="{Binding $parent[UserControl].DataContext.EditarDocumentoCommand}"
                                             CommandParameter="{Binding}"
-                                            Background="#D1FAE5" Foreground="#065F46" Padding="8,4" FontSize="11" CornerRadius="4"/>
+                                            Classes="btn-secondary-compact"
+                                            Width="32" Height="32" Padding="0"
+                                            ToolTip.Tip="Editar Documento">
+                                        <TextBlock Text="✏️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Button>
                                     
-                                    <Button Content="🗑️ Borrar" 
-                                            Command="{Binding ((vm:HistorialViewModel)DataContext).BorrarDocumentoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    <Button Command="{Binding ((vm:HistorialViewModel)DataContext).ReimprimirPdfCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                             CommandParameter="{Binding}"
-                                            Background="#FEE2E2" Foreground="#991B1B" Padding="8,4" FontSize="11" CornerRadius="4"/>
+                                            Classes="btn-success-compact"
+                                            Width="32" Height="32" Padding="0"
+                                            ToolTip.Tip="Reimprimir PDF">
+                                        <TextBlock Text="🖨️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Button>
+                                    
+                                    <Button Command="{Binding ((vm:HistorialViewModel)DataContext).BorrarDocumentoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            Classes="btn-danger-compact"
+                                            Width="32" Height="32" Padding="0"
+                                            ToolTip.Tip="Eliminar Documento">
+                                        <TextBlock Text="🗑️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Button>
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>

@@ -50,6 +50,7 @@ namespace QuickDocs.UI.ViewModels
 
             CargarDatosInicialesCommand = new AsyncRelayCommand(CargarDatosInicialesAsync);
             GuardarReciboCommand = new AsyncRelayCommand(GuardarReciboAsync);
+            NavegarAHistorialCommand = new RelayCommand(() => { });
             
             Dispatcher.UIThread.Post(async () => await CargarDatosInicialesAsync());
         }
@@ -242,7 +243,8 @@ namespace QuickDocs.UI.ViewModels
                 // Resolución y vinculación del cliente en la interfaz
                 if (reciboReal.ClienteId.HasValue && reciboReal.ClienteId.Value > 0)
                 {
-                    ClienteSeleccionado = _todosLosClientes.FirstOrDefault(c => c.Id == reciboReal.ClienteId.Value);
+                    //ClienteSeleccionado = _todosLosClientes.FirstOrDefault(c => c.Id == reciboReal.ClienteId.Value);
+                    ClienteSeleccionado = _todosLosClientes?.FirstOrDefault(c => c.Id == reciboReal.ClienteId.Value);
                     TextoBuscarCliente = ClienteSeleccionado?.Nombre ?? reciboReal.ClienteNombre ?? string.Empty;
                 }
                 else

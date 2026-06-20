@@ -12,6 +12,10 @@
 .DS_Store
 Thumbs.db
 
+QuickDocs
+*Trabajo.txt
+*FuturasCorrecciones.txt
+
 # Archivos de compilación y salida de .NET
 [Dd]ebug/
 [Rr]elease/

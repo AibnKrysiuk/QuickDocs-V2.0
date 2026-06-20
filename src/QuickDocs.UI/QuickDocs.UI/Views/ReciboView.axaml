@@ -6,16 +6,25 @@
     
     <Grid RowDefinitions="Auto, *, Auto" Margin="15" Background="Transparent">
         
-        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
+        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
             <StackPanel Grid.Column="0" Spacing="5">
-                <TextBlock Text="🧾 Nuevo Recibo de Pago" FontSize="22" FontWeight="Bold" Foreground="#0F172A"/>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="🧾" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                    <TextBlock Text="Nuevo Recibo de Pago" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                </StackPanel>
+                
                 <TextBlock Text="Complete los datos del cobro para emitir el comprobante." FontSize="13" Foreground="#64748B"/>
             </StackPanel>
             
-            <Button Grid.Column="1" Content="📋 Ver Historial" 
-                    Background="#64748B" Foreground="White" 
-                    Padding="12,8" CornerRadius="6" FontSize="13" FontWeight="Medium"
-                    VerticalAlignment="Top"/>
+            <Button Grid.Column="1" 
+                    Classes="btn-secondary"
+                    FontSize="13" FontWeight="Medium"
+                    VerticalAlignment="Top">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="📋" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                    <TextBlock Text="Historial" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
         </Grid>
 
         <Border Grid.Row="1" Background="White" Padding="25" CornerRadius="10" BoxShadow="0 4 6 -1 #10000000, 0 2 4 -1 #06000000" VerticalAlignment="Top">
@@ -36,11 +45,8 @@
                         <TextBox Text="{Binding ImporteRecibido, Mode=TwoWay}" 
                                 PlaceholderText="0.00" 
                                 HorizontalContentAlignment="Right" 
-                                FontWeight="Bold" 
-                                Foreground="#10B981"/>
+                                FontWeight="Bold"/>
                     </StackPanel>
-
-                    
                 </Grid>
 
                 <StackPanel Spacing="5">
@@ -54,13 +60,17 @@
                 </StackPanel>
 
                 <StackPanel Spacing="5">
-                        <TextBlock Text="Forma de Pago" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
-                        <ComboBox SelectedItem="{Binding FormaPago}" HorizontalAlignment="Stretch">
-                            <ComboBoxItem Content="Efectivo" />
-                            <ComboBoxItem Content="Transferencia" />
-                            <ComboBoxItem Content="Cheque" />
-                        </ComboBox>
-                    </StackPanel>
+                    <TextBlock Text="Forma de Pago" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                    
+                    <ComboBox SelectedIndex="{Binding FormaPago, Mode=TwoWay}">
+                        <ComboBoxItem Content="Efectivo" />
+                        <ComboBoxItem Content="Qr" />
+                        <ComboBoxItem Content="Transferencia" />
+                        <ComboBoxItem Content="Tarjeta Débito" />
+                        <ComboBoxItem Content="Tarjeta Crédito" />
+                        <ComboBoxItem Content="Cheque" />
+                    </ComboBox>
+                </StackPanel>
 
                 <TextBlock Text="* Los datos de la empresa emisora y la fecha actual se incluirán automáticamente al generar el documento." 
                            FontSize="11" 
@@ -70,11 +80,13 @@
         </Border>
 
         <Grid Grid.Row="2" ColumnDefinitions="*, Auto" Margin="0,20,0,0">
-            <Button Grid.Column="0" Content="💾 Guardar y Generar PDF" 
-                Command="{Binding GuardarReciboCommand}" 
-                Background="#10B981" Foreground="White" 
-                Padding="24,14" FontSize="15" FontWeight="Bold" CornerRadius="6" 
-                HorizontalAlignment="Left"/>
+            <Button Command="{Binding GuardarReciboCommand}"
+                    Classes="btn-success">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="⚙️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                    <TextBlock Text="Emitir" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
         </Grid>
         
     </Grid>

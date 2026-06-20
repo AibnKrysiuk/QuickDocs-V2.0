@@ -10,5 +10,13 @@ namespace QuickDocs.UI.Views
             InitializeComponent();
             DataContext = new PresupuestoViewModel();
         }
+
+        private void DeseleccionarLista_OnPointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+        {
+            if (DataContext is QuickDocs.UI.ViewModels.PresupuestoViewModel vm)
+            {
+                vm.DetalleSeleccionado = null;
+            }
+        }
     }
 }

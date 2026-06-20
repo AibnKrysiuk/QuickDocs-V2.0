@@ -242,8 +242,8 @@ namespace QuickDocs.Backend.Controllers
                 clienteData = clienteReal ?? new Cliente
                 {
                     Nombre = presupuesto.ClienteNombre,
-                    CuitCuil = null,
-                    Direccion = null
+                    CuitCuil = string.Empty,
+                    Direccion = string.Empty
                 };
             }
             else
@@ -251,8 +251,8 @@ namespace QuickDocs.Backend.Controllers
                 clienteData = new Cliente
                 {
                     Nombre = presupuesto.ClienteNombre,
-                    CuitCuil = null, 
-                    Direccion = null  
+                    CuitCuil = string.Empty, 
+                    Direccion = string.Empty  
                 };
             }
 

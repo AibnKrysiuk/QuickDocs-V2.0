@@ -28,6 +28,7 @@ namespace QuickDocs.UI.ViewModels
         private string _telefonoSecundario = string.Empty;
         private string _emailContacto = string.Empty;
         private string _direccion = string.Empty;
+        private string _localidad = string.Empty; // 🎯 NUEVO CAMPO RESPALDATORIO
         private string _logoPath = string.Empty;
 
         private Bitmap? _logoImagen;
@@ -80,6 +81,12 @@ namespace QuickDocs.UI.ViewModels
             set => SetProperty(ref _direccion, value);
         }
 
+        public string Localidad
+        {
+            get => _localidad;
+            set => SetProperty(ref _localidad, value);
+        }
+
         public string LogoPath
         {
             get => _logoPath;
@@ -102,6 +109,7 @@ namespace QuickDocs.UI.ViewModels
 
             Task.Run(async () => await CargarPerfilDesdeApi());
         }
+
         private async Task CargarPerfilDesdeApi()
         {
             try
@@ -122,8 +130,9 @@ namespace QuickDocs.UI.ViewModels
                         TelefonoSecundario = perfilGuardado.TelefonoSecundario ?? string.Empty;
                         EmailContacto = perfilGuardado.EmailContacto;
                         Direccion = perfilGuardado.Direccion;
+                        Localidad = perfilGuardado.Localidad; // 🎯 CARGA DEL NUEVO CAMPO DESDE LA DB
                         
-                        // Asignamos las rutas para el XAML y el PDF
+                        // Asignamos las rutas para el XAML and el PDF
                         LogoPath = perfilGuardado.LogoPath;
                         _rutaLogoSeleccionadoLocal = perfilGuardado.LogoPath;
 
@@ -158,6 +167,7 @@ namespace QuickDocs.UI.ViewModels
                 CargarDatosDePrueba(); // Contingencia si la API está apagada
             }
         }
+
         private void CargarDatosDePrueba()
         {
             NombreFantasia = "QuickDocs";
@@ -166,7 +176,8 @@ namespace QuickDocs.UI.ViewModels
             TelefonoPrincipal = "21456325";
             TelefonoSecundario = "21456325";
             EmailContacto = "quickdocs@gmail.com";
-            Direccion = "Algun Lugar 123, La Plata, Bs.As. 1900";
+            Direccion = "Algun Lugar 123";
+            Localidad = "La Plata"; // 🎯 VALOR POR DEFECTO REUBICADO AQUÍ
         }
 
         // ─── LÓGICA DE PREVISUALIZACIÓN DE PDF ───
@@ -179,8 +190,9 @@ namespace QuickDocs.UI.ViewModels
                     UsuarioId = 1,
                     NombreFantasia = this.NombreFantasia,
                     Direccion = this.Direccion,
-                    CuitCuil = this.CuitCuil,       // 🎯 Enviamos el nuevo campo
-                    EmailContacto = this.EmailContacto, // 🎯 Enviamos el nuevo campo
+                    Localidad = this.Localidad,     // 🎯 Enviamos el nuevo campo para armar el PDF
+                    CuitCuil = this.CuitCuil,       
+                    EmailContacto = this.EmailContacto, 
                     CondicionIva = this.CondicionIva,
                     TelefonoPrincipal = this.TelefonoPrincipal,
                     TelefonoSecundario = this.TelefonoSecundario,
@@ -213,7 +225,6 @@ namespace QuickDocs.UI.ViewModels
                         // Plan B genérico si xdg-open no responde
                         Process.Start(new ProcessStartInfo { FileName = tempPath, UseShellExecute = true });
                     }
-
                 }
                 else
                 {
@@ -238,6 +249,7 @@ namespace QuickDocs.UI.ViewModels
                 content.Add(new StringContent("1"), "UsuarioId"); // Usuario fijo para pruebas locales
                 content.Add(new StringContent(NombreFantasia ?? string.Empty), "NombreFantasia");
                 content.Add(new StringContent(Direccion ?? string.Empty), "Direccion");
+                content.Add(new StringContent(Localidad ?? string.Empty), "Localidad"); // 🎯 ENVIAMOS LOCALIDAD AL FORM-DATA
                 content.Add(new StringContent(CuitCuil ?? string.Empty), "CuitCuil");
                 content.Add(new StringContent(CondicionIva ?? string.Empty), "CondicionIva");
                 content.Add(new StringContent(TelefonoPrincipal ?? string.Empty), "TelefonoPrincipal");
@@ -308,6 +320,12 @@ namespace QuickDocs.UI.ViewModels
                         // 4. Obtenemos la ruta absoluta del archivo en Linux
                         _rutaLogoSeleccionadoLocal = files[0].Path.LocalPath;
                         Console.WriteLine($"[LOGO LOCAL SELECCIONADO]: {_rutaLogoSeleccionadoLocal}");
+                        
+                        // Cargamos el Bitmap inmediatamente para previsualizarlo en el recuadro antes de guardar
+                        if (File.Exists(_rutaLogoSeleccionadoLocal))
+                        {
+                            LogoImagen = new Bitmap(_rutaLogoSeleccionadoLocal);
+                        }
                     }
                 }
             }

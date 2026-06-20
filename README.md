@@ -1,4 +1,4 @@
-<img width="807" height="450" alt="Logo" src="https://github.com/user-attachments/assets/8fba6515-512d-4d86-a519-7dded216a256" />
+<img width="404" height="225" alt="Logo" src="https://github.com/user-attachments/assets/8fba6515-512d-4d86-a519-7dded216a256" />
 
 
 # 🚀 QuickDocs v2.0

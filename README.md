@@ -1,3 +1,6 @@
+<img width="807" height="450" alt="Logo" src="https://github.com/user-attachments/assets/8fba6515-512d-4d86-a519-7dded216a256" />
+
+
 # 🚀 QuickDocs v2.0
 
 QuickDocs es una aplicación de escritorio liviana, eficiente y multiplataforma diseñada para la gestión rápida de documentos comerciales. Ideal para pequeños talleres y negocios que necesitan profesionalizar su facturación administrativa sin complicaciones.

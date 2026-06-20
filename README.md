@@ -54,10 +54,7 @@ El proyecto está preparado para compilarse en archivos únicos e independientes
 ## 📸 Capturas
 <img width="1538" height="827" alt="Screenshot_2026-06-20_17-33-52" src="https://github.com/user-attachments/assets/f68c18c3-7ce3-41ef-9058-e95057973342" />
 <img width="1538" height="827" alt="Screenshot_2026-06-20_17-39-39" src="https://github.com/user-attachments/assets/eb5abe4f-2d65-4071-b6b9-38b62a84e0bd" />
-<img width="1538" height="827" alt="Screenshot_2026-06-20_17-43-56" src="https://github.com/user-attachments/assets/51f92576-3056-4407-9d52-9417909de659" />
 <img width="1538" height="827" alt="Screenshot_2026-06-20_17-37-27" src="https://github.com/user-attachments/assets/6f0a50ce-c018-4cfe-a194-1c4bae07a422" />
-<img width="1538" height="827" alt="Screenshot_2026-06-20_17-36-37" src="https://github.com/user-attachments/assets/931cd7be-6ec5-45b0-87b7-9892a8469daa" />
-<img width="1538" height="827" alt="Screenshot_2026-06-20_17-39-39" src="https://github.com/user-attachments/assets/52f97294-3e4e-4f5e-9c91-309a8e3d94c9" />
 <img width="1481" height="699" alt="Screenshot_2026-06-20_17-40-17" src="https://github.com/user-attachments/assets/82a894cb-dd1b-4a42-8452-f5af3a70673a" />
 
 

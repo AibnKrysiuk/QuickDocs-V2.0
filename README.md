@@ -12,7 +12,7 @@ Esta versión 2.0 redefine el proyecto mediante una arquitectura desacoplada (Fr
 * **Gestión de Catálogos:** Módulos integrados y optimizados para administrar clientes, productos y servicios con sugerencias de búsqueda dinámica en tiempo real.
 * **Generación de Documentos:** Creación de PDFs con diseño profesional y descarga directa para:
   * 📋 Presupuestos
-  * 📦 Remitos (con opción de ocultar/mostrar precios)
+  * 📦 Remitos 
   * 🧾 Recibos de cobro
   * 💳 Notas de Crédito
 * **Historial Centralizado:** Acceso y control total de todos los documentos generados con funciones de:

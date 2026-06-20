@@ -15,6 +15,7 @@ Esta versión 2.0 redefine el proyecto mediante una arquitectura desacoplada (Fr
 * <img width="1538" height="827" alt="Screenshot_2026-06-20_17-39-39" src="https://github.com/user-attachments/assets/eb5abe4f-2d65-4071-b6b9-38b62a84e0bd" />
 * **Gestión de Catálogos:** Módulos integrados y optimizados para administrar clientes, productos y servicios con sugerencias de búsqueda dinámica en tiempo real.
 * <img width="1538" height="827" alt="Screenshot_2026-06-20_17-37-27" src="https://github.com/user-attachments/assets/6f0a50ce-c018-4cfe-a194-1c4bae07a422" />
+
 <img width="1538" height="827" alt="Screenshot_2026-06-20_17-36-37" src="https://github.com/user-attachments/assets/931cd7be-6ec5-45b0-87b7-9892a8469daa" />
 
 * **Generación de Documentos:** Creación de PDFs con diseño profesional y descarga directa para:
@@ -22,15 +23,15 @@ Esta versión 2.0 redefine el proyecto mediante una arquitectura desacoplada (Fr
   * 📦 Remitos 
   * 🧾 Recibos de cobro
   * 💳 Notas de Crédito
- 
-  * <img width="1538" height="827" alt="Screenshot_2026-06-20_17-34-16" src="https://github.com/user-attachments/assets/5d0379b8-fc42-4c21-a024-2771b32e5739" />
+
+<img width="1538" height="827" alt="Screenshot_2026-06-20_17-34-16" src="https://github.com/user-attachments/assets/5d0379b8-fc42-4c21-a024-2771b32e5739" />
 
 * **Historial Centralizado:** Acceso y control total de todos los documentos generados con funciones de:
   * 🔍 Búsqueda inteligente por cliente, tipo o número de documento.
   * 🖨️ Reimpresión y apertura instantánea de PDFs físicos directamente desde la interfaz.
   * 🗑️ Eliminación segura con integridad referencial en cascada a nivel Base de Datos.
  
-  * <img width="1538" height="827" alt="Screenshot_2026-06-20_17-43-56" src="https://github.com/user-attachments/assets/51f92576-3056-4407-9d52-9417909de659" />
+<img width="1538" height="827" alt="Screenshot_2026-06-20_17-43-56" src="https://github.com/user-attachments/assets/51f92576-3056-4407-9d52-9417909de659" />
 
 
 ---

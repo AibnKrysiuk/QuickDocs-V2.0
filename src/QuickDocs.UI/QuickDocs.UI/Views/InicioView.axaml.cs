@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace QuickDocs.Desktop.Views
+namespace QuickDocs.UI.Views
 {
     public partial class InicioView : UserControl
     {

@@ -91,3 +91,15 @@ El proyecto está pensado para compilarse en archivos únicos e independientes (
 
 
 Desarrollado con 💙 por [AibnKrysiuk](https://github.com/AibnKrysiuk) para agilizar el trabajo diario.
+
+## 📄 Licencia
+
+Este proyecto no cuenta con una licencia open-source formal por el momento.
+
+El código es visible con fines de aprendizaje y portfolio. Si alguien quiere
+inspirarse o construir su propia versión, adelante — la idea no es restringir
+el conocimiento. Simplemente, si en algún momento cobro por el uso de esta
+aplicación en particular, es porque yo la construí y sostengo su desarrollo,
+no porque el código en sí esté cerrado.
+
+© 2026 AibnKrysiuk.

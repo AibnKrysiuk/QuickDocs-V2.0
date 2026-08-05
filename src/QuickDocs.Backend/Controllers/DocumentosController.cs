@@ -24,7 +24,8 @@ namespace QuickDocs.Backend.Controllers
         public async Task<ActionResult<IEnumerable<Documento>>> GetHistorial(
             [FromQuery] int usuarioId,
             [FromQuery] int tipoFiltro, // 0=Todos, 1=Presupuesto, 2=Remito, 3=Recibo, 4=NotaCredito
-            [FromQuery] string? buscarCliente)
+            [FromQuery] string? buscarCliente,
+            [FromQuery] int periodoFiltro = 0) // 0=Cualquier fecha, 1=Hoy, 2=Últimos 7 días, 3=Este mes
         {
             try
             {
@@ -55,7 +56,22 @@ namespace QuickDocs.Backend.Controllers
                     query = query.Where(d => d.ClienteNombre.ToLower().Contains(busqueda));
                 }
 
-                // 5. Orden cronológico inverso
+                // 5. Filtro por período (usamos UTC porque FechaEmision se guarda en UtcNow)
+                if (periodoFiltro > 0)
+                {
+                    DateTime ahora = DateTime.UtcNow;
+
+                    query = periodoFiltro switch
+                    {
+                        1 => query.Where(d => d.FechaEmision.Date == ahora.Date),
+                        2 => query.Where(d => d.FechaEmision >= ahora.AddDays(-7)),
+                        3 => query.Where(d => d.FechaEmision.Year == ahora.Year
+                                            && d.FechaEmision.Month == ahora.Month),
+                        _ => query
+                    };
+                }
+
+                // 6. Orden cronológico inverso
                 query = query.OrderByDescending(d => d.FechaEmision)
                              .ThenByDescending(d => d.Id);
 

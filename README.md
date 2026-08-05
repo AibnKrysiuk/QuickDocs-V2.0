@@ -33,7 +33,7 @@ Esta versión 2.0 redefine el proyecto mediante una arquitectura desacoplada (Fr
 El proyecto fue migrado de una estructura monolítica a un modelo distribuido y robusto:
 
 ### 🖥️ Front-End (Interfaz de Usuario)
-* **Framework:** [Avalonia UI](https://avaloniaui.net/) (.NET 8) - Permite una interfaz moderna, fluida y **100% multiplataforma**.
+* **Framework:** [Avalonia UI](https://avaloniaui.net/) (.NET 8) - Permite una interfaz moderna, fluida y **100% multiplataforma**, con proyectos head listos para Desktop, Android, iOS y Browser sobre una base de código compartida.
 * **Patrón de Diseño:** MVVM (Model-View-ViewModel) utilizando el **CommunityToolkit.Mvvm** para un manejo de estado limpio y reactivo.
 * **Comunicación:** Consumo asíncrono de servicios mediante `HttpClient`.
 
@@ -45,9 +45,40 @@ El proyecto fue migrado de una estructura monolítica a un modelo distribuido y 
 
 ---
 
+## 🚀 Cómo ejecutar el proyecto
+
+### Requisitos
+* [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+
+### 1. Levantar el Backend (API)
+```bash
+cd src/QuickDocs.Backend
+dotnet run
+```
+
+### 2. Levantar el cliente de escritorio
+En otra terminal:
+```bash
+cd src/QuickDocs.UI/QuickDocs.UI.Desktop
+dotnet run
+```
+
+> La aplicación de escritorio se conecta al Backend local (`http://localhost:5018/`), así que asegurate de que el paso 1 esté corriendo antes de abrir el cliente.
+
+---
+
 ## 📦 Compilación e Implementación Independiente
 
-El proyecto está preparado para compilarse en archivos únicos e independientes (*Self-Contained Single File*). Esto significa que podés generar un ejecutable final para Windows (o Linux) que **no requiere tener .NET instalado en la máquina del cliente** para funcionar, empaquetando todo el entorno en un solo archivo `.exe`.
+El proyecto está pensado para compilarse en archivos únicos e independientes (*Self-Contained Single File*). Esto significa que se puede generar un ejecutable final para Windows o Linux que **no requiere tener .NET instalado en la máquina del cliente** para funcionar, empaquetando todo el entorno en un solo archivo.
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Despliegue de la base de datos en un VPS
+- [ ] Cliente móvil (Android / iOS)
+- [ ] Cliente web (Browser)
+- [ ] Sincronización multi-dispositivo contra la base de datos remota
 
 ---
 
@@ -60,3 +91,15 @@ El proyecto está preparado para compilarse en archivos únicos e independientes
 
 
 Desarrollado con 💙 por [AibnKrysiuk](https://github.com/AibnKrysiuk) para agilizar el trabajo diario.
+
+## 📄 Licencia
+
+Este proyecto no cuenta con una licencia open-source formal por el momento.
+
+El código es visible con fines de aprendizaje y portfolio. Si alguien quiere
+inspirarse o construir su propia versión, adelante — la idea no es restringir
+el conocimiento. Simplemente, si en algún momento cobro por el uso de esta
+aplicación en particular, es porque yo la construí y sostengo su desarrollo,
+no porque el código en sí esté cerrado.
+
+© 2026 AibnKrysiuk.

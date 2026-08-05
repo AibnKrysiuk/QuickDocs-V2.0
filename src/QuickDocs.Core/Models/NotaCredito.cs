@@ -18,5 +18,7 @@ namespace QuickDocs.Core.Models
 
         // Espacio libre para justificar el motivo del saldo a favor
         public string Detalle { get; set; } = string.Empty;
+
+        public override decimal MontoAsociado => Total;
     }
 }

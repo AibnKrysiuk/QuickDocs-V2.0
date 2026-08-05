@@ -1,7 +1,13 @@
 using System;
+using System.Text.Json.Serialization;
 
 namespace QuickDocs.Core.Models
 {
+    [JsonPolymorphic(TypeDiscriminatorPropertyName = "tipoDiscriminador")]
+    [JsonDerivedType(typeof(Presupuesto), "Presupuesto")]
+    [JsonDerivedType(typeof(Remito), "Remito")]
+    [JsonDerivedType(typeof(Recibo), "Recibo")]
+    [JsonDerivedType(typeof(NotaCredito), "NotaCredito")]
     
     public class Documento
     {
@@ -35,5 +41,9 @@ namespace QuickDocs.Core.Models
 
         // Nombre del cliente (manual o copia del registrado)
         public string ClienteNombre { get; set; } = string.Empty;
+
+        // Monto representativo del documento, según su tipo.
+        // Cada subtipo la sobreescribe con el campo que corresponda.
+        public virtual decimal MontoAsociado => 0m;
     }
 }

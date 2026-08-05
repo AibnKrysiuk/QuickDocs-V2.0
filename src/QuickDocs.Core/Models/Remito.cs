@@ -22,5 +22,7 @@ namespace QuickDocs.Core.Models
         public decimal Total { get; set; }
 
         public List<DetalleRemito> Detalles { get; set; } = new();
+
+        public override decimal MontoAsociado => Total;
     }
 }

@@ -22,5 +22,7 @@ namespace QuickDocs.Core.Models
 
         // La lista con los renglones (Detalles) que validamos recién
         public List<DetallePresupuesto> Detalles { get; set; } = new();
+
+        public override decimal MontoAsociado => Total;
     }
 }

@@ -16,5 +16,7 @@ namespace QuickDocs.Core.Models
 
         // Vínculo opcional por si el cobro viene de un Remito específico
         public int? RemitoId { get; set; }
+
+        public override decimal MontoAsociado => ImporteRecibido;
     }
 }

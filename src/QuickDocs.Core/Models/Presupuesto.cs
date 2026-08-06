@@ -24,5 +24,6 @@ namespace QuickDocs.Core.Models
         public List<DetallePresupuesto> Detalles { get; set; } = new();
 
         public override decimal MontoAsociado => Total;
+        public override DateTime? FechaVencimientoAsociada => FechaVencimiento;
     }
 }

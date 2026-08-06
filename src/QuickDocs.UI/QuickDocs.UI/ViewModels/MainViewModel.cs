@@ -39,7 +39,8 @@ public partial class MainViewModel : ViewModelBase
 
     private void EjecutarMostrarInicio()
     {
-        ContenidoActual = new InicioView();
+        var inicioVM = new InicioViewModel(MostrarPresupuesto, MostrarRemito, MostrarHistorial);
+        ContenidoActual = new InicioView { DataContext = inicioVM };
     }
 
     private void EjecutarMostrarHistorial()

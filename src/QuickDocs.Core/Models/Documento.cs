@@ -45,5 +45,8 @@ namespace QuickDocs.Core.Models
         // Monto representativo del documento, según su tipo.
         // Cada subtipo la sobreescribe con el campo que corresponda.
         public virtual decimal MontoAsociado => 0m;
+        // Fecha de vencimiento, si el tipo de documento la tiene (Presupuesto, NotaCredito).
+        // Null para los tipos que no vencen (Remito, Recibo).
+        public virtual DateTime? FechaVencimientoAsociada => null;
     }
 }

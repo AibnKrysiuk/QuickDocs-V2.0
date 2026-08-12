@@ -222,4 +222,9 @@
         <Setter Property="Background" Value="#94A3B8"/>
         <Setter Property="TextBlock.Foreground" Value="#334155"/>
     </Style>
+    <!-- ========================= Botones del Sidebar (MainView) =============================== -->
+    <Style Selector="Button.btn-sidebar /template/ ContentPresenter#PART_ContentPresenter:pointerover">
+        <Setter Property="Background" Value="#3B4B63"/>
+        <Setter Property="TextBlock.Foreground" Value="#F8FAFC"/>
+    </Style>
 </Styles>

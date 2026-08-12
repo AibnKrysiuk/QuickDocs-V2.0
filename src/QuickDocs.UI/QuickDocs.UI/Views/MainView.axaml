@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:QuickDocs.UI.ViewModels"
+             xmlns:conv="using:QuickDocs.UI.Converters"
              mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="700"
              x:Class="QuickDocs.UI.Views.MainView"
              x:DataType="vm:MainViewModel"
@@ -23,15 +24,19 @@
 
         <StackPanel Grid.Row="1" Spacing="8">
 
-          <Button HorizontalAlignment="Stretch" Padding="12,10" Background="#334155" Foreground="#F8FAFC"
-                  CornerRadius="6" HorizontalContentAlignment="Left" Command="{Binding MostrarInicio}">
+          <Button HorizontalAlignment="Stretch" Padding="12,10" 
+            Classes="btn-sidebar"
+            Background="{Binding VistaActual, Converter={x:Static conv:SidebarActiveBackgroundConverter.Instance}, ConverterParameter=Inicio}"
+            Foreground="{Binding VistaActual, Converter={x:Static conv:SidebarActiveForegroundConverter.Instance}, ConverterParameter=Inicio}"
+            CornerRadius="6" HorizontalContentAlignment="Left" Command="{Binding MostrarInicio}">
             <StackPanel Orientation="Horizontal" Spacing="10">
               <TextBlock Text="📊" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
               <TextBlock Text="Inicio" VerticalAlignment="Center"/>
             </StackPanel>
           </Button>
 
-          <Expander Header="➕ Crear Documento" HorizontalAlignment="Stretch" Background="#334155"
+          <Expander Header="➕ Crear Documento" IsExpanded="{Binding MenuDocumentosExpandido, Mode=TwoWay}" 
+                    HorizontalAlignment="Stretch" Background="#334155"
                     Foreground="#E2E8F0" BorderThickness="0" Padding="0" Margin="0" FontSize="14" CornerRadius="6">
             <Expander.Resources>
               <SolidColorBrush x:Key="ExpanderHeaderBackground">Transparent</SolidColorBrush>
@@ -42,21 +47,38 @@
               <Thickness x:Key="ExpanderHeaderBorderThickness">0</Thickness>
               <Thickness x:Key="ExpanderHeaderBorderThicknessPointerOver">0</Thickness>
               <Thickness x:Key="ExpanderHeaderBorderThicknessPressed">0</Thickness>
+              <SolidColorBrush x:Key="ExpanderHeaderForeground">#E2E8F0</SolidColorBrush>
+              <SolidColorBrush x:Key="ExpanderHeaderForegroundPointerOver">#F8FAFC</SolidColorBrush>
+              <SolidColorBrush x:Key="ExpanderChevronForeground">#E2E8F0</SolidColorBrush>
+              <SolidColorBrush x:Key="ExpanderChevronForegroundPointerOver">#F8FAFC</SolidColorBrush>
             </Expander.Resources>
 
             <StackPanel Spacing="4" Margin="15, 5, 0, 5">
 
-              <Button Content="📄 Presupuesto" HorizontalAlignment="Stretch" Padding="10,8" Background="Transparent"
-                      Foreground="#94A3B8" FontSize="13" HorizontalContentAlignment="Left" Command="{Binding MostrarPresupuesto}"/>
+              <Button Content="📄 Presupuesto" HorizontalAlignment="Stretch" Padding="10,8" 
+                      Classes="btn-sidebar"
+                      Background="{Binding VistaActual, Converter={x:Static conv:SidebarActiveBackgroundConverter.Instance}, ConverterParameter=Presupuesto}"
+                      Foreground="{Binding VistaActual, Converter={x:Static conv:SidebarActiveForegroundConverter.Instance}, ConverterParameter=Presupuesto}"
+                      FontSize="13" HorizontalContentAlignment="Left" Command="{Binding MostrarPresupuesto}"/>
 
-              <Button Content="🚚 Remito" HorizontalAlignment="Stretch" Padding="10,8" Background="Transparent"
-                      Foreground="#94A3B8" FontSize="13" HorizontalContentAlignment="Left" Command="{Binding MostrarRemito}"/>
+              <Button Content="🚚 Remito" HorizontalAlignment="Stretch" Padding="10,8" 
+                  Classes="btn-sidebar"
+                  Background="{Binding VistaActual, Converter={x:Static conv:SidebarActiveBackgroundConverter.Instance}, ConverterParameter=Remito}"
+                  Foreground="{Binding VistaActual, Converter={x:Static conv:SidebarActiveForegroundConverter.Instance}, ConverterParameter=Remito}"
+                  CornerRadius="6" HorizontalContentAlignment="Left" Command="{Binding MostrarRemito}"/>
 
-              <Button Content="🧾 Recibo" HorizontalAlignment="Stretch" Padding="10,8" Background="Transparent"
-                      Foreground="#94A3B8" FontSize="13" HorizontalContentAlignment="Left" Command="{Binding MostrarRecibo}"/>
+              <Button Content="🧾 Recibo" HorizontalAlignment="Stretch" Padding="10,8" 
+                  Classes="btn-sidebar"
+                  Background="{Binding VistaActual, Converter={x:Static conv:SidebarActiveBackgroundConverter.Instance}, ConverterParameter=Recibo}"
+                  Foreground="{Binding VistaActual, Converter={x:Static conv:SidebarActiveForegroundConverter.Instance}, ConverterParameter=Recibo}"
+                  CornerRadius="6" HorizontalContentAlignment="Left" Command="{Binding MostrarRecibo}"/>
 
-              <Button HorizontalAlignment="Stretch" Padding="10,8" Background="Transparent" Foreground="#94A3B8"
-                      FontSize="13" HorizontalContentAlignment="Left" Command="{Binding MostrarNotaCredito}">
+              <Button HorizontalAlignment="Stretch" Padding="10,8"
+                  Classes="btn-sidebar"
+                  Background="{Binding VistaActual, 
+              Converter={x:Static conv:SidebarActiveBackgroundConverter.Instance}, ConverterParameter=NotaCredito}"
+                  Foreground="{Binding VistaActual, Converter={x:Static conv:SidebarActiveForegroundConverter.Instance}, ConverterParameter=NotaCredito}"
+                  CornerRadius="6" HorizontalContentAlignment="Left" Command="{Binding MostrarNotaCredito}">
                 <StackPanel Orientation="Horizontal" Spacing="10">
                   <TextBlock Text="💳" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
                   <TextBlock Text="Nota de Crédito" VerticalAlignment="Center"/>
@@ -65,13 +87,23 @@
             </StackPanel>
           </Expander>
 
-          <Button Content="📁 Historial Documentos" HorizontalAlignment="Stretch" Padding="12,10" Background="Transparent"
-                  Foreground="#E2E8F0" CornerRadius="6" HorizontalContentAlignment="Left" Command="{Binding MostrarHistorial}"/>
+          <Button Content="📁 Historial Documentos" HorizontalAlignment="Stretch" Padding="12,10" 
+                  Classes="btn-sidebar"
+                  Background="{Binding VistaActual, Converter={x:Static conv:SidebarActiveBackgroundConverter.Instance}, ConverterParameter=Historial}"
+                  Foreground="{Binding VistaActual, Converter={x:Static conv:SidebarActiveForegroundConverter.Instance}, ConverterParameter=Historial}"
+                  CornerRadius="6" HorizontalContentAlignment="Left" Command="{Binding MostrarHistorial}"/>
 
-          <Button Content="👥 Clientes" HorizontalAlignment="Stretch" Padding="12,10" Background="Transparent"
-                  Foreground="#E2E8F0" CornerRadius="6" HorizontalContentAlignment="Left" Command="{Binding MostrarClientes}"/>
+          <Button Content="👥 Clientes" HorizontalAlignment="Stretch" Padding="12,10" 
+                  Classes="btn-sidebar"
+                  Background="{Binding VistaActual, Converter={x:Static conv:SidebarActiveBackgroundConverter.Instance}, ConverterParameter=Clientes}"
+                  Foreground="{Binding VistaActual, Converter={x:Static conv:SidebarActiveForegroundConverter.Instance}, ConverterParameter=Clientes}"
+                  CornerRadius="6" HorizontalContentAlignment="Left" Command="{Binding MostrarClientes}"/>
+          
 
-          <Button HorizontalAlignment="Stretch" Padding="12,10" Background="Transparent" Foreground="#E2E8F0"
+          <Button HorizontalAlignment="Stretch" Padding="12,10" 
+                  Classes="btn-sidebar"
+                  Background="{Binding VistaActual, Converter={x:Static conv:SidebarActiveBackgroundConverter.Instance}, ConverterParameter=Articulos}"
+                  Foreground="{Binding VistaActual, Converter={x:Static conv:SidebarActiveForegroundConverter.Instance}, ConverterParameter=Articulos}"
                   CornerRadius="6" HorizontalContentAlignment="Left" Command="{Binding MostrarArticulos}">
             <StackPanel Orientation="Horizontal" Spacing="10">
               <TextBlock Text="📦" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
@@ -79,8 +111,11 @@
             </StackPanel>
           </Button>
 
-          <Button Content="⚙️ Mi Perfil" HorizontalAlignment="Stretch" Padding="12,10" Background="Transparent"
-                  Foreground="#E2E8F0" CornerRadius="6" HorizontalContentAlignment="Left" Command="{Binding MostrarPerfil}"/>
+          <Button Content="⚙️ Mi Perfil" HorizontalAlignment="Stretch" Padding="12,10" 
+                  Classes="btn-sidebar"
+                  Background="{Binding VistaActual, Converter={x:Static conv:SidebarActiveBackgroundConverter.Instance}, ConverterParameter=Perfil}"
+                  Foreground="{Binding VistaActual, Converter={x:Static conv:SidebarActiveForegroundConverter.Instance}, ConverterParameter=Perfil}"
+                  CornerRadius="6" HorizontalContentAlignment="Left" Command="{Binding MostrarPerfil}"/>
 
           <Button Content="🔄 Sincronizar Nube" HorizontalAlignment="Stretch" Padding="12,10" Background="Transparent"
                   Foreground="#34D399" CornerRadius="6" HorizontalContentAlignment="Left" Margin="0,20,0,0"/>

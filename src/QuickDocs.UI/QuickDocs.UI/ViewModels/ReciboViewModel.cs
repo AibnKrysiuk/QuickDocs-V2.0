@@ -50,7 +50,7 @@ namespace QuickDocs.UI.ViewModels
 
             CargarDatosInicialesCommand = new AsyncRelayCommand(CargarDatosInicialesAsync);
             GuardarReciboCommand = new AsyncRelayCommand(GuardarReciboAsync);
-            NavegarAHistorialCommand = new RelayCommand(() => { });
+            NavegarAHistorialCommand = new RelayCommand(NavegarAHistorial);
             
             Dispatcher.UIThread.Post(async () => await CargarDatosInicialesAsync());
         }
@@ -214,6 +214,27 @@ namespace QuickDocs.UI.ViewModels
             ImporteRecibido = 0m;                  // 🎯 Restablecemos valores numéricos
             FormaPago = MetodoPago.Efectivo;       // 🎯 Restablecemos combo de pago
             Detalle = string.Empty;                // 🎯 Limpiamos campo detalle
+        }
+
+        private void NavegarAHistorial()
+        {
+            if (Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var mainDataContext = desktop.MainWindow?.DataContext;
+
+                if (mainDataContext != null)
+                {
+                    var propiedadComando = mainDataContext.GetType().GetProperty("MostrarHistorial");
+                    if (propiedadComando != null)
+                    {
+                        var comando = propiedadComando.GetValue(mainDataContext) as System.Windows.Input.ICommand;
+                        if (comando != null && comando.CanExecute(null))
+                        {
+                            comando.Execute(null);
+                        }
+                    }
+                }
+            }
         }
 
         // 🎯 IMPLEMENTADO: Carga el recibo de forma asíncrona mapeando los datos a la vista

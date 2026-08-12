@@ -15,6 +15,7 @@
             </StackPanel>
             
             <Button Grid.Column="1" 
+                    Command="{Binding NavegarAHistorialCommand}"
                     Classes="btn-secondary"
                     FontSize="13" FontWeight="Medium"
                     VerticalAlignment="Top">

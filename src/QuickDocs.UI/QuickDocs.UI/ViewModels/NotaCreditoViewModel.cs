@@ -31,11 +31,13 @@ namespace QuickDocs.UI.ViewModels
 
         public IAsyncRelayCommand GuardarNotaCreditoCommand { get; }
         public IAsyncRelayCommand BorrarNotaCreditoCommand { get; }
+        public IRelayCommand NavegarAHistorialCommand { get; }
 
         public NotaCreditoViewModel()
         {
             GuardarNotaCreditoCommand = new AsyncRelayCommand(GuardarNotaCreditoAsync);
             BorrarNotaCreditoCommand = new AsyncRelayCommand(BorrarNotaCreditoAsync);
+            NavegarAHistorialCommand = new RelayCommand(NavegarAHistorial);
             
             Dispatcher.UIThread.Post(async () => await CargarClientesAsync());
         }
@@ -218,6 +220,27 @@ namespace QuickDocs.UI.ViewModels
             ClienteSeleccionado = null;
             Total = 0m;
             Detalle = string.Empty;
+        }
+
+        private void NavegarAHistorial()
+        {
+            if (Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var mainDataContext = desktop.MainWindow?.DataContext;
+
+                if (mainDataContext != null)
+                {
+                    var propiedadComando = mainDataContext.GetType().GetProperty("MostrarHistorial");
+                    if (propiedadComando != null)
+                    {
+                        var comando = propiedadComando.GetValue(mainDataContext) as System.Windows.Input.ICommand;
+                        if (comando != null && comando.CanExecute(null))
+                        {
+                            comando.Execute(null);
+                        }
+                    }
+                }
+            }
         }
     }
 }

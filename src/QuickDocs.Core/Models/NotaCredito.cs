@@ -12,6 +12,8 @@ namespace QuickDocs.Core.Models
 
         public DateTime FechaVencimiento { get; set; }
 
+        public int DiasValidez { get; set; } = 30;
+
         // Propiedad calculada para validar si caducó sin usar espacio en la base de datos
         public bool EstaVencida => Estado == EstadoNotaCredito.Vigente 
                                    && DateTime.UtcNow > FechaVencimiento;

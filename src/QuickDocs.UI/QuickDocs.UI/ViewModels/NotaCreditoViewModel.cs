@@ -28,6 +28,7 @@ namespace QuickDocs.UI.ViewModels
         [ObservableProperty] private Cliente? _clienteSeleccionado;
         [ObservableProperty] private decimal _total;
         [ObservableProperty] private string _detalle = string.Empty;
+        [ObservableProperty] private int _diasValidez = 30;
 
         public IAsyncRelayCommand GuardarNotaCreditoCommand { get; }
         public IAsyncRelayCommand BorrarNotaCreditoCommand { get; }
@@ -73,7 +74,8 @@ namespace QuickDocs.UI.ViewModels
                 ClienteId = ClienteSeleccionado?.Id,
                 ClienteNombreLibre = ClienteSeleccionado == null ? TextoBuscarCliente : null,
                 Total = Total,
-                Detalle = Detalle
+                Detalle = Detalle,
+                DiasValidez = DiasValidez
             };
 
             try
@@ -196,6 +198,7 @@ namespace QuickDocs.UI.ViewModels
                     _notaCreditoIdActual = nota.Id;
                     Total = nota.Total;
                     Detalle = nota.Detalle ?? string.Empty;
+                    DiasValidez = nota.DiasValidez;
 
                     if (nota.ClienteId.HasValue && nota.ClienteId.Value > 0)
                     {
@@ -220,6 +223,7 @@ namespace QuickDocs.UI.ViewModels
             ClienteSeleccionado = null;
             Total = 0m;
             Detalle = string.Empty;
+            DiasValidez = 30;
         }
 
         private void NavegarAHistorial()

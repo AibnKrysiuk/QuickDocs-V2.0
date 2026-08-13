@@ -30,13 +30,13 @@
         <Border Grid.Row="1" Background="White" Padding="25" CornerRadius="10" BoxShadow="0 4 6 -1 #10000000, 0 2 4 -1 #06000000" VerticalAlignment="Top">
             <StackPanel Spacing="20">
                 
-                <Grid ColumnDefinitions="2*, *" ColumnSpacing="20">
+                <Grid ColumnDefinitions="2*, *, 100" ColumnSpacing="20">
                     <StackPanel Grid.Column="0" Spacing="5">
                         <TextBlock Text="Emitida a favor de" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
                         <AutoCompleteBox Text="{Binding TextoBuscarCliente, Mode=TwoWay}"
-                                         ItemsSource="{Binding SugerenciasClientes}"
-                                         FilterMode="Contains"
-                                         PlaceholderText="Nombre del cliente..." />
+                                        ItemsSource="{Binding SugerenciasClientes}"
+                                        FilterMode="Contains"
+                                        PlaceholderText="Nombre del cliente..." />
                     </StackPanel>
                     
                     <StackPanel Grid.Column="1" Spacing="5">
@@ -45,6 +45,13 @@
                             PlaceholderText="0.00" 
                             HorizontalContentAlignment="Right" 
                             FontWeight="Bold"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Spacing="5">
+                        <TextBlock Text="Válida por (días)" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                        <TextBox Text="{Binding DiasValidez, Mode=TwoWay}" 
+                            PlaceholderText="30" 
+                            HorizontalContentAlignment="Center"/>
                     </StackPanel>
                 </Grid>
 

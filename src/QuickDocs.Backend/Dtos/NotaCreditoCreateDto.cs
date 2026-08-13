@@ -18,5 +18,8 @@ namespace QuickDocs.Backend.Dtos
 
         [Required(ErrorMessage = "Debe especificar el motivo o detalle de la nota de crédito")]
         public string Detalle { get; set; } = string.Empty;
+
+        [Range(1, 3650, ErrorMessage = "Los días de validez deben estar entre 1 y 3650")]
+        public int DiasValidez { get; set; } = 30;
     }
 }

@@ -53,7 +53,8 @@ namespace QuickDocs.Backend.Controllers
                 ClienteNombre = nombreClienteFinal, 
                 Tipo = TipoDocumento.NotaCredito, 
                 FechaEmision = DateTime.UtcNow,
-                FechaVencimiento = DateTime.UtcNow.AddDays(30), 
+                FechaVencimiento = DateTime.UtcNow.AddDays(dto.DiasValidez > 0 ? dto.DiasValidez : 30),
+                DiasValidez = dto.DiasValidez > 0 ? dto.DiasValidez : 30,
                 PuntoEmision = 1,                         
                 NumeroCorrelativo = ultimoNumero + 1,     
                 Total = dto.Total,
@@ -99,6 +100,9 @@ namespace QuickDocs.Backend.Controllers
             notaCredito.ClienteNombre = nombreClienteFinal;
             notaCredito.Total = dto.Total;
             notaCredito.Detalle = dto.Detalle;
+
+            notaCredito.DiasValidez = dto.DiasValidez > 0 ? dto.DiasValidez : notaCredito.DiasValidez;
+            notaCredito.FechaVencimiento = notaCredito.FechaEmision.AddDays(notaCredito.DiasValidez);
 
             await _context.SaveChangesAsync();
 

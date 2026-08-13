@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:QuickDocs.UI.ViewModels"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              x:Class="QuickDocs.UI.Views.ReciboView"
              x:DataType="vm:ReciboViewModel">
     
@@ -9,7 +10,7 @@
         <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
             <StackPanel Grid.Column="0" Spacing="5">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <TextBlock Text="🧾" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                    <materialIcons:MaterialIcon Kind="FileDocument" Width="16" Height="16" VerticalAlignment="Center"/>
                     <TextBlock Text="Nuevo Recibo de Pago" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
                 </StackPanel>
                 
@@ -22,7 +23,7 @@
                     FontSize="13" FontWeight="Medium"
                     VerticalAlignment="Top">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <TextBlock Text="📋" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                    <materialIcons:MaterialIcon Kind="ClipboardTextOutline" Width="16" Height="16" VerticalAlignment="Center"/>
                     <TextBlock Text="Historial" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
@@ -84,7 +85,7 @@
             <Button Command="{Binding GuardarReciboCommand}"
                     Classes="btn-success">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <TextBlock Text="⚙️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                    <materialIcons:MaterialIcon Kind="CogOutline" Width="16" Height="16" VerticalAlignment="Center"/>
                     <TextBlock Text="Emitir" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>

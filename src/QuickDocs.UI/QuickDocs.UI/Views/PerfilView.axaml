@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:QuickDocs.UI.ViewModels"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              x:Class="QuickDocs.UI.Views.PerfilView"
              x:DataType="vm:PerfilViewModel">
     
@@ -8,7 +9,7 @@
         
         <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,15">
             <StackPanel Orientation="Horizontal" Spacing="8">
-                <TextBlock Text="⚙️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                <materialIcons:MaterialIcon Kind="CogOutline" Width="16" Height="16" VerticalAlignment="Center"/>
                 <TextBlock Text="Configuración del Comercio" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
             </StackPanel>
             <TextBlock Text="Personalice la información que aparecerá en sus documentos y facturas." FontSize="13" Foreground="#64748B"/>
@@ -31,9 +32,8 @@
                                         RadiusX="10" 
                                         RadiusY="10"/>
                                 
-                                <TextBlock Text="📸" 
-                                    FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji"
-                                    FontSize="48" 
+                                <materialIcons:MaterialIcon Kind="Camera"
+                                    Width="48" Height="48"
                                     HorizontalAlignment="Center" 
                                     VerticalAlignment="Center" 
                                     Opacity="0.2"
@@ -127,7 +127,7 @@
                             Classes="btn-primary"
                             HorizontalAlignment="Stretch">
                         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-                            <TextBlock Text="👁️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                            <materialIcons:MaterialIcon Kind="EyeOutline" Width="16" Height="16" VerticalAlignment="Center"/>
                             <TextBlock Text="Previsualizar Cabecera" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
@@ -137,7 +137,7 @@
                             Classes="btn-success"
                             HorizontalAlignment="Stretch">
                         <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
-                            <TextBlock Text="💾" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                            <materialIcons:MaterialIcon Kind="ContentSaveOutline" Width="16" Height="16" VerticalAlignment="Center"/>
                             <TextBlock Text="Guardar Cambios del Perfil" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>

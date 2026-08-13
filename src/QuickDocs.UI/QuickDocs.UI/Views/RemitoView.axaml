@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:QuickDocs.UI.ViewModels"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              x:Class="QuickDocs.UI.Views.RemitoView"
              x:DataType="vm:RemitoViewModel">
     
@@ -9,7 +10,7 @@
         <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
             <StackPanel Grid.Column="0" Spacing="5">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <TextBlock Text="🚚" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                    <materialIcons:MaterialIcon Kind="TruckDelivery" Width="16" Height="16" VerticalAlignment="Center"/>
                     <TextBlock Text="Nuevo Remito de Entrega" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
                 </StackPanel>
                 
@@ -22,7 +23,7 @@
                     FontSize="13" FontWeight="Medium"
                     VerticalAlignment="Top">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <TextBlock Text="📋" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                    <materialIcons:MaterialIcon Kind="ClipboardTextOutline" Width="16" Height="16" VerticalAlignment="Center"/>
                     <TextBlock Text="Historial" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
@@ -60,18 +61,25 @@
                 </Grid>
 
                 <StackPanel Grid.Row="1" Spacing="5">
-                    <TextBlock Text="📍 Lugar de Entrega / Dirección de Envío" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <materialIcons:MaterialIcon Kind="MapMarkerCheckOutline" Width="14" Height="14" 
+                                                    HorizontalAlignment="Left" VerticalAlignment="Center"
+                                                    Foreground="#475569"/>
+                        <TextBlock Text="Dirección de Entrega" FontSize="11" Foreground="#475569" VerticalAlignment="Center"/>
+                    </StackPanel>
+
                     <TextBox Text="{Binding DireccionEntrega, Mode=TwoWay}" 
-                            PlaceholderText="Ej. Av. Siempreviva 742, Planta Alta / Dejar en depósito central..." HorizontalAlignment="Stretch"/>
+                            PlaceholderText="Ej. Av. Siempreviva 742, Planta Alta / Dejar en depósito central..." 
+                            HorizontalAlignment="Stretch"/>
                 </StackPanel>
-                
+                                
             </Grid>
         </Border>
 
         <Border Grid.Row="2" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,15">
             <StackPanel Spacing="10">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <TextBlock Text="📦" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="13" FontWeight="Bold" Foreground="#1E293B" VerticalAlignment="Center"/>
+                    <materialIcons:MaterialIcon Kind="Package" Width="16" Height="16" VerticalAlignment="Center"/>
                     <TextBlock Text="Añadir Bultos / Artículos al Remito" FontSize="13" FontWeight="Bold" Foreground="#1E293B" VerticalAlignment="Center"/>
                 </StackPanel>
                 
@@ -98,7 +106,7 @@
                             VerticalAlignment="Bottom" 
                             FontSize="13">
                         <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
-                            <TextBlock Text="➕" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="12" VerticalAlignment="Center"/>
+                            <materialIcons:MaterialIcon Kind="Plus" Width="16" Height="16" VerticalAlignment="Center"/>
                             <TextBlock Text="Agregar" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
@@ -145,7 +153,7 @@
                     <Button Command="{Binding SeleccionarRenglonParaModificarCommand}"
                             Classes="btn-secondary-compact">
                         <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
-                            <TextBlock Text="✏️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                            <materialIcons:MaterialIcon Kind="Pencil" Width="16" Height="16" VerticalAlignment="Center"/>
                             <TextBlock Text="Editar" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
@@ -153,7 +161,7 @@
                     <Button Command="{Binding QuitarRenglonCommand}"
                             Classes="btn-danger-compact">
                         <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
-                            <TextBlock Text="🗑️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                            <materialIcons:MaterialIcon Kind="Delete" Width="16" Height="16" VerticalAlignment="Center"/>
                             <TextBlock Text="Quitar" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
@@ -167,7 +175,7 @@
                     Classes="btn-success"
                     HorizontalAlignment="Left">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <TextBlock Text="⚙️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                    <materialIcons:MaterialIcon Kind="CogOutline" Width="16" Height="16" VerticalAlignment="Center"/>
                     <TextBlock Text="Emitir" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>

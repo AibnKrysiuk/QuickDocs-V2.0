@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:QuickDocs.UI.ViewModels"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              x:Class="QuickDocs.UI.Views.PresupuestoView"
              x:DataType="vm:PresupuestoViewModel">
     
@@ -9,7 +10,7 @@
         <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
             <StackPanel Grid.Column="0" Spacing="5">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <TextBlock Text="📄" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                    <materialIcons:MaterialIcon Kind="FileDocument" Width="16" Height="16" VerticalAlignment="Center"/>
                     <TextBlock Text="Nuevo Presupuesto" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
                 </StackPanel>
                 
@@ -22,7 +23,7 @@
                     FontSize="13" FontWeight="Medium"
                     VerticalAlignment="Top">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <TextBlock Text="📋" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                    <materialIcons:MaterialIcon Kind="ClipboardTextOutline" Width="16" Height="16" VerticalAlignment="Center"/>
                     <TextBlock Text="Historial" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
@@ -66,7 +67,7 @@
         <Border Grid.Row="2" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,15">
             <StackPanel Spacing="10">
                 <StackPanel Orientation="Horizontal" Spacing="8">
-                    <TextBlock Text="📥" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="13" FontWeight="Bold" Foreground="#1E293B" VerticalAlignment="Center"/>
+                    <materialIcons:MaterialIcon Kind="PackageVariant" Width="16" Height="16" VerticalAlignment="Center"/>
                     <TextBlock Text="Ingresar Artículo / Servicio" FontSize="13" FontWeight="Bold" Foreground="#1E293B" VerticalAlignment="Center"/>
                 </StackPanel>
                 
@@ -99,7 +100,7 @@
                             Classes="btn-primary-compact"
                             VerticalAlignment="Bottom">
                         <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
-                            <TextBlock Text="➕" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="12" VerticalAlignment="Center"/>
+                            <materialIcons:MaterialIcon Kind="Plus" Width="16" Height="16" VerticalAlignment="Center"/>
                             <TextBlock Text="Agregar" FontSize="13" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
@@ -150,7 +151,7 @@
                     <Button Command="{Binding SeleccionarRenglonParaModificarCommand}" 
                             Classes="btn-secondary-compact">
                         <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
-                            <TextBlock Text="✏️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                            <materialIcons:MaterialIcon Kind="Pencil" Width="16" Height="16" VerticalAlignment="Center"/>
                             <TextBlock Text="Editar" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
@@ -158,7 +159,7 @@
                     <Button Command="{Binding QuitarRenglonCommand}" 
                             Classes="btn-danger-compact">
                         <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
-                            <TextBlock Text="🗑️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                            <materialIcons:MaterialIcon Kind="Delete" Width="16" Height="16" VerticalAlignment="Center"/>
                             <TextBlock Text="Quitar" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
@@ -172,7 +173,7 @@
                 <Button Command="{Binding GuardarPresupuestoCommand}"
                         Classes="btn-success">
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <TextBlock Text="⚙️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                        <materialIcons:MaterialIcon Kind="CogOutline" Width="16" Height="16" VerticalAlignment="Center"/>
                         <TextBlock Text="Emitir" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
@@ -181,7 +182,7 @@
                         IsVisible="{Binding EsEdicion}"
                         Classes="btn-accent">
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <TextBlock Text="🚚" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                        <materialIcons:MaterialIcon Kind="TruckOutline" Width="16" Height="16" VerticalAlignment="Center"/>
                         <TextBlock Text="Convertir" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>

@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:QuickDocs.UI.ViewModels"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              x:Class="QuickDocs.UI.Views.ArticulosView"
              x:DataType="vm:ArticulosViewModel">
     
@@ -8,7 +9,7 @@
         
         <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,15">
             <StackPanel Orientation="Horizontal" Spacing="8">
-                <TextBlock Text="📦" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                <materialIcons:MaterialIcon Kind="Package" Width="16" Height="16" VerticalAlignment="Center"/>
                 <TextBlock Text="Catálogo de Artículos y Servicios" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
             </StackPanel>
             <TextBlock Text="Gestione la lista de precios, marcas y unidades de medida de sus productos de forma centralizada." FontSize="13" Foreground="#64748B"/>
@@ -19,7 +20,7 @@
             <Border Grid.Column="0" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" VerticalAlignment="Top">
                 <StackPanel Spacing="12">
                     <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,0,0,5">
-                        <TextBlock Text="📝" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="14" FontWeight="Bold" Foreground="#1E293B" VerticalAlignment="Center"/>
+                        <materialIcons:MaterialIcon Kind="ClipboardEditOutline" Width="16" Height="16" VerticalAlignment="Center"/>
                         <TextBlock Text="Datos del Ítem" FontSize="14" FontWeight="Bold" Foreground="#1E293B" VerticalAlignment="Center"/>
                     </StackPanel>
                     
@@ -63,7 +64,7 @@
                                 Classes="btn-success"
                                 HorizontalAlignment="Stretch">
                             <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
-                                <TextBlock Text="💾" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                <materialIcons:MaterialIcon Kind="ContentSaveOutline" Width="16" Height="16" VerticalAlignment="Center"/>
                                 <TextBlock Text="Guardar" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
@@ -73,7 +74,7 @@
                                 Classes="btn-tertiary"
                                 IsVisible="{Binding EsEdicion}">
                             <StackPanel Orientation="Horizontal" Spacing="6">
-                                <TextBlock Text="❌" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                <materialIcons:MaterialIcon Kind="Close" Width="16" Height="16" VerticalAlignment="Center"/>
                                 <TextBlock Text="Cancelar" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
@@ -92,7 +93,7 @@
                                 Classes="btn-secondary" 
                                 VerticalAlignment="Center">
                             <StackPanel Orientation="Horizontal" Spacing="6">
-                                <TextBlock Text="🧹" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                <materialIcons:MaterialIcon Kind="Broom" Width="16" Height="16" VerticalAlignment="Center"/>
                                 <TextBlock Text="Limpiar" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
@@ -113,9 +114,9 @@
                                     <StackPanel Grid.Column="0" Spacing="2">
                                         <TextBlock Text="{Binding Descripcion}" FontWeight="SemiBold" Foreground="#0F172A" FontSize="13"/>
                                         <StackPanel Orientation="Horizontal" Spacing="4">
-                                            <TextBlock Text="🏷️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="11" VerticalAlignment="Center"/>
+                                            <materialIcons:MaterialIcon Kind="Paperclip" Width="16" Height="16" VerticalAlignment="Center"/>
                                             <TextBlock Text="{Binding Marca, TargetNullValue='Sin Marca'}" Foreground="#64748B" FontSize="11" VerticalAlignment="Center"/>
-                                            <TextBlock Text="•" Foreground="#64748B" FontSize="11" VerticalAlignment="Center"/>
+                                            <materialIcons:MaterialIcon Kind="CircleSmall" Width="16" Height="16" VerticalAlignment="Center"/>
                                             <TextBlock Text="{Binding Tipo}" Foreground="#64748B" FontSize="11" VerticalAlignment="Center"/>
                                         </StackPanel>
                                     </StackPanel>
@@ -134,7 +135,7 @@
                                                 Classes="btn-danger-compact"
                                                 Width="32" Height="32" Padding="0"
                                                 ToolTip.Tip="Borrar Artículo">
-                                            <TextBlock Text="🗑️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <materialIcons:MaterialIcon Kind="Delete" Width="16" Height="16" VerticalAlignment="Center"/>
                                         </Button>
                                     </StackPanel>
                                     

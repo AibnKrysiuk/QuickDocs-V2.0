@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:QuickDocs.UI.ViewModels"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              x:Class="QuickDocs.UI.Views.HistorialView"
              x:DataType="vm:HistorialViewModel">
     
@@ -8,7 +9,7 @@
         
         <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,15">
             <StackPanel Orientation="Horizontal" Spacing="8">
-                <TextBlock Text="📋" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                <materialIcons:MaterialIcon Kind="ClipboardTextOutline" Width="16" Height="16" VerticalAlignment="Center"/>
                 <TextBlock Text="Historial de Documentos" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
             </StackPanel>
             <TextBlock Text="Consulte, filtre y gestione todos los comprobantes emitidos por el sistema." FontSize="13" Foreground="#64748B"/>
@@ -17,7 +18,7 @@
         <Border Grid.Row="1" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,15">
             <StackPanel Spacing="10">
                 <StackPanel Orientation="Horizontal" Spacing="6">
-                    <TextBlock Text="🔍" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="12" FontWeight="Bold" Foreground="#334155" VerticalAlignment="Center"/>
+                    <materialIcons:MaterialIcon Kind="Magnify" Width="16" Height="16" VerticalAlignment="Center"/>
                     <TextBlock Text="Filtros de Búsqueda" FontSize="12" FontWeight="Bold" Foreground="#334155" VerticalAlignment="Center"/>
                 </StackPanel>
                 
@@ -27,31 +28,31 @@
                         <ComboBox SelectedIndex="{Binding TipoDocumentoSeleccionado, Mode=TwoWay}">
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock Text="📁" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <materialIcons:MaterialIcon Kind="FolderOutline" Width="16" Height="16" VerticalAlignment="Center"/>
                                     <TextBlock Text="Todos los documentos" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </ComboBoxItem>
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock Text="📄" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <materialIcons:MaterialIcon Kind="FileDocument" Width="16" Height="16" VerticalAlignment="Center"/>
                                     <TextBlock Text="Presupuestos" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </ComboBoxItem>
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock Text="🚚" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <materialIcons:MaterialIcon Kind="TruckDelivery" Width="16" Height="16" VerticalAlignment="Center"/>
                                     <TextBlock Text="Remitos" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </ComboBoxItem>
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock Text="💰" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <materialIcons:MaterialIcon Kind="CurrencyUsd" Width="16" Height="16" VerticalAlignment="Center"/>
                                     <TextBlock Text="Recibos" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </ComboBoxItem>
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock Text="💳" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <materialIcons:MaterialIcon Kind="CreditCard" Width="16" Height="16" VerticalAlignment="Center"/>
                                     <TextBlock Text="Notas de Crédito" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </ComboBoxItem>
@@ -68,25 +69,25 @@
                         <ComboBox SelectedIndex="{Binding PeriodoSeleccionado, Mode=TwoWay}">
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock Text="📅" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <materialIcons:MaterialIcon Kind="CalendarBlank" Width="16" Height="16" VerticalAlignment="Center"/>
                                     <TextBlock Text="Cualquier fecha" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </ComboBoxItem>
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock Text="☀️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <materialIcons:MaterialIcon Kind="WhiteBalanceSunny" Width="16" Height="16" VerticalAlignment="Center"/>
                                     <TextBlock Text="Hoy" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </ComboBoxItem>
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock Text="📅" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <materialIcons:MaterialIcon Kind="CalendarBlank" Width="16" Height="16" VerticalAlignment="Center"/>
                                     <TextBlock Text="Últimos 7 días" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </ComboBoxItem>
                             <ComboBoxItem>
                                 <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <TextBlock Text="🗓️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                    <materialIcons:MaterialIcon Kind="CalendarRange" Width="16" Height="16" VerticalAlignment="Center"/>
                                     <TextBlock Text="Este mes" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </ComboBoxItem>
@@ -98,7 +99,7 @@
                                 Classes="btn-secondary-compact"
                                 FontSize="12" FontWeight="Medium">
                             <StackPanel Orientation="Horizontal" Spacing="6">
-                                <TextBlock Text="🧹" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                <materialIcons:MaterialIcon Kind="Broom" Width="16" Height="16" VerticalAlignment="Center"/>
                                 <TextBlock Text="Limpiar" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
@@ -107,7 +108,7 @@
                                 Classes="btn-secondary-compact"
                                 FontSize="12" FontWeight="Medium">
                             <StackPanel Orientation="Horizontal" Spacing="6">
-                                <TextBlock Text="🔄" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" VerticalAlignment="Center"/>
+                                <materialIcons:MaterialIcon Kind="Reload" Width="16" Height="16" VerticalAlignment="Center"/>
                                 <TextBlock Text="Refrescar" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
@@ -155,7 +156,7 @@
                                             Classes="btn-secondary-compact"
                                             Width="32" Height="32" Padding="0"
                                             ToolTip.Tip="Editar Documento">
-                                        <TextBlock Text="✏️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <materialIcons:MaterialIcon Kind="Pencil" Width="16" Height="16" VerticalAlignment="Center"/>
                                     </Button>
                                     
                                     <Button Command="{Binding ((vm:HistorialViewModel)DataContext).ReimprimirPdfCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
@@ -163,7 +164,7 @@
                                             Classes="btn-success-compact"
                                             Width="32" Height="32" Padding="0"
                                             ToolTip.Tip="Reimprimir PDF">
-                                        <TextBlock Text="🖨️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <materialIcons:MaterialIcon Kind="PrinterOutline" Width="16" Height="16" VerticalAlignment="Center"/>
                                     </Button>
                                     
                                     <Button Command="{Binding ((vm:HistorialViewModel)DataContext).BorrarDocumentoCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
@@ -171,7 +172,7 @@
                                             Classes="btn-danger-compact"
                                             Width="32" Height="32" Padding="0"
                                             ToolTip.Tip="Eliminar Documento">
-                                        <TextBlock Text="🗑️" FontFamily="Segoe UI Emoji, Noto Color Emoji, Apple Color Emoji" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <materialIcons:MaterialIcon Kind="Delete" Width="16" Height="16" VerticalAlignment="Center"/>
                                     </Button>
                                 </StackPanel>
                             </Grid>

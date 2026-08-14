@@ -203,13 +203,6 @@ namespace QuickDocs.Backend.Services
                                     r.AutoItem().Text($"-${presupuesto.Descuento:N2}").FontSize(10).FontColor(Colors.Red.Medium); 
                                 });
 
-                                // 3. IVA % (Estructura fija lista para cuando mapees el porcentaje)
-                                totalesCol.Item().PaddingTop(2).Row(r => 
-                                { 
-                                    r.RelativeItem().Text("IVA %:").FontSize(10).FontColor(Colors.Grey.Darken3); 
-                                    r.AutoItem().Text("$0.00").FontSize(10); 
-                                });
-
                                 // Línea divisoria sutil antes del Total
                                 totalesCol.Item().PaddingVertical(4).LineHorizontal(0.5f).LineColor(Colors.Grey.Lighten2);
 
@@ -446,11 +439,6 @@ namespace QuickDocs.Backend.Services
                             {
                                 c.Item().Text("CLIENTE / BENEFICIARIO:").Bold().FontSize(11).FontColor(Colors.Grey.Darken3);
                                 c.Item().Text($"Nombre: {cliente.Nombre}");
-                                if (!string.IsNullOrEmpty(cliente.CuitCuil) && cliente.CuitCuil != "00-00000000-0")
-                                {
-                                    c.Item().Text($"CUIT/CUIL: {cliente.CuitCuil}");
-                                    c.Item().Text($"Dirección: {cliente.Direccion}");
-                                }
                             });
 
                             col.Item().PaddingTop(1, Unit.Centimetre);

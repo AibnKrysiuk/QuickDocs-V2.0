@@ -89,7 +89,7 @@ namespace QuickDocs.Backend.Controllers
                 .Select(d => (int?)d.NumeroCorrelativo)
                 .MaxAsync() ?? 0;
 
-            int diasAsignados = dto.DiasValidez <= 0 ? 15 : dto.DiasValidez;
+            int diasAsignados = dto.DiasValidez <= 0 ? 30 : dto.DiasValidez;
 
             var presupuesto = new Presupuesto
             {
@@ -101,6 +101,7 @@ namespace QuickDocs.Backend.Controllers
                 Estado = EstadoPresupuesto.Vigente,
                 PuntoEmision = 1,
                 NumeroCorrelativo = ultimoNumero + 1, 
+                DiasValidez = diasAsignados,
                 Detalles = new List<DetallePresupuesto>()
             };
 
@@ -144,6 +145,7 @@ namespace QuickDocs.Backend.Controllers
 
             presupuesto.Subtotal = subtotalAcumulado;
             presupuesto.Descuento = (decimal)dto.DescuentoGeneral;
+            presupuesto.MotivoDescuento = presupuesto.Descuento > 0 ? dto.MotivoDescuento : null;
             presupuesto.Total = subtotalAcumulado - presupuesto.Descuento;
             if (presupuesto.Total < 0m) presupuesto.Total = 0m;
 
@@ -281,11 +283,12 @@ namespace QuickDocs.Backend.Controllers
                 if (!clienteExiste) return BadRequest("El cliente especificado no existe o no pertenece a este usuario.");
             }
 
-            int diasAsignados = dto.DiasValidez <= 0 ? 15 : dto.DiasValidez;
+            int diasAsignados = dto.DiasValidez <= 0 ? 30 : dto.DiasValidez;
 
             presupuestoExistente.ClienteId = dto.ClienteId == 0 ? null : dto.ClienteId;
-            presupuestoExistente.FechaEmision = DateTime.UtcNow; 
-            presupuestoExistente.FechaVencimiento = DateTime.UtcNow.AddDays(diasAsignados);
+            // 🎯 FIX: ya no pisamos FechaEmision — el vencimiento se recalcula desde la fecha ORIGINAL
+            presupuestoExistente.DiasValidez = diasAsignados;
+            presupuestoExistente.FechaVencimiento = presupuestoExistente.FechaEmision.AddDays(diasAsignados);
 
             if (presupuestoExistente.ClienteId.HasValue && presupuestoExistente.ClienteId.Value > 0)
             {
@@ -334,6 +337,7 @@ namespace QuickDocs.Backend.Controllers
 
             presupuestoExistente.Subtotal = subtotalAcumulado;
             presupuestoExistente.Descuento = (decimal)dto.DescuentoGeneral;
+            presupuestoExistente.MotivoDescuento = presupuestoExistente.Descuento > 0 ? dto.MotivoDescuento : null;
             presupuestoExistente.Total = subtotalAcumulado - presupuestoExistente.Descuento;
             if (presupuestoExistente.ClienteId.HasValue && presupuestoExistente.ClienteId.Value > 0)
             {
@@ -341,6 +345,9 @@ namespace QuickDocs.Backend.Controllers
                 if (c != null) 
                 {
                     if (!string.IsNullOrWhiteSpace(dto.ClienteNombreLibre)) c.Nombre = dto.ClienteNombreLibre;
+                    // 🎯 NUEVO: si el usuario editó el CUIT/Dirección desde la UI, lo actualizamos en el cliente real
+                    if (!string.IsNullOrWhiteSpace(dto.ClienteCuitLibre)) c.CuitCuil = dto.ClienteCuitLibre;
+                    if (!string.IsNullOrWhiteSpace(dto.ClienteDireccionLibre)) c.Direccion = dto.ClienteDireccionLibre;
                     presupuestoExistente.ClienteNombre = c.Nombre;
                 }
             }

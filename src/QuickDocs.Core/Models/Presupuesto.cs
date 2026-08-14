@@ -13,6 +13,10 @@ namespace QuickDocs.Core.Models
         public decimal Descuento { get; set; }
         public decimal Total { get; set; }
 
+        public int DiasValidez { get; set;} = 30;
+
+        public string? MotivoDescuento { get; set; }
+
         // El estado usando el Enum exclusivo de Presupuestos que creamos antes
         public EstadoPresupuesto Estado { get; set; } = EstadoPresupuesto.Vigente;
 

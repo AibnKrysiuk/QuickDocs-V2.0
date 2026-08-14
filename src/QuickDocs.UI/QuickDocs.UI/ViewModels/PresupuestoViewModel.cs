@@ -10,8 +10,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Avalonia.Threading;
 
+
+
 namespace QuickDocs.UI.ViewModels
 {
+    public enum TipoDescuentoUI { Porcentaje, Monto }
     public partial class PresupuestoViewModel : ObservableObject
     {
         private readonly HttpClient _httpClient;
@@ -41,7 +44,7 @@ namespace QuickDocs.UI.ViewModels
         private Cliente? _clienteSeleccionado;
 
         [ObservableProperty]
-        private int _diasValidez = 15;
+        private int _diasValidez = 30;
 
         // 🎯 PROPIEDADES NUEVAS: Para soportar CUIT y Dirección editables o del cliente seleccionado
         [ObservableProperty]
@@ -49,6 +52,21 @@ namespace QuickDocs.UI.ViewModels
 
         [ObservableProperty]
         private string _clienteDireccionLibre = string.Empty;
+
+        [ObservableProperty]
+        private TipoDescuentoUI _tipoDescuento = TipoDescuentoUI.Porcentaje;
+
+        [ObservableProperty]
+        private decimal _valorDescuentoIngresado = 0;
+
+        [ObservableProperty]
+        private string _motivoDescuento = string.Empty;
+
+        // --- Banner de errores ---
+        public ObservableCollection<string> ErroresValidacion { get; } = new();
+
+        [ObservableProperty]
+        private bool _mostrarErrores;
 
         // --- Bindings del formulario de ingreso de Renglones ---
         [ObservableProperty]
@@ -152,8 +170,8 @@ namespace QuickDocs.UI.ViewModels
 
         private void AgregarRenglon()
         {
-            if (string.IsNullOrWhiteSpace(DescripcionRenglon) || CantidadRenglon <= 0) return;
-
+            if (string.IsNullOrWhiteSpace(DescripcionRenglon) || CantidadRenglon <= 0 || PrecioRenglon < 0) return;
+            
             if (DetalleSeleccionado != null)
             {
                 Detalles.Remove(DetalleSeleccionado);
@@ -194,6 +212,31 @@ namespace QuickDocs.UI.ViewModels
             ItemSeleccionado = _todosLosItems.FirstOrDefault(i => i.Id == DetalleSeleccionado.ItemId);
         }
 
+        // El monto real del descuento en pesos, sin importar si el usuario tipeó % o $
+        public decimal DescuentoCalculado => TipoDescuento == TipoDescuentoUI.Porcentaje
+            ? Math.Round(Total * (ValorDescuentoIngresado / 100m), 2)
+            : ValorDescuentoIngresado;
+
+        // El total final, ya con el descuento aplicado
+        public decimal TotalFinal => Math.Max(0, Total - DescuentoCalculado);
+
+        partial void OnTotalChanged(decimal value)
+        {
+            OnPropertyChanged(nameof(DescuentoCalculado));
+            OnPropertyChanged(nameof(TotalFinal));
+        }
+
+        partial void OnTipoDescuentoChanged(TipoDescuentoUI value)
+        {
+            OnPropertyChanged(nameof(DescuentoCalculado));
+            OnPropertyChanged(nameof(TotalFinal));
+        }
+
+        partial void OnValorDescuentoIngresadoChanged(decimal value)
+        {
+            OnPropertyChanged(nameof(DescuentoCalculado));
+            OnPropertyChanged(nameof(TotalFinal));
+        }
         private void RecalcularTotal()
         {
             Total = Detalles.Sum(d => d.Importe);
@@ -201,7 +244,7 @@ namespace QuickDocs.UI.ViewModels
 
         private async Task GuardarPresupuestoAsync()
         {
-            if (Detalles.Count == 0) return;
+            if (!ValidarFormulario()) return;
 
             var dto = new
             {
@@ -211,7 +254,8 @@ namespace QuickDocs.UI.ViewModels
                 ClienteCuitLibre = !string.IsNullOrWhiteSpace(this.ClienteCuitLibre) ? this.ClienteCuitLibre : null,
                 ClienteDireccionLibre = !string.IsNullOrWhiteSpace(this.ClienteDireccionLibre) ? this.ClienteDireccionLibre : null,
                 DiasValidez = DiasValidez,
-                DescuentoGeneral = 0.0, 
+                DescuentoGeneral = (double)DescuentoCalculado,
+                MotivoDescuento = DescuentoCalculado > 0 ? MotivoDescuento : null,
                 Detalles = Detalles.Select(d => new
                 {
                     ItemId = d.ItemId ?? 0,
@@ -236,7 +280,13 @@ namespace QuickDocs.UI.ViewModels
                 if (!response.IsSuccessStatusCode)
                 {
                     string errorApi = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"La API devolvió un error ({response.StatusCode}): {errorApi}");
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        ErroresValidacion.Clear();
+                        ErroresValidacion.Add($"El servidor rechazó el presupuesto: {errorApi}");
+                        MostrarErrores = true;
+                    });
+                    return;
                 }
 
                 string jsonRespuesta = await response.Content.ReadAsStringAsync();
@@ -420,10 +470,10 @@ namespace QuickDocs.UI.ViewModels
                     ClienteDireccionLibre = string.Empty;
                 }
 
-                if (presupuesto.FechaVencimiento >= presupuesto.FechaEmision)
-                {
-                    DiasValidez = (presupuesto.FechaVencimiento - presupuesto.FechaEmision).Days;
-                }
+                DiasValidez = presupuesto.DiasValidez;
+                TipoDescuento = TipoDescuentoUI.Monto;
+                ValorDescuentoIngresado = presupuesto.Descuento;
+                MotivoDescuento = presupuesto.MotivoDescuento ?? string.Empty;
 
                 Detalles.Clear();
                 if (presupuesto.Detalles != null)
@@ -505,16 +555,52 @@ namespace QuickDocs.UI.ViewModels
             TextoBuscarCliente = string.Empty;
             ClienteCuitLibre = string.Empty;
             ClienteDireccionLibre = string.Empty;
-            DiasValidez = 15;
+            DiasValidez = 30;
+            TipoDescuento = TipoDescuentoUI.Porcentaje;
+            ValorDescuentoIngresado = 0;
+            MotivoDescuento = string.Empty;
+            ErroresValidacion.Clear();
+            MostrarErrores = false;
             Detalles.Clear();
             Total = 0;
             
-            // 🎯 NUEVO: Reseteamos el estado de edición al limpiar
             EsEdicion = false;
             
             LimpiarCamposRenglon();
         }
-    
+
+        private bool ValidarFormulario()
+        {
+            var errores = new List<string>();
+
+            if (Detalles.Count == 0)
+                errores.Add("Debe cargar al menos un ítem.");
+
+            if (!string.IsNullOrWhiteSpace(ClienteCuitLibre) && 
+                !System.Text.RegularExpressions.Regex.IsMatch(ClienteCuitLibre, @"^\d{11}$"))
+                errores.Add("El CUIT/CUIL debe tener exactamente 11 dígitos, o dejarse vacío.");
+
+            if (DiasValidez < 1 || DiasValidez > 99)
+                errores.Add("Los días de validez deben estar entre 1 y 99.");
+
+            if (ValorDescuentoIngresado < 0)
+                errores.Add("El descuento no puede ser un valor negativo.");
+
+            if (TipoDescuento == TipoDescuentoUI.Porcentaje && ValorDescuentoIngresado > 100)
+                errores.Add("El descuento porcentual no puede superar el 100%.");
+
+            if (DescuentoCalculado > Total)
+                errores.Add("El descuento no puede ser mayor al subtotal del presupuesto.");
+
+            if (MotivoDescuento.Length > 150)
+                errores.Add("El motivo del descuento no puede superar los 150 caracteres.");
+
+            ErroresValidacion.Clear();
+            foreach (var error in errores) ErroresValidacion.Add(error);
+            MostrarErrores = errores.Count > 0;
+
+            return errores.Count == 0;
+        }
         private void NavegarAHistorial()
         {
             if (Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop)

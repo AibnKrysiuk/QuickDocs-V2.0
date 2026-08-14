@@ -1,17 +1,26 @@
-================ Funcionalidades ==================================
-===================================================================
-
-
-================ Trabajo ==========================================
-===================================================================
-- Editar vencimiento de Nota de credito.
-
-
-
-================ Futuros ==========================================
-===================================================================
-- Envio por wsp incorporado.
-- Pagina de Soporte, Ayuda y contacto.
-- Servidor en la nube.
-- Version mobil.
-    
+🔜 Pendiente — Presupuesto (necesito: PresupuestoViewModel.cs, PresupuestoCreateDto.cs, PresupuestosController.cs, Enums.cs)
+Agregar DiasValidez real al modelo Presupuesto.cs (hoy no existe, el PDF lo calcula raro restando fechas — simplificar)
+Agregar campos de Descuento: TipoDescuento (enum Porcentaje/Monto) + MotivoDescuento (string, máx. 150 caracteres) al modelo, DTO, ViewModel y UI
+Validar: descuento no supera Subtotal (si es Monto) ni 100% (si es Porcentaje)
+PDF: que el bloque de Descuento solo se imprima si Descuento > 0, incluyendo el Motivo
+PDF: cuando el Cliente está vacío, dejar líneas en blanco para escribir a mano (en vez de solo texto "Consumidor Final")
+Validaciones de UI: Cliente opcional, CUIT 11 dígitos o vacío, mínimo 1 ítem, Cantidad > 0, Precio ≥ 0, Días de validez 1-99 default 30
+Banner de alerta (Opción A) al intentar emitir sin cumplir lo obligatorio
+🔜 Pendiente — Remito (necesito: Remito.cs, RemitoViewModel.cs, RemitosController.cs)
+Agregar bloque de CUIT/CUIL al PDF de Remito (hoy no existe)
+Agregar campo CUIT/CUIL a la UI de Remito (11 dígitos o vacío)
+Agregar "Fecha de Entrega __ / __ / ____" en blanco al PDF de Remito (hoy no existe)
+Validaciones de UI: Cliente obligatorio, mínimo 1 ítem, Cantidad > 0 (sin precio)
+Banner de alerta al emitir sin cumplir lo obligatorio
+🔜 Pendiente — Recibo
+Agregar valor "Otro" al enum MetodoPago (pedirte el Enums.cs real para no pisar nombres existentes)
+Que "Otro" sea el default si no se elige nada
+Validaciones de UI: ImporteRecibido > 0, Cliente obligatorio, Detalle opcional
+Banner de alerta al emitir sin cumplir lo obligatorio
+🔜 Pendiente — Nota de Crédito
+Validaciones de UI: Cliente obligatorio, Total > 0, Detalle (motivo) obligatorio
+Diseñar advertencia visual para montos grandes (+$2M) — pendiente de definir el diseño
+Banner de alerta al emitir sin cumplir lo obligatorio
+🔜 Al final, después de validaciones
+Logo en el ejecutable
+Generar .exe (Windows) y binario (Linux)

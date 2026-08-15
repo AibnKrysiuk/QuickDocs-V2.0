@@ -129,15 +129,16 @@ namespace QuickDocs.Backend.Controllers
             if (remito.ClienteId.HasValue && remito.ClienteId.Value > 0)
             {
                 var c = await _context.Clientes.FindAsync(remito.ClienteId.Value);
-                if (c != null) remito.ClienteNombre = c.Nombre;
+                if (c != null)
+                {
+                    remito.ClienteNombre = c.Nombre;
+                    // 🎯 NUEVO: si el usuario cargó/editó el CUIT desde la UI, lo guardamos en el cliente real
+                    if (!string.IsNullOrWhiteSpace(dto.ClienteCuitLibre)) c.CuitCuil = dto.ClienteCuitLibre;
+                }
             }
             else if (!string.IsNullOrWhiteSpace(dto.ClienteNombreLibre))
             {
                 remito.ClienteNombre = dto.ClienteNombreLibre;
-            }
-            else
-            {
-                remito.ClienteNombre = "Consumidor Final / Público General";
             }
 
             remito.Subtotal = subtotalAcumulado;
@@ -223,15 +224,15 @@ namespace QuickDocs.Backend.Controllers
             if (remitoExistente.ClienteId.HasValue && remitoExistente.ClienteId.Value > 0)
             {
                 var c = await _context.Clientes.FindAsync(remitoExistente.ClienteId.Value);
-                if (c != null) remitoExistente.ClienteNombre = c.Nombre;
+                if (c != null)
+                {
+                    remitoExistente.ClienteNombre = c.Nombre;
+                    if (!string.IsNullOrWhiteSpace(dto.ClienteCuitLibre)) c.CuitCuil = dto.ClienteCuitLibre;
+                }
             }
             else if (!string.IsNullOrWhiteSpace(dto.ClienteNombreLibre))
             {
                 remitoExistente.ClienteNombre = dto.ClienteNombreLibre;
-            }
-            else
-            {
-                remitoExistente.ClienteNombre = "Consumidor Final / Público General";
             }
 
             // Limpieza y reemplazo de bultos tal cual como hacés con los detalles de presupuesto
@@ -242,18 +243,27 @@ namespace QuickDocs.Backend.Controllers
 
             foreach (var renglonDto in dto.Detalles)
             {
-                var item = await _context.Items.FirstOrDefaultAsync(i => i.Id == renglonDto.ItemId && i.UsuarioId == idUsuarioReal);
-                if (item == null) return BadRequest($"El ítem con ID {renglonDto.ItemId} no existe.");
+                decimal precioAplicado = 0m;
+                string descripcionSnapshot = renglonDto.Descripcion;
 
-                decimal totalRenglon = item.PrecioUnitario * renglonDto.Cantidad;
+                if (renglonDto.ItemId.HasValue && renglonDto.ItemId.Value > 0)
+                {
+                    var item = await _context.Items.FirstOrDefaultAsync(i => i.Id == renglonDto.ItemId.Value && i.UsuarioId == idUsuarioReal);
+                    if (item == null) return BadRequest($"El ítem con ID {renglonDto.ItemId} no existe.");
+
+                    descripcionSnapshot = item.Descripcion;
+                    precioAplicado = item.PrecioUnitario;
+                }
+
+                decimal totalRenglon = precioAplicado * renglonDto.Cantidad;
                 subtotalAcumulado += totalRenglon;
 
                 remitoExistente.Detalles.Add(new DetalleRemito
                 {
-                    ItemId = item.Id,
-                    DescripcionSnapshot = item.Descripcion,
+                    ItemId = (renglonDto.ItemId.HasValue && renglonDto.ItemId.Value > 0) ? renglonDto.ItemId : null,
+                    DescripcionSnapshot = descripcionSnapshot,
                     Cantidad = renglonDto.Cantidad,
-                    PrecioAplicado = item.PrecioUnitario
+                    PrecioAplicado = precioAplicado
                 });
             }
 

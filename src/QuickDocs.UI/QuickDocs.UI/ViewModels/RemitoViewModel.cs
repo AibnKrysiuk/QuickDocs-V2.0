@@ -46,6 +46,15 @@ namespace QuickDocs.UI.ViewModels
         [ObservableProperty]
         private string _direccionEntrega = string.Empty;
 
+        [ObservableProperty]
+        private string _clienteCuitLibre = string.Empty;
+
+        // --- Banner de errores ---
+        public ObservableCollection<string> ErroresValidacion { get; } = new();
+
+        [ObservableProperty]
+        private bool _mostrarErrores;
+
         // --- Bindings del formulario de ingreso de Renglones ---
         [ObservableProperty]
         private string _textoBuscarItem = string.Empty;
@@ -189,7 +198,7 @@ namespace QuickDocs.UI.ViewModels
 
         private async Task GuardarRemitoAsync()
         {
-            if (Detalles.Count == 0) return;
+            if (!ValidarFormulario()) return;
 
             // Armamos el DTO adaptado de manera idéntica a presupuestos
             var dto = new
@@ -197,6 +206,7 @@ namespace QuickDocs.UI.ViewModels
                 UsuarioId = 1,
                 ClienteId = ClienteSeleccionado?.Id, 
                 ClienteNombreLibre = ClienteSeleccionado == null ? TextoBuscarCliente : null,
+                ClienteCuitLibre = !string.IsNullOrWhiteSpace(ClienteCuitLibre) ? ClienteCuitLibre : null,
                 DireccionEntrega = DireccionEntrega,
                 PresupuestoId = _presupuestoIdOrigen ?? 0,
                 DescuentoGeneral = 0.0, 
@@ -227,7 +237,13 @@ namespace QuickDocs.UI.ViewModels
                 if (!response.IsSuccessStatusCode)
                 {
                     string errorApi = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"La API de Remitos devolvió un error ({response.StatusCode}): {errorApi}");
+                    await Dispatcher.UIThread.InvokeAsync(() =>
+                    {
+                        ErroresValidacion.Clear();
+                        ErroresValidacion.Add($"El servidor rechazó el remito: {errorApi}");
+                        MostrarErrores = true;
+                    });
+                    return;
                 }
 
                 string jsonRespuesta = await response.Content.ReadAsStringAsync();
@@ -364,6 +380,8 @@ namespace QuickDocs.UI.ViewModels
                 if (ClienteSeleccionado != null)
                 {
                     TextoBuscarCliente = ClienteSeleccionado.Nombre ?? string.Empty;
+                    DireccionEntrega = remito.DireccionEntrega ?? string.Empty;
+                    ClienteCuitLibre = ClienteSeleccionado?.CuitCuil ?? string.Empty;
                 }
                 else
                 {
@@ -469,7 +487,10 @@ namespace QuickDocs.UI.ViewModels
             _presupuestoIdOrigen = null;
             ClienteSeleccionado = null;
             TextoBuscarCliente = string.Empty;
+            ClienteCuitLibre = string.Empty;
             DireccionEntrega = string.Empty;
+            ErroresValidacion.Clear();
+            MostrarErrores = false;
             Detalles.Clear();
             Total = 0;
             LimpiarCamposRenglon();
@@ -495,12 +516,28 @@ namespace QuickDocs.UI.ViewModels
             }
         }
 
-        [ObservableProperty]
-        private bool _mostrarPreciosImpresion;
-
-        partial void OnMostrarPreciosImpresionChanged(bool value)
+        private bool ValidarFormulario()
         {
-            System.Diagnostics.Debug.WriteLine($"[Remito] Mostrar precios impresión cambiado a: {value}");
+            var errores = new List<string>();
+
+            bool tieneClienteDeBase = ClienteSeleccionado != null;
+            bool tieneClienteLibre = !string.IsNullOrWhiteSpace(TextoBuscarCliente);
+
+            if (!tieneClienteDeBase && !tieneClienteLibre)
+                errores.Add("Debe indicar un cliente.");
+
+            if (!string.IsNullOrWhiteSpace(ClienteCuitLibre) &&
+                !System.Text.RegularExpressions.Regex.IsMatch(ClienteCuitLibre, @"^\d{11}$"))
+                errores.Add("El CUIT/CUIL debe tener exactamente 11 dígitos, o dejarse vacío.");
+
+            if (Detalles.Count == 0)
+                errores.Add("Debe cargar al menos un ítem.");
+
+            ErroresValidacion.Clear();
+            foreach (var error in errores) ErroresValidacion.Add(error);
+            MostrarErrores = errores.Count > 0;
+
+            return errores.Count == 0;
         }
     }
 }

@@ -5,7 +5,7 @@
              x:Class="QuickDocs.UI.Views.RemitoView"
              x:DataType="vm:RemitoViewModel">
     
-    <Grid RowDefinitions="Auto, Auto, Auto, *, Auto" Margin="15" Background="Transparent">
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, *, Auto" Margin="15" Background="Transparent">
         
         <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
             <StackPanel Grid.Column="0" Spacing="5">
@@ -29,54 +29,61 @@
             </Button>
         </Grid>
 
-        <Border Grid.Row="1" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,15">
-            <Grid RowDefinitions="Auto, Auto" RowSpacing="15">
-                
-                <Grid Grid.Row="0" ColumnDefinitions="*, Auto" ColumnSpacing="20">
-                    <StackPanel Grid.Column="0" Spacing="5">
-                        <TextBlock Text="Destinatario / Cliente" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
-                        <AutoCompleteBox Text="{Binding TextoBuscarCliente, Mode=TwoWay}" 
-                                        ItemsSource="{Binding SugerenciasClientes}"
-                                        FilterMode="Contains"
-                                        PlaceholderText="Escriba para buscar o registrar cliente manual..." 
-                                        HorizontalAlignment="Stretch"/>
-                    </StackPanel>
-                    
-                    <StackPanel Grid.Column="1" 
-                                Orientation="Horizontal" 
-                                Spacing="8" 
-                                VerticalAlignment="Bottom" 
-                                Margin="0,0,0,8">
-                        
-                        <CheckBox IsChecked="{Binding MostrarPreciosImpresion, Mode=TwoWay}"
-                                VerticalAlignment="Center"
-                                Margin="0"/>
-                        
-                        <TextBlock Text="Mostrar precios en el documento impreso" 
-                                FontSize="13" 
-                                FontWeight="Medium" 
-                                Foreground="#334155" 
-                                VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Grid>
-
-                <StackPanel Grid.Row="1" Spacing="5">
-                    <StackPanel Orientation="Horizontal" Spacing="6">
-                        <materialIcons:MaterialIcon Kind="MapMarkerCheckOutline" Width="14" Height="14" 
-                                                    HorizontalAlignment="Left" VerticalAlignment="Center"
-                                                    Foreground="#475569"/>
-                        <TextBlock Text="Dirección de Entrega" FontSize="11" Foreground="#475569" VerticalAlignment="Center"/>
-                    </StackPanel>
-
-                    <TextBox Text="{Binding DireccionEntrega, Mode=TwoWay}" 
-                            PlaceholderText="Ej. Av. Siempreviva 742, Planta Alta / Dejar en depósito central..." 
-                            HorizontalAlignment="Stretch"/>
+        <Border Grid.Row="1" 
+                Background="#FEF2F2" BorderBrush="#FCA5A5" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,15"
+                IsVisible="{Binding MostrarErrores}">
+            <StackPanel Spacing="6">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <materialIcons:MaterialIcon Kind="AlertCircleOutline" Width="18" Height="18" Foreground="#DC2626" VerticalAlignment="Center"/>
+                    <TextBlock Text="Revisá lo siguiente antes de emitir:" FontWeight="Bold" Foreground="#991B1B" VerticalAlignment="Center"/>
                 </StackPanel>
-                                
-            </Grid>
+                <ItemsControl ItemsSource="{Binding ErroresValidacion}" Margin="26,0,0,0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding StringFormat='• {0}'}" Foreground="#991B1B" FontSize="13"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
         </Border>
 
         <Border Grid.Row="2" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,15">
+            <StackPanel Spacing="12">
+                
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Destinatario / Cliente" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
+                    <AutoCompleteBox Text="{Binding TextoBuscarCliente, Mode=TwoWay}" 
+                                    ItemsSource="{Binding SugerenciasClientes}"
+                                    FilterMode="Contains"
+                                    PlaceholderText="Escriba para buscar o registrar cliente manual..." 
+                                    HorizontalAlignment="Stretch"/>
+                </StackPanel>
+
+                <Grid ColumnDefinitions="1*, 2*" ColumnSpacing="15">
+                    <StackPanel Grid.Column="0" Spacing="5">
+                        <TextBlock Text="CUIT / CUIL (Opcional)" FontSize="11" Foreground="#64748B"/>
+                        <TextBox Text="{Binding ClienteCuitLibre, Mode=TwoWay}" 
+                                PlaceholderText="11 dígitos, sin guiones"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Spacing="5">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <materialIcons:MaterialIcon Kind="MapMarkerCheckOutline" Width="14" Height="14" 
+                                                        HorizontalAlignment="Left" VerticalAlignment="Center"
+                                                        Foreground="#475569"/>
+                            <TextBlock Text="Dirección de Entrega (Opcional)" FontSize="11" Foreground="#475569" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <TextBox Text="{Binding DireccionEntrega, Mode=TwoWay}" 
+                                PlaceholderText="Ej. Av. Siempreviva 742, Planta Alta. Vacío = Retira en el local." 
+                                HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                </Grid>
+                                
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="3" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,15">
             <StackPanel Spacing="10">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <materialIcons:MaterialIcon Kind="Package" Width="16" Height="16" VerticalAlignment="Center"/>
@@ -114,7 +121,7 @@
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="3" Background="White" CornerRadius="8" Padding="5" BoxShadow="0 2 4 0 #10000000">
+        <Border Grid.Row="4" Background="White" CornerRadius="8" Padding="5" BoxShadow="0 2 4 0 #10000000">
             <Grid RowDefinitions="Auto, *, Auto" RowSpacing="10">
                 
                 <Grid Grid.Row="0" ColumnDefinitions="*, 150, 100" Margin="5,0,5,5">
@@ -169,7 +176,7 @@
             </Grid>
         </Border>
 
-        <Grid Grid.Row="4" ColumnDefinitions="*, Auto" Margin="0,15,0,0">
+        <Grid Grid.Row="5" ColumnDefinitions="*, Auto" Margin="0,15,0,0">
             <Button Grid.Column="0" 
                     Command="{Binding GuardarRemitoCommand}" 
                     Classes="btn-success"

@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\QuickDocs.Core\QuickDocs.Core.csproj" />
-    <ProjectReference Include="..\..\QuickDocs.Backend\QuickDocs.Backend.csproj" />
-
   </ItemGroup>
+
+  
 </Project>

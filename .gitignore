@@ -43,3 +43,5 @@ bld/
 # PDFs generados localmente (para no ensuciar el repo con pruebas)
 QuickDocs/Presupuestos/
 *.pdf
+# Ejecutables publicados (se regeneran con publicar.sh)
+src/QuickDocs.UI/QuickDocs.UI.Desktop/publicaciones/

@@ -5,20 +5,20 @@
              xmlns:conv="using:QuickDocs.UI.Converters"
              x:Class="QuickDocs.UI.Views.PresupuestoView"
              x:DataType="vm:PresupuestoViewModel">
-    
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
     <Grid RowDefinitions="Auto, Auto, Auto, Auto, *, Auto, Auto" Margin="15" Background="Transparent">
-        
-        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
-            <StackPanel Grid.Column="0" Spacing="5">
+
+        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,10">
+            <StackPanel Grid.Column="0" Spacing="3">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <materialIcons:MaterialIcon Kind="FileDocument" Width="16" Height="16" VerticalAlignment="Center"/>
-                    <TextBlock Text="Nuevo Presupuesto" FontSize="22" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                    <TextBlock Text="Nuevo Presupuesto" FontSize="20" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
                 </StackPanel>
-                
-                <TextBlock Text="Cargue los datos del cliente y los artículos para el documento." FontSize="13" Foreground="#64748B"/>
+                <TextBlock Text="Cargue los datos del cliente y los artículos para el documento." FontSize="12" Foreground="#64748B"/>
             </StackPanel>
-            
-            <Button Grid.Column="1" 
+
+            <Button Grid.Column="1"
                     Command="{Binding NavegarAHistorialCommand}"
                     Classes="btn-secondary"
                     FontSize="13" FontWeight="Medium"
@@ -30,9 +30,9 @@
             </Button>
         </Grid>
 
-        <!-- 🎯 NUEVO: Banner de errores -->
-        <Border Grid.Row="1" 
-                Background="#FEF2F2" BorderBrush="#FCA5A5" BorderThickness="1" CornerRadius="8" Padding="15" Margin="0,0,0,15"
+        <!-- Banner de errores -->
+        <Border Grid.Row="1"
+                Background="#FEF2F2" BorderBrush="#FCA5A5" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,10"
                 IsVisible="{Binding MostrarErrores}">
             <StackPanel Spacing="6">
                 <StackPanel Orientation="Horizontal" Spacing="8">
@@ -49,18 +49,19 @@
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="2" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,15">
-            <StackPanel Spacing="12">
+        <!-- Datos de cliente: más compacto -->
+        <Border Grid.Row="2" Background="White" Padding="12" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,10">
+            <StackPanel Spacing="8">
                 <Grid ColumnDefinitions="*, Auto" ColumnSpacing="20">
-                    <StackPanel Grid.Column="0" Spacing="5">
+                    <StackPanel Grid.Column="0" Spacing="4">
                         <TextBlock Text="Cliente / Razón Social" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
-                        <AutoCompleteBox Text="{Binding TextoBuscarCliente, Mode=TwoWay}" 
+                        <AutoCompleteBox Text="{Binding TextoBuscarCliente, Mode=TwoWay}"
                             ItemsSource="{Binding SugerenciasClientes}"
                             FilterMode="Contains"
-                            PlaceholderText="Escriba el nombre del cliente o empresa..." 
+                            PlaceholderText="Escriba el nombre del cliente o empresa..."
                             HorizontalAlignment="Stretch"/>
                     </StackPanel>
-                    
+
                     <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Orientation="Horizontal" Spacing="8">
                         <TextBlock Text="Documento válido por" FontSize="13" Foreground="#475569" VerticalAlignment="Center"/>
                         <TextBox Text="{Binding DiasValidez, Mode=TwoWay}" Width="50" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
@@ -69,53 +70,54 @@
                 </Grid>
 
                 <Grid ColumnDefinitions="1*, 2*" ColumnSpacing="15">
-                    <StackPanel Grid.Column="0" Spacing="5">
+                    <StackPanel Grid.Column="0" Spacing="4">
                         <TextBlock Text="CUIT / CUIL (Opcional)" FontSize="11" Foreground="#64748B"/>
-                        <TextBox Text="{Binding ClienteCuitLibre, Mode=TwoWay}" 
+                        <TextBox Text="{Binding ClienteCuitLibre, Mode=TwoWay}"
                                  PlaceholderText="11 dígitos, sin guiones"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="1" Spacing="5">
+                    <StackPanel Grid.Column="1" Spacing="4">
                         <TextBlock Text="Dirección Comercial (Opcional)" FontSize="11" Foreground="#64748B"/>
-                        <TextBox Text="{Binding ClienteDireccionLibre, Mode=TwoWay}" 
+                        <TextBox Text="{Binding ClienteDireccionLibre, Mode=TwoWay}"
                                  PlaceholderText="Ej. Av. 7 nro 123, La Plata"/>
                     </StackPanel>
                 </Grid>
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="3" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,15">
-            <StackPanel Spacing="10">
+        <!-- Ingresar artículo: más compacto -->
+        <Border Grid.Row="3" Background="White" Padding="12" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,10">
+            <StackPanel Spacing="8">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <materialIcons:MaterialIcon Kind="PackageVariant" Width="16" Height="16" VerticalAlignment="Center"/>
                     <TextBlock Text="Ingresar Artículo / Servicio" FontSize="13" FontWeight="Bold" Foreground="#1E293B" VerticalAlignment="Center"/>
                 </StackPanel>
-                
+
                 <Grid ColumnDefinitions="2*, 1*, 80, 120, Auto" ColumnSpacing="12">
-                    <StackPanel Grid.Column="0" Spacing="5">
+                    <StackPanel Grid.Column="0" Spacing="4">
                         <TextBlock Text="Nombre / Descripción" FontSize="11" Foreground="#475569"/>
-                        <AutoCompleteBox Text="{Binding TextoBuscarItem, Mode=TwoWay}" 
+                        <AutoCompleteBox Text="{Binding TextoBuscarItem, Mode=TwoWay}"
                             ItemsSource="{Binding SugerenciasItems}"
                             FilterMode="Contains"
                             PlaceholderText="Ej. Tornillo Hexagonal o busque en catálogo..."/>
                     </StackPanel>
-                    
-                    <StackPanel Grid.Column="1" Spacing="5">
+
+                    <StackPanel Grid.Column="1" Spacing="4">
                         <TextBlock Text="Marca" FontSize="11" Foreground="#475569"/>
                         <TextBox Text="{Binding MarcaRenglon, Mode=TwoWay}" PlaceholderText="Ej. Aceros Max"/>
                     </StackPanel>
-                    
-                    <StackPanel Grid.Column="2" Spacing="5">
+
+                    <StackPanel Grid.Column="2" Spacing="4">
                         <TextBlock Text="Cant." FontSize="11" Foreground="#475569"/>
                         <TextBox Text="{Binding CantidadRenglon, Mode=TwoWay}" PlaceholderText="0" HorizontalContentAlignment="Center"/>
                     </StackPanel>
-                    
-                    <StackPanel Grid.Column="3" Spacing="5">
+
+                    <StackPanel Grid.Column="3" Spacing="4">
                         <TextBlock Text="Precio Unit." FontSize="11" Foreground="#475569"/>
                         <TextBox Text="{Binding PrecioRenglon, Mode=TwoWay}" PlaceholderText="0.00" HorizontalContentAlignment="Right"/>
                     </StackPanel>
-                    
-                    <Button Grid.Column="4" 
+
+                    <Button Grid.Column="4"
                             Command="{Binding AgregarRenglonCommand}"
                             Classes="btn-primary-compact"
                             VerticalAlignment="Bottom">
@@ -128,10 +130,11 @@
             </StackPanel>
         </Border>
 
-        <Border Grid.Row="4" Background="White" CornerRadius="8" Padding="5" BoxShadow="0 2 4 0 #10000000">
-            <Grid RowDefinitions="Auto, *, Auto" RowSpacing="10">
-                
-                <Grid Grid.Row="0" ColumnDefinitions="2*, 1*, 80, 120, 120" Margin="5,0,5,5">
+        <!-- Grilla de renglones: la sección protagonista, con más aire -->
+        <Border Grid.Row="4" Background="White" CornerRadius="8" Padding="8" BoxShadow="0 2 4 0 #10000000" MinHeight="320">
+            <Grid RowDefinitions="Auto, *, Auto" RowSpacing="8">
+
+                <Grid Grid.Row="0" ColumnDefinitions="2*, 1*, 80, 120, 120" Margin="8,4,8,6">
                     <TextBlock Grid.Column="0" Text="Detalle del Artículo" FontWeight="SemiBold" Foreground="#334155"/>
                     <TextBlock Grid.Column="1" Text="Marca" FontWeight="SemiBold" Foreground="#334155"/>
                     <TextBlock Grid.Column="2" Text="Cant." FontWeight="SemiBold" Foreground="#334155" HorizontalAlignment="Center"/>
@@ -140,43 +143,42 @@
                 </Grid>
                 <Separator Grid.Row="0" VerticalAlignment="Bottom" Background="#E2E8F0"/>
 
-                <ListBox Grid.Row="1" 
-                        ItemsSource="{Binding Detalles}" 
-                        SelectedItem="{Binding DetalleSeleccionado, Mode=TwoWay}" 
-                        PointerPressed="DeseleccionarLista_OnPointerPressed" 
-                        Background="Transparent" 
-                        BorderThickness="0" 
-                        Padding="0"
-                        MaxHeight="500">
+                <ListBox Grid.Row="1"
+                        ItemsSource="{Binding Detalles}"
+                        SelectedItem="{Binding DetalleSeleccionado, Mode=TwoWay}"
+                        PointerPressed="DeseleccionarLista_OnPointerPressed"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Padding="0">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Grid ColumnDefinitions="2*, 1*, 80, 120, 120" Margin="0,2">
-                                <TextBlock Grid.Column="0" Text="{Binding Descripcion}" VerticalAlignment="Center" Foreground="#0F172A"/>
-                                <TextBlock Grid.Column="1" Text="{Binding Marca}" VerticalAlignment="Center" Foreground="#475569"/>
-                                <TextBlock Grid.Column="2" Text="{Binding Cantidad}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0F172A"/>
-                                <TextBlock Grid.Column="3" Text="{Binding PrecioUnitario, StringFormat='{}{0:C}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="#0F172A"/>
-                                <TextBlock Grid.Column="4" Text="{Binding Importe, StringFormat='{}{0:C}'}" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Medium" Foreground="#0F172A"/>
+                            <Grid ColumnDefinitions="2*, 1*, 80, 120, 120" Margin="8,6">
+                                <TextBlock Grid.Column="0" Text="{Binding Descripcion}" VerticalAlignment="Center" Foreground="#0F172A" FontSize="13"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Marca}" VerticalAlignment="Center" Foreground="#475569" FontSize="13"/>
+                                <TextBlock Grid.Column="2" Text="{Binding Cantidad}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#0F172A" FontSize="13"/>
+                                <TextBlock Grid.Column="3" Text="{Binding PrecioUnitario, StringFormat='{}{0:C}'}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="#0F172A" FontSize="13"/>
+                                <TextBlock Grid.Column="4" Text="{Binding Importe, StringFormat='{}{0:C}'}" HorizontalAlignment="Right" VerticalAlignment="Center" FontWeight="Medium" Foreground="#0F172A" FontSize="13"/>
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
 
-                <StackPanel Grid.Row="2" 
-                            Orientation="Horizontal" 
-                            Spacing="10" 
-                            HorizontalAlignment="Left" 
-                            Margin="0,5,0,0"
+                <StackPanel Grid.Row="2"
+                            Orientation="Horizontal"
+                            Spacing="10"
+                            HorizontalAlignment="Left"
+                            Margin="8,0,0,4"
                             IsVisible="{Binding DetalleSeleccionado, Converter={x:Static ObjectConverters.IsNotNull}}">
-                    
-                    <Button Command="{Binding SeleccionarRenglonParaModificarCommand}" 
+
+                    <Button Command="{Binding SeleccionarRenglonParaModificarCommand}"
                             Classes="btn-secondary-compact">
                         <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
                             <materialIcons:MaterialIcon Kind="Pencil" Width="16" Height="16" VerticalAlignment="Center"/>
                             <TextBlock Text="Editar" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                            
-                    <Button Command="{Binding QuitarRenglonCommand}" 
+
+                    <Button Command="{Binding QuitarRenglonCommand}"
                             Classes="btn-danger-compact">
                         <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
                             <materialIcons:MaterialIcon Kind="Delete" Width="16" Height="16" VerticalAlignment="Center"/>
@@ -184,38 +186,38 @@
                         </StackPanel>
                     </Button>
                 </StackPanel>
-                
+
             </Grid>
         </Border>
 
-        <!-- 🎯 NUEVO: Sección de Descuento -->
-        <Border Grid.Row="5" Background="White" Padding="15" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,15,0,0">
-            <StackPanel Spacing="10">
+        <!-- Descuento: más compacto -->
+        <Border Grid.Row="5" Background="White" Padding="12" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,10,0,0">
+            <StackPanel Spacing="8">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <materialIcons:MaterialIcon Kind="TagOutline" Width="16" Height="16" VerticalAlignment="Center"/>
                     <TextBlock Text="Descuento (Opcional)" FontSize="13" FontWeight="Bold" Foreground="#1E293B" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <Grid ColumnDefinitions="Auto, 100, 2*, Auto" ColumnSpacing="15">
-                    <StackPanel Grid.Column="0" Spacing="5" VerticalAlignment="Bottom">
+                    <StackPanel Grid.Column="0" Spacing="4" VerticalAlignment="Bottom">
                         <RadioButton GroupName="TipoDescuento" Content="Porcentaje (%)"
                                      IsChecked="{Binding TipoDescuento, Converter={x:Static conv:EnumRadioConverter.Instance}, ConverterParameter=Porcentaje}"/>
                         <RadioButton GroupName="TipoDescuento" Content="Monto fijo ($)"
                                      IsChecked="{Binding TipoDescuento, Converter={x:Static conv:EnumRadioConverter.Instance}, ConverterParameter=Monto}"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="1" Spacing="5">
+                    <StackPanel Grid.Column="1" Spacing="4">
                         <TextBlock Text="Valor" FontSize="11" Foreground="#475569"/>
                         <TextBox Text="{Binding ValorDescuentoIngresado, Mode=TwoWay}" PlaceholderText="0" HorizontalContentAlignment="Center"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Column="2" Spacing="5">
+                    <StackPanel Grid.Column="2" Spacing="4">
                         <TextBlock Text="Motivo (máx. 150 caracteres)" FontSize="11" Foreground="#475569"/>
                         <TextBox Text="{Binding MotivoDescuento, Mode=TwoWay}" MaxLength="150" PlaceholderText="Ej. Pago en efectivo, cliente frecuente..."/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="3" Spacing="2" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                        <TextBlock Text="{Binding DescuentoCalculado, StringFormat='Descuento: -{0:C}'}" 
+                        <TextBlock Text="{Binding DescuentoCalculado, StringFormat='Descuento: -{0:C}'}"
                                    FontSize="12" Foreground="#F59E0B" FontWeight="SemiBold"
                                    IsVisible="{Binding DescuentoCalculado, Converter={x:Static ObjectConverters.IsNotNull}}"/>
                     </StackPanel>
@@ -223,7 +225,7 @@
             </StackPanel>
         </Border>
 
-        <Grid Grid.Row="6" ColumnDefinitions="*, Auto" Margin="0,15,0,0">
+        <Grid Grid.Row="6" ColumnDefinitions="*, Auto" Margin="0,12,0,0">
             <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12" HorizontalAlignment="Left">
                 <Button Command="{Binding GuardarPresupuestoCommand}"
                         Classes="btn-success">
@@ -232,7 +234,7 @@
                         <TextBlock Text="Emitir" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                
+
                 <Button Command="{Binding ConvertirARemitoCommand}"
                         IsVisible="{Binding EsEdicion}"
                         Classes="btn-accent">
@@ -242,9 +244,9 @@
                     </StackPanel>
                 </Button>
             </StackPanel>
-            
+
             <StackPanel Grid.Column="1" Orientation="Vertical" Spacing="2" HorizontalAlignment="Right" VerticalAlignment="Center">
-                <TextBlock Text="{Binding Total, StringFormat='Subtotal: {0:C}'}" 
+                <TextBlock Text="{Binding Total, StringFormat='Subtotal: {0:C}'}"
                            FontSize="13" Foreground="#64748B" HorizontalAlignment="Right"/>
                 <StackPanel Orientation="Horizontal" Spacing="15">
                     <TextBlock Text="TOTAL:" FontSize="18" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
@@ -252,6 +254,7 @@
                 </StackPanel>
             </StackPanel>
         </Grid>
-        
+
     </Grid>
+    </ScrollViewer>
 </UserControl>

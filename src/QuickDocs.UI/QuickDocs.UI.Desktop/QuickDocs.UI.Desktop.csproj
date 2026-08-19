@@ -5,6 +5,11 @@
     See https://docs.avaloniaui.net/docs/guides/platforms/platform-specific-code/dotnet for more details.-->
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <ApplicationIcon>quickdocs-logo.ico</ApplicationIcon>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -22,4 +27,5 @@
   <ItemGroup>
     <ProjectReference Include="..\QuickDocs.UI\QuickDocs.UI.csproj" />
   </ItemGroup>
+
 </Project>

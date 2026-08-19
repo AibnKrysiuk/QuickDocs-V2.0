@@ -11,6 +11,8 @@ QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseUrls("http://localhost:5018");
+
 builder.Services.AddScoped<DocumentoPdfService>();
 
 // var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -74,7 +76,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 // ====================================================================
 // 💾 BLOQUE DE SEEDING (¡CORREGIDO ACÁ! Antes del app.Run)

@@ -417,10 +417,12 @@ namespace QuickDocs.UI.ViewModels
                 {
                     System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                     {
-                        FileName = "cmd.exe",
-                        Arguments = $"/c start \"\" \"{rutaArchivo}\"",
-                        CreateNoWindow = true,
-                        UseShellExecute = false
+                        // FileName = "cmd.exe",
+                        // Arguments = $"/c start \"\" \"{rutaArchivo}\"",
+                        // CreateNoWindow = true,
+                        // UseShellExecute = false
+                        FileName = rutaArchivo,
+                        UseShellExecute = true
                     });
                 }
             }
@@ -430,6 +432,15 @@ namespace QuickDocs.UI.ViewModels
                 System.Console.WriteLine($"🚨 ERROR CRÍTICO EN DESCARGA/APERTURA PDF:");
                 System.Console.WriteLine(ex.ToString());
                 System.Console.WriteLine($"==================================================");
+                try
+                    {
+                        string carpetaLog = System.IO.Path.Combine(
+                            Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "QuickDocs");
+                        System.IO.Directory.CreateDirectory(carpetaLog);
+                        string logPath = System.IO.Path.Combine(carpetaLog, "error_pdf.log");
+                        System.IO.File.AppendAllText(logPath, $"{DateTime.Now}\n{ex}\n\n");
+                    }
+                    catch { /* si ni esto funciona, no hay más que hacer acá */ }
             }
         }
 

@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using QuickDocs.Core.Models;
-using QuickDocs.Backend.Dtos;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Avalonia.Threading;
@@ -68,7 +68,7 @@ namespace QuickDocs.UI.ViewModels
 
         private async Task GuardarNotaCreditoAsync()
         {
-            var dto = new NotaCreditoCreateDto
+            var dto = new
             {
                 UsuarioId = 1,
                 ClienteId = ClienteSeleccionado?.Id,

@@ -11,6 +11,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Avalonia.Threading;
 
+using System.Globalization;
+
 namespace QuickDocs.UI.ViewModels
 {
     public partial class NotaCreditoViewModel : ObservableObject
@@ -26,9 +28,11 @@ namespace QuickDocs.UI.ViewModels
 
         [ObservableProperty] private string _textoBuscarCliente = string.Empty;
         [ObservableProperty] private Cliente? _clienteSeleccionado;
-        [ObservableProperty] private decimal _total;
+        [ObservableProperty] private string _totalTexto = "0";
+        public decimal Total => decimal.TryParse(TotalTexto, NumberStyles.Any, CultureInfo.CurrentCulture, out var v) ? v : 0;
         [ObservableProperty] private string _detalle = string.Empty;
-        [ObservableProperty] private int _diasValidez = 30;
+        [ObservableProperty] private string _diasValidezTexto = "30";
+        public int DiasValidez => int.TryParse(DiasValidezTexto, out var v) ? v : 0;
 
         public IAsyncRelayCommand GuardarNotaCreditoCommand { get; }
         public IAsyncRelayCommand BorrarNotaCreditoCommand { get; }
@@ -196,9 +200,9 @@ namespace QuickDocs.UI.ViewModels
                 if (nota != null)
                 {
                     _notaCreditoIdActual = nota.Id;
-                    Total = nota.Total;
+                    TotalTexto = nota.Total.ToString(CultureInfo.CurrentCulture);
                     Detalle = nota.Detalle ?? string.Empty;
-                    DiasValidez = nota.DiasValidez;
+                    DiasValidezTexto = nota.DiasValidez.ToString();
 
                     if (nota.ClienteId.HasValue && nota.ClienteId.Value > 0)
                     {
@@ -221,9 +225,9 @@ namespace QuickDocs.UI.ViewModels
             _notaCreditoIdActual = 0;
             TextoBuscarCliente = string.Empty;
             ClienteSeleccionado = null;
-            Total = 0m;
+            TotalTexto = "0";
             Detalle = string.Empty;
-            DiasValidez = 30;
+            DiasValidezTexto = "30";
         }
 
         private void NavegarAHistorial()

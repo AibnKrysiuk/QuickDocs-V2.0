@@ -5,11 +5,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using System.Globalization;
+
 using QuickDocs.Core.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Avalonia.Threading;
-
 
 
 namespace QuickDocs.UI.ViewModels
@@ -44,7 +45,8 @@ namespace QuickDocs.UI.ViewModels
         private Cliente? _clienteSeleccionado;
 
         [ObservableProperty]
-        private int _diasValidez = 30;
+        private string _diasValidezTexto = "30";
+        public int DiasValidez => int.TryParse(DiasValidezTexto, out var v) ? v : 0;
 
         // 🎯 PROPIEDADES NUEVAS: Para soportar CUIT y Dirección editables o del cliente seleccionado
         [ObservableProperty]
@@ -57,7 +59,8 @@ namespace QuickDocs.UI.ViewModels
         private TipoDescuentoUI _tipoDescuento = TipoDescuentoUI.Porcentaje;
 
         [ObservableProperty]
-        private decimal _valorDescuentoIngresado = 0;
+        private string _valorDescuentoIngresadoTexto = "0";
+        public decimal ValorDescuentoIngresado => decimal.TryParse(ValorDescuentoIngresadoTexto, NumberStyles.Any, CultureInfo.CurrentCulture, out var v) ? v : 0;
 
         [ObservableProperty]
         private string _motivoDescuento = string.Empty;
@@ -82,10 +85,12 @@ namespace QuickDocs.UI.ViewModels
         private string _marcaRenglon = string.Empty;
 
         [ObservableProperty]
-        private decimal _cantidadRenglon = 1;
+        private string _cantidadRenglonTexto = "1";
+        public decimal CantidadRenglon => decimal.TryParse(CantidadRenglonTexto, NumberStyles.Any, CultureInfo.CurrentCulture, out var v) ? v : 0;
 
         [ObservableProperty]
-        private decimal _precioRenglon = 0;
+        private string _precioRenglonTexto = "0";
+        public decimal PrecioRenglon => decimal.TryParse(PrecioRenglonTexto, NumberStyles.Any, CultureInfo.CurrentCulture, out var v) ? v : 0;
 
         // --- Totales Finales ---
         [ObservableProperty]
@@ -94,6 +99,11 @@ namespace QuickDocs.UI.ViewModels
         // 🎯 NUEVO: Propiedad para controlar la visibilidad del botón "Convertir a Remito"
         [ObservableProperty]
         private bool _esEdicion = false;
+        //Expandible para mas comodidad.
+        [ObservableProperty]
+        private bool _clienteExpandido = true;
+
+        public IRelayCommand ToggleClienteExpandidoCommand { get; }
 
         // --- Colección de Renglones de la Grilla Actual ---
         public ObservableCollection<DetallePresupuestoTemporal> Detalles { get; } = new();
@@ -123,6 +133,7 @@ namespace QuickDocs.UI.ViewModels
             GuardarPresupuestoCommand = new AsyncRelayCommand(GuardarPresupuestoAsync);
             ConvertirARemitoCommand = new AsyncRelayCommand(ConvertirARemitoAsync);
             NavegarAHistorialCommand = new RelayCommand(NavegarAHistorial);
+            ToggleClienteExpandidoCommand = new RelayCommand(() => ClienteExpandido = !ClienteExpandido);
 
             // Carga asíncrona de clientes e ítems para los selectores al iniciar
             Dispatcher.UIThread.Post(async () => await CargarDatosInicialesAsync());
@@ -164,8 +175,8 @@ namespace QuickDocs.UI.ViewModels
             if (value == null) return;
             DescripcionRenglon = value.Descripcion;
             MarcaRenglon = value.Marca ?? "Sin Marca";
-            PrecioRenglon = value.PrecioUnitario;
-            CantidadRenglon = 1;
+            PrecioRenglonTexto = value.PrecioUnitario.ToString(CultureInfo.CurrentCulture);
+            CantidadRenglonTexto = "1";
         }
 
         private void AgregarRenglon()
@@ -206,9 +217,9 @@ namespace QuickDocs.UI.ViewModels
 
             DescripcionRenglon = DetalleSeleccionado.Descripcion;
             MarcaRenglon = DetalleSeleccionado.Marca;
-            CantidadRenglon = DetalleSeleccionado.Cantidad;
-            PrecioRenglon = DetalleSeleccionado.PrecioUnitario;
-            
+            CantidadRenglonTexto = DetalleSeleccionado.Cantidad.ToString(CultureInfo.CurrentCulture);
+            PrecioRenglonTexto = DetalleSeleccionado.PrecioUnitario.ToString(CultureInfo.CurrentCulture);
+
             ItemSeleccionado = _todosLosItems.FirstOrDefault(i => i.Id == DetalleSeleccionado.ItemId);
         }
 
@@ -219,6 +230,16 @@ namespace QuickDocs.UI.ViewModels
 
         // El total final, ya con el descuento aplicado
         public decimal TotalFinal => Math.Max(0, Total - DescuentoCalculado);
+
+        public string ResumenCliente
+        {
+            get
+            {
+                string nombre = !string.IsNullOrWhiteSpace(TextoBuscarCliente) ? TextoBuscarCliente : "Sin cliente";
+                string cuit = !string.IsNullOrWhiteSpace(ClienteCuitLibre) ? $" · CUIT: {ClienteCuitLibre}" : "";
+                return $"{nombre}{cuit} · Válido por {DiasValidezTexto} días";
+            }
+        }
 
         partial void OnTotalChanged(decimal value)
         {
@@ -232,8 +253,9 @@ namespace QuickDocs.UI.ViewModels
             OnPropertyChanged(nameof(TotalFinal));
         }
 
-        partial void OnValorDescuentoIngresadoChanged(decimal value)
+        partial void OnValorDescuentoIngresadoTextoChanged(string value)
         {
+            OnPropertyChanged(nameof(ValorDescuentoIngresado));
             OnPropertyChanged(nameof(DescuentoCalculado));
             OnPropertyChanged(nameof(TotalFinal));
         }
@@ -481,9 +503,9 @@ namespace QuickDocs.UI.ViewModels
                     ClienteDireccionLibre = string.Empty;
                 }
 
-                DiasValidez = presupuesto.DiasValidez;
+                DiasValidezTexto = presupuesto.DiasValidez.ToString();
                 TipoDescuento = TipoDescuentoUI.Monto;
-                ValorDescuentoIngresado = presupuesto.Descuento;
+                ValorDescuentoIngresadoTexto = presupuesto.Descuento.ToString(CultureInfo.CurrentCulture);
                 MotivoDescuento = presupuesto.MotivoDescuento ?? string.Empty;
 
                 Detalles.Clear();
@@ -507,6 +529,8 @@ namespace QuickDocs.UI.ViewModels
                 // 🎯 NUEVO: Como estamos editando un registro que ya existe en la BD, activamos la bandera
                 EsEdicion = true;
 
+                ClienteExpandido = true;
+
                 System.Console.WriteLine($"[DEBUG-FORM] Éxito. Renglones cargados: {Detalles.Count}. Cliente: {presupuesto.ClienteNombre}");
             }
             catch (Exception ex)
@@ -529,6 +553,8 @@ namespace QuickDocs.UI.ViewModels
             {
                 ClienteSeleccionado = null; 
             }
+
+            OnPropertyChanged(nameof(ResumenCliente));
         }
         
 
@@ -542,7 +568,7 @@ namespace QuickDocs.UI.ViewModels
             {
                 ItemSeleccionado = coincidencia;
                 MarcaRenglon = coincidencia.Marca ?? "Sin Marca";
-                PrecioRenglon = coincidencia.PrecioUnitario;
+                PrecioRenglonTexto = coincidencia.PrecioUnitario.ToString(CultureInfo.CurrentCulture);
             }
             else
             {
@@ -553,10 +579,11 @@ namespace QuickDocs.UI.ViewModels
         private void LimpiarCamposRenglon()
         {
             ItemSeleccionado = null;
+            TextoBuscarItem = string.Empty;
             DescripcionRenglon = string.Empty;
             MarcaRenglon = string.Empty;
-            CantidadRenglon = 1;
-            PrecioRenglon = 0;
+            CantidadRenglonTexto = "1";
+            PrecioRenglonTexto = "0";
         }
 
         private void LimpiarFormularioCompleto()
@@ -566,9 +593,9 @@ namespace QuickDocs.UI.ViewModels
             TextoBuscarCliente = string.Empty;
             ClienteCuitLibre = string.Empty;
             ClienteDireccionLibre = string.Empty;
-            DiasValidez = 30;
+            DiasValidezTexto = "30";
             TipoDescuento = TipoDescuentoUI.Porcentaje;
-            ValorDescuentoIngresado = 0;
+            ValorDescuentoIngresadoTexto = "0";
             MotivoDescuento = string.Empty;
             ErroresValidacion.Clear();
             MostrarErrores = false;
@@ -632,6 +659,9 @@ namespace QuickDocs.UI.ViewModels
                 }
             }
         }
+
+        partial void OnClienteCuitLibreChanged(string value) => OnPropertyChanged(nameof(ResumenCliente));
+        partial void OnDiasValidezTextoChanged(string value) => OnPropertyChanged(nameof(ResumenCliente));
     }
 
     public class DetallePresupuestoTemporal

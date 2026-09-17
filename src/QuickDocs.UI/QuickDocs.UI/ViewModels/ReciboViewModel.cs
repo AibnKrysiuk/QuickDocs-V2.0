@@ -9,6 +9,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using QuickDocs.Core.Models;
 using CommunityToolkit.Mvvm.Input;
 using Avalonia.Threading;
+using System.Globalization;
 
 namespace QuickDocs.UI.ViewModels
 {
@@ -26,8 +27,9 @@ namespace QuickDocs.UI.ViewModels
         // --- Colecciones de texto plano para los desplegables de la UI ---
         public ObservableCollection<string> SugerenciasClientes { get; } = new();
 
-        [ObservableProperty] 
-        private decimal _importeRecibido;
+        [ObservableProperty]
+        private string _importeRecibidoTexto = "0";
+        public decimal ImporteRecibido => decimal.TryParse(ImporteRecibidoTexto, NumberStyles.Any, CultureInfo.CurrentCulture, out var v) ? v : 0;
         [ObservableProperty] 
         private MetodoPago _formaPago = MetodoPago.Efectivo;
         [ObservableProperty] 
@@ -211,7 +213,7 @@ namespace QuickDocs.UI.ViewModels
             _reciboIdActual = 0;
             ClienteSeleccionado = null;
             TextoBuscarCliente = string.Empty;
-            ImporteRecibido = 0m;                  // 🎯 Restablecemos valores numéricos
+            ImporteRecibidoTexto = "0";
             FormaPago = MetodoPago.Efectivo;       // 🎯 Restablecemos combo de pago
             Detalle = string.Empty;                // 🎯 Limpiamos campo detalle
         }
@@ -257,7 +259,7 @@ namespace QuickDocs.UI.ViewModels
                 _reciboIdActual = reciboReal.Id;
 
                 // Asignamos las propiedades observables del formulario
-                ImporteRecibido = reciboReal.ImporteRecibido;
+                ImporteRecibidoTexto = reciboReal.ImporteRecibido.ToString(CultureInfo.CurrentCulture);
                 FormaPago = reciboReal.FormaPago;
                 Detalle = reciboReal.Detalle ?? string.Empty;
 

@@ -9,6 +9,7 @@ using QuickDocs.Core.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Avalonia.Threading;
+using System.Globalization;
 
 namespace QuickDocs.UI.ViewModels
 {
@@ -45,6 +46,11 @@ namespace QuickDocs.UI.ViewModels
         // 🎯 CAMBIO LOGÍSTICO: Dirección de entrega obligatoria para el remito
         [ObservableProperty]
         private string _direccionEntrega = string.Empty;
+        //Expander para mayor comodidad
+        [ObservableProperty]
+        private bool _clienteExpandido = true;
+
+        public IRelayCommand ToggleClienteExpandidoCommand { get; }
 
         [ObservableProperty]
         private string _clienteCuitLibre = string.Empty;
@@ -69,10 +75,12 @@ namespace QuickDocs.UI.ViewModels
         private string _marcaRenglon = string.Empty;
 
         [ObservableProperty]
-        private decimal _cantidadRenglon = 1;
+        private string _cantidadRenglonTexto = "1";
+        public decimal CantidadRenglon => decimal.TryParse(CantidadRenglonTexto, NumberStyles.Any, CultureInfo.CurrentCulture, out var v) ? v : 0;
 
         [ObservableProperty]
-        private decimal _precioRenglon = 0;
+        private string _precioRenglonTexto = "0";
+        public decimal PrecioRenglon => decimal.TryParse(PrecioRenglonTexto, NumberStyles.Any, CultureInfo.CurrentCulture, out var v) ? v : 0;
 
         // --- Totales Finales (Para control interno del formulario) ---
         [ObservableProperty]
@@ -102,6 +110,8 @@ namespace QuickDocs.UI.ViewModels
             SeleccionarRenglonParaModificarCommand = new RelayCommand(SeleccionarRenglonParaModificar);
             GuardarRemitoCommand = new AsyncRelayCommand(GuardarRemitoAsync);
             NavegarAHistorialCommand = new RelayCommand(NavegarAHistorial);
+
+            ToggleClienteExpandidoCommand = new RelayCommand(() => ClienteExpandido = !ClienteExpandido);
 
             // Carga asíncrona de clientes e ítems al iniciar
             Dispatcher.UIThread.Post(async () => await CargarDatosInicialesAsync());
@@ -143,8 +153,8 @@ namespace QuickDocs.UI.ViewModels
             if (value == null) return;
             DescripcionRenglon = value.Descripcion;
             MarcaRenglon = value.Marca ?? "Sin Marca";
-            PrecioRenglon = value.PrecioUnitario;
-            CantidadRenglon = 1;
+            PrecioRenglonTexto = value.PrecioUnitario.ToString(CultureInfo.CurrentCulture);
+            CantidadRenglonTexto = "1";
         }
 
         private void AgregarRenglon()
@@ -185,8 +195,8 @@ namespace QuickDocs.UI.ViewModels
 
             DescripcionRenglon = DetalleSeleccionado.Descripcion;
             MarcaRenglon = DetalleSeleccionado.Marca;
-            CantidadRenglon = DetalleSeleccionado.Cantidad;
-            PrecioRenglon = DetalleSeleccionado.PrecioUnitario;
+            CantidadRenglonTexto = DetalleSeleccionado.Cantidad.ToString(CultureInfo.CurrentCulture);
+            PrecioRenglonTexto = DetalleSeleccionado.PrecioUnitario.ToString(CultureInfo.CurrentCulture);
             
             ItemSeleccionado = _todosLosItems.FirstOrDefault(i => i.Id == DetalleSeleccionado.ItemId);
         }
@@ -407,6 +417,8 @@ namespace QuickDocs.UI.ViewModels
                     }
                 }
                 
+                ClienteExpandido = true;
+
                 RecalcularTotal();
                 System.Console.WriteLine($"[DEBUG] Remito {remito.Id} cargado exitosamente mediante API.");
             }
@@ -443,6 +455,16 @@ namespace QuickDocs.UI.ViewModels
             RecalcularTotal();
         }
 
+        public string ResumenCliente
+        {
+            get
+            {
+                string nombre = !string.IsNullOrWhiteSpace(TextoBuscarCliente) ? TextoBuscarCliente : "Sin cliente";
+                string cuit = !string.IsNullOrWhiteSpace(ClienteCuitLibre) ? $" · CUIT: {ClienteCuitLibre}" : "";
+                string entrega = !string.IsNullOrWhiteSpace(DireccionEntrega) ? $" · Entrega: {DireccionEntrega}" : " · Retira en el local";
+                return $"{nombre}{cuit}{entrega}";
+            }
+        }
         partial void OnTextoBuscarClienteChanged(string value)
         {
             var coincidencia = _todosLosClientes.FirstOrDefault(c => string.Equals(c.Nombre, value, StringComparison.OrdinalIgnoreCase));
@@ -454,7 +476,11 @@ namespace QuickDocs.UI.ViewModels
             {
                 ClienteSeleccionado = null; 
             }
+            OnPropertyChanged(nameof(ResumenCliente));
         }
+
+        partial void OnClienteCuitLibreChanged(string value) => OnPropertyChanged(nameof(ResumenCliente));
+        partial void OnDireccionEntregaChanged(string value) => OnPropertyChanged(nameof(ResumenCliente));
 
         partial void OnTextoBuscarItemChanged(string value)
         {
@@ -464,7 +490,7 @@ namespace QuickDocs.UI.ViewModels
             {
                 ItemSeleccionado = coincidencia;
                 MarcaRenglon = coincidencia.Marca ?? "Sin Marca";
-                PrecioRenglon = coincidencia.PrecioUnitario;
+                PrecioRenglonTexto = coincidencia.PrecioUnitario.ToString(CultureInfo.CurrentCulture);
             }
             else
             {
@@ -475,10 +501,11 @@ namespace QuickDocs.UI.ViewModels
         private void LimpiarCamposRenglon()
         {
             ItemSeleccionado = null;
+            TextoBuscarItem = string.Empty;
             DescripcionRenglon = string.Empty;
             MarcaRenglon = string.Empty;
-            CantidadRenglon = 1;
-            PrecioRenglon = 0;
+            CantidadRenglonTexto = "1";
+            PrecioRenglonTexto = "0";
         }
 
         private void LimpiarFormularioCompleto()
@@ -516,6 +543,7 @@ namespace QuickDocs.UI.ViewModels
             }
         }
 
+        
         private bool ValidarFormulario()
         {
             var errores = new List<string>();

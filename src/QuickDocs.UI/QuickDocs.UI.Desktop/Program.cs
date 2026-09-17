@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
+using System.Globalization;
 
 namespace QuickDocs.UI.Desktop;
 
@@ -15,6 +16,12 @@ sealed class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        var culturaAR = new CultureInfo("es-AR");
+        CultureInfo.DefaultThreadCurrentCulture = culturaAR;
+        CultureInfo.DefaultThreadCurrentUICulture = culturaAR;
+        Thread.CurrentThread.CurrentCulture = culturaAR;
+        Thread.CurrentThread.CurrentUICulture = culturaAR;
+
         AppDomain.CurrentDomain.ProcessExit += (_, _) => DetenerBackend();
         AppDomain.CurrentDomain.UnhandledException += (_, _) => DetenerBackend();
 

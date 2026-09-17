@@ -9,7 +9,7 @@
     <SelfContained>true</SelfContained>
     <PublishSingleFile>true</PublishSingleFile>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-    <InvariantGlobalization>true</InvariantGlobalization>
+    <!-- <InvariantGlobalization>true</InvariantGlobalization> -->
   </PropertyGroup>
 
   <PropertyGroup>

@@ -41,7 +41,7 @@
                     
                     <StackPanel Grid.Column="1" Spacing="5">
                         <TextBlock Text="Crédito a asignar ($)" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
-                        <TextBox Text="{Binding Total, Mode=TwoWay}" 
+                        <TextBox Text="{Binding TotalTexto, Mode=TwoWay}" 
                             PlaceholderText="0.00" 
                             HorizontalContentAlignment="Right" 
                             FontWeight="Bold"/>
@@ -49,7 +49,7 @@
 
                     <StackPanel Grid.Column="2" Spacing="5">
                         <TextBlock Text="Válida por (días)" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
-                        <TextBox Text="{Binding DiasValidez, Mode=TwoWay}" 
+                        <TextBox Text="{Binding DiasValidezTexto, Mode=TwoWay}" 
                             PlaceholderText="30" 
                             HorizontalContentAlignment="Center"/>
                     </StackPanel>

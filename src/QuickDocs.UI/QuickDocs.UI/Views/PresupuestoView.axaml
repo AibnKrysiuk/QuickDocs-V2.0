@@ -9,22 +9,18 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
     <Grid RowDefinitions="Auto, Auto, Auto, Auto, *, Auto, Auto" Margin="15" Background="Transparent">
 
-        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,10">
-            <StackPanel Grid.Column="0" Spacing="3">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <materialIcons:MaterialIcon Kind="FileDocument" Width="16" Height="16" VerticalAlignment="Center"/>
-                    <TextBlock Text="Nuevo Presupuesto" FontSize="20" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
-                </StackPanel>
-                <TextBlock Text="Cargue los datos del cliente y los artículos para el documento." FontSize="12" Foreground="#64748B"/>
+        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,6">
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                <materialIcons:MaterialIcon Kind="FileDocument" Width="14" Height="14" VerticalAlignment="Center"/>
+                <TextBlock Text="Nuevo Presupuesto" FontSize="15" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
             </StackPanel>
 
             <Button Grid.Column="1"
                     Command="{Binding NavegarAHistorialCommand}"
-                    Classes="btn-secondary"
-                    FontSize="13" FontWeight="Medium"
-                    VerticalAlignment="Top">
-                <StackPanel Orientation="Horizontal" Spacing="8">
-                    <materialIcons:MaterialIcon Kind="ClipboardTextOutline" Width="16" Height="16" VerticalAlignment="Center"/>
+                    Classes="btn-secondary-compact"
+                    VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <materialIcons:MaterialIcon Kind="ClipboardTextOutline" Width="14" Height="14" VerticalAlignment="Center"/>
                     <TextBlock Text="Historial" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
@@ -52,36 +48,52 @@
         <!-- Datos de cliente: más compacto -->
         <Border Grid.Row="2" Background="White" Padding="12" CornerRadius="8" BoxShadow="0 2 4 0 #10000000" Margin="0,0,0,10">
             <StackPanel Spacing="8">
-                <Grid ColumnDefinitions="*, Auto" ColumnSpacing="20">
-                    <StackPanel Grid.Column="0" Spacing="4">
-                        <TextBlock Text="Cliente / Razón Social" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
-                        <AutoCompleteBox Text="{Binding TextoBuscarCliente, Mode=TwoWay}"
-                            ItemsSource="{Binding SugerenciasClientes}"
-                            FilterMode="Contains"
-                            PlaceholderText="Escriba el nombre del cliente o empresa..."
-                            HorizontalAlignment="Stretch"/>
-                    </StackPanel>
 
-                    <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Orientation="Horizontal" Spacing="8">
-                        <TextBlock Text="Documento válido por" FontSize="13" Foreground="#475569" VerticalAlignment="Center"/>
-                        <TextBox Text="{Binding DiasValidez, Mode=TwoWay}" Width="50" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
-                        <TextBlock Text="días (1-99)." FontSize="13" Foreground="#475569" VerticalAlignment="Center"/>
+                <Button Command="{Binding ToggleClienteExpandidoCommand}"
+                        Background="Transparent" Padding="0" BorderThickness="0"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Left">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <materialIcons:MaterialIcon Kind="ChevronDown" Width="16" Height="16" Foreground="#475569" VerticalAlignment="Center" IsVisible="{Binding ClienteExpandido}"/>
+                        <materialIcons:MaterialIcon Kind="ChevronRight" Width="16" Height="16" Foreground="#475569" VerticalAlignment="Center" IsVisible="{Binding !ClienteExpandido}"/>
+                        <TextBlock Text="Cliente / Razón Social" FontSize="12" FontWeight="SemiBold" Foreground="#475569" VerticalAlignment="Center"/>
                     </StackPanel>
-                </Grid>
+                </Button>
 
-                <Grid ColumnDefinitions="1*, 2*" ColumnSpacing="15">
-                    <StackPanel Grid.Column="0" Spacing="4">
-                        <TextBlock Text="CUIT / CUIL (Opcional)" FontSize="11" Foreground="#64748B"/>
-                        <TextBox Text="{Binding ClienteCuitLibre, Mode=TwoWay}"
-                                 PlaceholderText="11 dígitos, sin guiones"/>
-                    </StackPanel>
+                <TextBlock Text="{Binding ResumenCliente}" FontSize="13" Foreground="#334155"
+                        IsVisible="{Binding !ClienteExpandido}"/>
 
-                    <StackPanel Grid.Column="1" Spacing="4">
-                        <TextBlock Text="Dirección Comercial (Opcional)" FontSize="11" Foreground="#64748B"/>
-                        <TextBox Text="{Binding ClienteDireccionLibre, Mode=TwoWay}"
-                                 PlaceholderText="Ej. Av. 7 nro 123, La Plata"/>
-                    </StackPanel>
-                </Grid>
+                <StackPanel Spacing="8" IsVisible="{Binding ClienteExpandido}">
+                    <Grid ColumnDefinitions="*, Auto" ColumnSpacing="20">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <AutoCompleteBox Text="{Binding TextoBuscarCliente, Mode=TwoWay}"
+                                ItemsSource="{Binding SugerenciasClientes}"
+                                FilterMode="Contains"
+                                PlaceholderText="Escriba el nombre del cliente o empresa..."
+                                HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" VerticalAlignment="Bottom" Orientation="Horizontal" Spacing="8">
+                            <TextBlock Text="Documento válido por" FontSize="13" Foreground="#475569" VerticalAlignment="Center"/>
+                            <TextBox Text="{Binding DiasValidezTexto, Mode=TwoWay}" Width="50" HorizontalContentAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBlock Text="días (1-99)." FontSize="13" Foreground="#475569" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="1*, 2*" ColumnSpacing="15">
+                        <StackPanel Grid.Column="0" Spacing="4">
+                            <TextBlock Text="CUIT / CUIL (Opcional)" FontSize="11" Foreground="#64748B"/>
+                            <TextBox Text="{Binding ClienteCuitLibre, Mode=TwoWay}"
+                                    PlaceholderText="11 dígitos, sin guiones"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Spacing="4">
+                            <TextBlock Text="Dirección Comercial (Opcional)" FontSize="11" Foreground="#64748B"/>
+                            <TextBox Text="{Binding ClienteDireccionLibre, Mode=TwoWay}"
+                                    PlaceholderText="Ej. Av. 7 nro 123, La Plata"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+
             </StackPanel>
         </Border>
 
@@ -109,12 +121,12 @@
 
                     <StackPanel Grid.Column="2" Spacing="4">
                         <TextBlock Text="Cant." FontSize="11" Foreground="#475569"/>
-                        <TextBox Text="{Binding CantidadRenglon, Mode=TwoWay}" PlaceholderText="0" HorizontalContentAlignment="Center"/>
+                        <TextBox Text="{Binding CantidadRenglonTexto, Mode=TwoWay}" PlaceholderText="0" HorizontalContentAlignment="Center"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="3" Spacing="4">
                         <TextBlock Text="Precio Unit." FontSize="11" Foreground="#475569"/>
-                        <TextBox Text="{Binding PrecioRenglon, Mode=TwoWay}" PlaceholderText="0.00" HorizontalContentAlignment="Right"/>
+                        <TextBox Text="{Binding PrecioRenglonTexto, Mode=TwoWay}" PlaceholderText="0.00" HorizontalContentAlignment="Right"/>
                     </StackPanel>
 
                     <Button Grid.Column="4"
@@ -208,7 +220,7 @@
 
                     <StackPanel Grid.Column="1" Spacing="4">
                         <TextBlock Text="Valor" FontSize="11" Foreground="#475569"/>
-                        <TextBox Text="{Binding ValorDescuentoIngresado, Mode=TwoWay}" PlaceholderText="0" HorizontalContentAlignment="Center"/>
+                        <TextBox Text="{Binding ValorDescuentoIngresadoTexto, Mode=TwoWay}" PlaceholderText="0" HorizontalContentAlignment="Center"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="2" Spacing="4">

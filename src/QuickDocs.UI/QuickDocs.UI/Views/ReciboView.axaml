@@ -44,7 +44,7 @@
                     
                     <StackPanel Grid.Column="1" Spacing="5">
                         <TextBlock Text="La suma de (Monto en $)" FontSize="12" FontWeight="SemiBold" Foreground="#475569"/>
-                        <TextBox Text="{Binding ImporteRecibido, Mode=TwoWay}" 
+                        <TextBox Text="{Binding ImporteRecibidoTexto, Mode=TwoWay}" 
                                 PlaceholderText="0.00" 
                                 HorizontalContentAlignment="Right" 
                                 FontWeight="Bold"/>

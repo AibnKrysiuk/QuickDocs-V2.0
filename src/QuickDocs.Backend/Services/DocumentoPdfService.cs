@@ -131,7 +131,7 @@ namespace QuickDocs.Backend.Services
                             c.Item().Text("CLIENTE:").Bold().FontSize(11);
                             
                             // Al garantizar un objeto Cliente real, leemos directo de sus propiedades
-                            c.Item().Text($"Nombre: {cliente?.Nombre ?? "Consumidor Final / Público General"}");
+                            c.Item().Text($"Nombre: {cliente?.Nombre?.ToUpper() ?? "Consumidor Final / Público General"}");
                             
                             if (!string.IsNullOrWhiteSpace(cliente?.CuitCuil))
                             {
@@ -140,7 +140,7 @@ namespace QuickDocs.Backend.Services
                             
                             if (!string.IsNullOrWhiteSpace(cliente?.Direccion))
                             {
-                                c.Item().Text($"Dirección: {cliente.Direccion}");
+                                c.Item().Text($"Dirección: {cliente.Direccion.ToUpper()}");
                             }
                         });
 
@@ -182,7 +182,7 @@ namespace QuickDocs.Backend.Services
 
                             rowTotales.RelativeItem().AlignLeft().AlignBottom().Column(colValidez =>
                             {
-                                colValidez.Item().Text($"📌 Documento válido por {diasCalculados} días.").FontSize(10).Italic().Bold().FontColor(Colors.Grey.Darken3);
+                                colValidez.Item().Text($"Documento válido por {diasCalculados} días.").FontSize(10).Italic().Bold().FontColor(Colors.Grey.Darken3);
                             });
 
                             // 📦 Lado derecho inferior: Cajita Gris de Totales con mayor espacio
@@ -226,7 +226,7 @@ namespace QuickDocs.Backend.Services
                             rowFirmas.RelativeItem().PaddingRight(40).Column(fComercio =>
                             {
                                 fComercio.Item().PaddingTop(30).LineHorizontal(1).LineColor(Colors.Grey.Darken1);
-                                fComercio.Item().PaddingTop(4).AlignCenter().Text("Firma Autorizada Comercio").FontSize(9).FontColor(Colors.Grey.Darken2);
+                                fComercio.Item().PaddingTop(4).AlignCenter().Text(perfil.NombreFantasia).FontSize(9).FontColor(Colors.Grey.Darken2);
                             });
 
                             // Espacio intermedio vacío
@@ -285,11 +285,11 @@ namespace QuickDocs.Backend.Services
                             col.Item().Border(1).BorderColor(Colors.Grey.Lighten2).Padding(10).Background(Colors.Grey.Lighten3).Column(c =>
                             {
                                 c.Item().Text("DE / PARA:").Bold().FontSize(11);
-                                c.Item().Text($"Nombre: {cliente.Nombre}");
+                                c.Item().Text($"Nombre: {cliente.Nombre.ToUpper()}");
                                 if (!string.IsNullOrEmpty(cliente.CuitCuil) && cliente.CuitCuil != "00-00000000-0")
                                 {
                                     c.Item().Text($"CUIT/CUIL: {cliente.CuitCuil}");
-                                    c.Item().Text($"Dirección: {cliente.Direccion}");
+                                    c.Item().Text($"Dirección: {cliente.Direccion.ToUpper()}");
                                 }
                             });
 
@@ -346,7 +346,7 @@ namespace QuickDocs.Backend.Services
                                 row.RelativeItem().Border(1).BorderColor(Colors.Grey.Lighten2).Padding(10).Background(Colors.Grey.Lighten4).Column(c =>
                                 {
                                     c.Item().Text("DESTINATARIO:").Bold().FontSize(11).FontColor(Colors.Grey.Darken3);
-                                    c.Item().Text($"Nombre: {cliente.Nombre}");
+                                    c.Item().Text($"Nombre: {cliente.Nombre.ToUpper()}");
                                     c.Item().Text($"Teléfono Ref: {cliente.Telefono}");
                                 });
 
@@ -355,7 +355,7 @@ namespace QuickDocs.Backend.Services
                                 row.RelativeItem().Border(1).BorderColor(Colors.Orange.Darken2).Padding(10).Background(Colors.Orange.Lighten5).Column(d =>
                                 {
                                     d.Item().Text("LUGAR DE ENTREGA:").Bold().FontSize(11).FontColor(Colors.Orange.Darken3);
-                                    d.Item().Text(string.IsNullOrEmpty(remito.DireccionEntrega) ? "Se retira por el local del emisor" : remito.DireccionEntrega).Bold();
+                                    d.Item().Text(string.IsNullOrEmpty(remito.DireccionEntrega) ? "Se retira por el local del emisor" : remito.DireccionEntrega.ToUpper()).Bold();
                                 });
                             });
 
@@ -382,11 +382,10 @@ namespace QuickDocs.Backend.Services
 
                             col.Item().PaddingTop(2.5f, Unit.Centimetre).Row(row =>
                             {
-                                row.RelativeItem().Column(nota =>
+                                row.RelativeItem().Column(entregaCol =>
                                 {
-                                    nota.Item().Text("Notas del Transportista:").FontSize(9).Bold().FontColor(Colors.Grey.Darken1);
-                                    nota.Item().PaddingTop(5).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
-                                    nota.Item().PaddingTop(12).LineHorizontal(1).LineColor(Colors.Grey.Lighten2);
+                                    entregaCol.Item().BorderTop(1).BorderColor(Colors.Grey.Darken1).PaddingTop(5).AlignCenter().Text("Entregado por").FontSize(10).Bold();
+                                    entregaCol.Item().PaddingTop(15).AlignCenter().Text(perfil.NombreFantasia).FontSize(9).FontColor(Colors.Grey.Darken3).Bold();
                                 });
                                 row.ConstantItem(40);
                                 row.RelativeItem().Column(firmaCol =>
@@ -438,7 +437,7 @@ namespace QuickDocs.Backend.Services
                             col.Item().Border(1).BorderColor(Colors.Grey.Lighten2).Padding(10).Background(Colors.Grey.Lighten3).Column(c =>
                             {
                                 c.Item().Text("CLIENTE / BENEFICIARIO:").Bold().FontSize(11).FontColor(Colors.Grey.Darken3);
-                                c.Item().Text($"Nombre: {cliente.Nombre}");
+                                c.Item().Text($"Nombre: {cliente.Nombre.ToUpper()}");
                             });
 
                             col.Item().PaddingTop(1, Unit.Centimetre);
